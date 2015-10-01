@@ -33,11 +33,60 @@ if(!class_exists("FreshDeskAPI")){
 			$result = '';
 			if ( is_user_logged_in() ) {
 				global $current_user;
-				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
+				
+				$result .= '
+				<div style="float:left;">
+					<form method="post" action="" id="filter_form" name="filter_form">
+						<select id="filter_dropdown" name="filter_dropdown">
+							<option value="all_tickets" ';
+				$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+				$result .= '>----All Tickets----</option>
+							<option value="new_and_my_open" ';
+				$result .= ( $_POST["filter_dropdown"] == "new_and_my_open" ) ? 'selected="selected"' : '';
+				$result .= '>Open</option>
+							<option value="Pending" ';
+				$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+				$result .= '>Pending</option>
+							<option value="Resolved" ';
+				$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+				$result .= '>Resolved</option>
+							<option value="Closed" ';
+				$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+				$result .= '>Closed</option>
+							<option value="Waiting on Customer" ';
+				$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+				$result .= '>Waiting on Customer</option>
+							<option value="Waiting on Third Party" ';
+				$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+				$result .= '>Waiting on Third Party</option>
+						</select>
+					
+					</div>
+					<div style="float:right;">
+						<input type="text" value="' . $_POST['search_txt'] . '" id="search_txt" name="search_txt" placeholder="Search..."/>
+					</div>
+					<div style="clear:both;"></div>
+				</form>
+				<script type="text/javascript">
+					jQuery(document).ready(function(){
+						jQuery("#filter_dropdown").change(function(){
+							jQuery("#filter_form").submit();
+						});
+						jQuery("#search_txt").keypress(function(e) {
+							// Enter pressed?
+							if(e.which == 10 || e.which == 13) {
+								jQuery("#filter_form").submit();
+							}
+						});
+					});
+				</script>
+				';
+				
 				if( $tickets ) {
-					$result = $this->get_html( $tickets );
+					$result .= $this->get_html( $tickets );
 				} else {
-					$result = '';
+					$result .= '<p>No tickets</p>';
 				}
 			}
 			return $result;	
@@ -49,13 +98,18 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: API call to Freshdesk to get all tickets of the user(email)
 		 */
 		
-		function get_tickets( $uemail = '', $roles = array() ){
+		function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
 			if( !empty( $uemail ) ){
+				if( isset( $post_array['filter_dropdown'] ) ) {
+					$filterName = ( $post_array['filter_dropdown'] == 'new_and_my_open' ) ? 'new_and_my_open' : 'all_tickets';
+				} else {
+					$filterName = 'all_tickets';
+				}
 				$opt = get_option( 'fd_apikey' );
 				$apikey = ( $opt['freshdesk_apikey'] != '' ) ? $opt['freshdesk_apikey'] : '';
 				$password = "";
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
-				$url = 'https://bsfv.freshdesk.com/helpdesk/tickets.json?filter_name=all_tickets' . $filter;
+				$url = 'https://bsfv.freshdesk.com/helpdesk/tickets.json?page=1&filter_name=' . $filterName . $filter;
 				$ch = curl_init ($url);
 				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
 				curl_setopt($ch, CURLOPT_HEADER, false);
@@ -65,7 +119,14 @@ if(!class_exists("FreshDeskAPI")){
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
-				return json_decode( $server_output );
+				$tickets = json_decode( $server_output );
+				if( isset( $post_array['filter_dropdown'] ) ) {
+					$tickets = ( $post_array['filter_dropdown'] != 'new_and_my_open' && $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+				}
+				if( isset( $post_array['search_txt'] ) ) {
+					$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
+				}
+				return $tickets;
 			} else{
 				return false;
 			}			
@@ -78,15 +139,18 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function get_html( $tickets = '' ){
-			if( !isset( $tickets->require_login ) ) {
-				$html = '<ul>';
+			$html = '';
+			if( !isset( $tickets->require_login ) || $tickets != '' ) {
+				$html .= '<p>Total Tickets: ' . count( $tickets ) . '</p>';
+				$html .= '<ul>';
 				foreach( $tickets as $d ) {
 					$html .= '<li>Ticket ID: ' . $d->id . '<br/>
-								Requester ID: ' . $d->requester_id . '
+								Requester ID: ' . $d->requester_id . '<br/>
+								Status: ' . $d->status_name . '
 								<p><strong>SUBJECT: </strong>
 									<a href="https://bsfv.freshdesk.com/helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
 								</p>
-								<p><strong>DESCRIPTION: </strong>' . $d->description . '</p>
+								
 							</li>';
 				}
 				$html .= '</ul>';
@@ -95,7 +159,61 @@ if(!class_exists("FreshDeskAPI")){
 				return '<p>Error!</p>';
 			}
 		}
+		
+		
+		function filter_tickets( $tickets = '', $status = '' ){
+			$filtered_tickets = array();
+			foreach( $tickets as $t ){
+				if( $t->status_name == $status ) {
+					$filtered_tickets[] = $t;
+				}
+			}
+			return $filtered_tickets;
+		}
+		
+		function search_tickets( $tickets, $txt = '' ){
+			$filtered_tickets = array();
+			foreach( $tickets as $t ){
+				if( strpos( $t->subject, trim( $txt ) ) ) {
+					$filtered_tickets[] = $t;
+				}
+			}
+			return $filtered_tickets;
+		}
+		
+		
 	}
+} //end of class
+
+
+/* Register the activation function and redirect to Setting page. */
+register_activation_hook(__FILE__, 'fd_plugin_activate');
+add_action('admin_init', 'fd_plugin_redirect' );
+
+/*
+ * Function Name: fd_plugin_redirect
+ * Function Description:
+ */
+ 
+function fd_plugin_redirect() {
+	if ( get_option( 'fd_do_activation_redirect', false ) ) {
+		delete_option( 'fd_do_activation_redirect' );
+		if( !isset( $_GET['activate-multi'] ) ) {
+			wp_redirect( 'options-general.php?page=fd-setting-admin' );
+		}
+	}
+}
+
+/*
+ * Function Name: fd_plugin_activate
+ * Function Description:
+ */
+
+function fd_plugin_activate() {
+	add_option('fd_do_activation_redirect', true);
+	if( !isset( $_GET['activate-multi'] ) ) {
+			wp_redirect( 'options-general.php?page=fd-setting-admin' );
+		}
 }
 
 new FreshDeskAPI();
