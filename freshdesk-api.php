@@ -13,6 +13,8 @@ include_once( ABSPATH . 'wp-load.php' );
 if(!class_exists("FreshDeskAPI")){
 	class FreshDeskAPI{
 	
+		private $freshdeskUrl;
+	
 		/*
 		 * Function Name: __construct
 		 * Function Description: Constructor
@@ -21,6 +23,8 @@ if(!class_exists("FreshDeskAPI")){
 		function __construct(){
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
+			$options = get_option( 'fd_url' );
+			$this->freshdeskUrl = rtrim( $options['freshdesk_url'], '/' ) . '/';
 		}
 		
 		
@@ -34,7 +38,7 @@ if(!class_exists("FreshDeskAPI")){
 			if ( is_user_logged_in() ) {
 				global $current_user;
 				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				
+				//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 				$result .= '
 				<div style="float:left;">
 					<form method="post" action="" id="filter_form" name="filter_form">
@@ -109,7 +113,7 @@ if(!class_exists("FreshDeskAPI")){
 				$apikey = ( $opt['freshdesk_apikey'] != '' ) ? $opt['freshdesk_apikey'] : '';
 				$password = "";
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
-				$url = 'https://bsfv.freshdesk.com/helpdesk/tickets.json?page=1&filter_name=' . $filterName . $filter;
+				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?page=1&filter_name=' . $filterName . $filter;
 				$ch = curl_init ($url);
 				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
 				curl_setopt($ch, CURLOPT_HEADER, false);
@@ -140,7 +144,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function get_html( $tickets = '' ){
 			$html = '';
-			if( !isset( $tickets->require_login ) || $tickets != '' ) {
+			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
 				$html .= '<p>Total Tickets: ' . count( $tickets ) . '</p>';
 				$html .= '<ul>';
 				foreach( $tickets as $d ) {
@@ -148,7 +152,7 @@ if(!class_exists("FreshDeskAPI")){
 								Requester ID: ' . $d->requester_id . '<br/>
 								Status: ' . $d->status_name . '
 								<p><strong>SUBJECT: </strong>
-									<a href="https://bsfv.freshdesk.com/helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
+									<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
 								</p>
 								
 							</li>';
@@ -161,6 +165,11 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
+		/*
+		 * Function Name: filter_tickets
+		 * Function Description: Filters the tickets according to ticket_status
+		 */
+		
 		function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
 			foreach( $tickets as $t ){
@@ -170,6 +179,12 @@ if(!class_exists("FreshDeskAPI")){
 			}
 			return $filtered_tickets;
 		}
+		
+		
+		/*
+		 * Function Name: filter_tickets
+		 * Function Description: Filters the tickets according to ticket_status
+		 */
 		
 		function search_tickets( $tickets, $txt = '' ){
 			$filtered_tickets = array();
