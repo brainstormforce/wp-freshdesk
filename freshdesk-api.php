@@ -110,8 +110,17 @@ if(!class_exists("FreshDeskAPI")){
 					$filterName = 'all_tickets';
 				}
 				$opt = get_option( 'fd_apikey' );
-				$apikey = ( $opt['freshdesk_apikey'] != '' ) ? $opt['freshdesk_apikey'] : '';
-				$password = "";
+				//echo '<xmp>'; print_r($opt); echo '</xmp>';
+				if( $opt['use_apikey'] == 'on' ){
+					$apikey = ( $opt['freshdesk_apikey'] != '' ) ? $opt['freshdesk_apikey'] : '';
+					$password = "";
+				} else {
+					$apikey = ( $opt['api_username'] != '' ) ? $opt['api_username'] : '';
+					$password = ( $opt['api_pwd'] != '' ) ? $opt['api_pwd'] : '';
+				}
+				
+				
+				
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?page=1&filter_name=' . $filterName . $filter;
 				$ch = curl_init ($url);

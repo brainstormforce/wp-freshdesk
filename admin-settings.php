@@ -34,6 +34,7 @@ class FreshDeskSettingsPage{
     public function create_admin_page(){
         // Set class property
         $this->options = get_option( 'fd_apikey' );
+		//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		$this->url_options = get_option( 'fd_url' );
         ?>
         <div class="wrap">
@@ -48,30 +49,8 @@ class FreshDeskSettingsPage{
 					<?php
 						// This prints out all hidden setting fields
 						settings_fields( 'my_option_group' );   
-						do_settings_sections( 'my-setting-admin' ); 
-					?>
-					<table class="form-table">
-						<tbody>
-							<tr>
-								<td class="" colspan="2">
-									<fieldset>
-										<label for="users_can_register">
-											<input type="checkbox" name="use_apikey" id="use_apikey" checked="checked">Use my API key.
-										</label>
-									</fieldset>
-									<strong>OR</strong>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row" class="post-title page-title column-title">Username / Password</th>
-								<td class="">
-									<input readonly="readonly" type="text" placeholder="Username" id="fd_uname" name="fd_apikey[fd_uname]" value="" class="regular-text"><br>
-									<input readonly="readonly" type="password" placeholder="Password" id="fd_pwd" name="fd_apikey[fd_pwd]" class="regular-text">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<?php submit_button();?>
+						do_settings_sections( 'my-setting-admin' );
+						submit_button();?>
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="tabs">
@@ -96,11 +75,11 @@ class FreshDeskSettingsPage{
 					jQuery('#use_apikey').change(function(){
 						if( jQuery("#use_apikey").is(':checked') ) {
 							jQuery( "#freshdesk_apikey" ).removeAttr("readonly");
-							jQuery( "#fd_uname" ).attr( "readonly", "readonly" );
-							jQuery( "#fd_pwd" ).attr( "readonly", "readonly" );
+							jQuery( "#api_username" ).attr( "readonly", "readonly" );
+							jQuery( "#api_pwd" ).attr( "readonly", "readonly" );
 						} else {
-							jQuery( "#fd_uname" ).removeAttr("readonly");
-							jQuery( "#fd_pwd" ).removeAttr("readonly");
+							jQuery( "#api_username" ).removeAttr("readonly");
+							jQuery( "#api_pwd" ).removeAttr("readonly");
 							jQuery( "#freshdesk_apikey" ).attr( "readonly", "readonly" );
 						}
 					});
@@ -154,6 +133,30 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
+		add_settings_field(
+            'use_apikey', // ID
+            '', // Title 
+            array( $this, 'use_apikey_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
+		add_settings_field(
+            'api_username', // ID
+            'Username / Password', // Title 
+            array( $this, 'api_username_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
+		add_settings_field(
+            'api_pwd', // ID
+            '', // Title 
+            array( $this, 'api_pwd_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
 		register_setting(
             'url_option', // Option group
             'fd_url' // Option name
@@ -181,9 +184,19 @@ class FreshDeskSettingsPage{
      * @param array $input Contains all settings fields as array keys
      */
     public function sanitize( $input ){
+		//echo '<xmp>'; print_r($input); echo '</xmp>'; die;
         $new_input = array();
         if( isset( $input['freshdesk_apikey'] ) )
             $new_input['freshdesk_apikey'] = sanitize_text_field( $input['freshdesk_apikey'] );
+			
+		if( isset( $input['api_username'] ) )
+            $new_input['api_username'] = sanitize_text_field( $input['api_username'] );
+			
+		if( isset( $input['api_pwd'] ) )
+            $new_input['api_pwd'] = sanitize_text_field( $input['api_pwd'] );
+			
+		if( isset( $input['use_apikey'] ) )
+            $new_input['use_apikey'] = sanitize_text_field( $input['use_apikey'] );
 
         return $new_input;
     }
@@ -200,11 +213,46 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_apikey_callback(){
         printf(
-            '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" />',
-            isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : ''
+            '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />',
+            isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : '', ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : ''
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
+	
+	
+	 /** 
+     * Get the settings option array and print one of its values
+     */
+    public function use_apikey_callback(){
+        printf(
+            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Use my API key.',
+            ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : ''
+        );
+		printf( '<p><strong>OR</strong></p>' );
+    }
+	
+	
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function api_username_callback(){
+        printf(
+            '<input type="text" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>',
+            ( isset( $this->options['api_username'] ) && ( $this->options['use_apikey'] != 'on' ) ) ? esc_attr( $this->options['api_username']) : '', ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : ''
+        );
+    }
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function api_pwd_callback(){
+        printf(
+            '<input type="password" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>',
+            ( isset( $this->options['api_pwd'] ) && ( $this->options['use_apikey'] != 'on' ) ) ? esc_attr( $this->options['api_pwd']) : '', ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : ''
+        );
+    }
+	
 	
 	/** 
      * Get the settings option array and print one of its values
