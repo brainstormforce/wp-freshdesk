@@ -14,6 +14,7 @@ if(!class_exists("FreshDeskAPI")){
 	class FreshDeskAPI{
 	
 		private $freshdeskUrl;
+		private $opt;
 	
 		/*
 		 * Function Name: __construct
@@ -21,12 +22,108 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function __construct(){
+			add_action( 'init', array( $this, 'init' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$options = get_option( 'fd_url' );
 			$this->freshdeskUrl = rtrim( $options['freshdesk_url'], '/' ) . '/';
+			$this->opt = get_option( 'fd_apikey' );
 		}
 		
+		
+		function init(){
+			if ( is_user_logged_in() ) {
+			
+				
+				// This is a login request.
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'freshdesk-remote-login' ) {
+	
+					// Don't waste time if remote auth is turned off.
+					/*if ( ! isset( $this->settings['enabled'] ) || ! $this->settings['enabled'] ) {
+						_e( 'Remote authentication is not configured yet.', 'freshdesk' );
+						die();
+					}*/
+	
+					// Filter freshdesk_return_to
+					$return_to = apply_filters( 'freshdesk_return_to', $_REQUEST['return_to'] ) ;
+	
+					global $current_user;
+					wp_get_current_user();
+	
+					// If the current user is logged in
+					if ( 0 != $current_user->ID ) {
+	
+						// Pick the most appropriate name for the current user.
+						if ( $current_user->user_firstname != '' && $current_user->user_lastname != '' )
+							$name = $current_user->user_firstname . ' ' . $current_user->user_lastname;
+						else
+							$name = $current_user->display_name;
+	
+						// Gather more info from the user, incl. external ID
+						$email = $current_user->user_email;
+	
+						// The token is the remote "Shared Secret" under Admin - Security - Enable Single Sign On
+						$token = $this->opt['freshdesk_sharedkey'];
+	
+						// Generate the hash as per http://www.freshdesk.com/api/remote-authentication
+						$hash = md5( $name . $email . $token );
+	
+						// Create the SSO redirect URL and fire the redirect.
+						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=freshdesk-remote-login&return_to=' . urlencode( $return_to ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
+	
+						//Hook before redirecting logged in user.
+						do_action( 'freshdesk_logged_in_redirect_before' );
+	
+						wp_redirect( $sso_url );
+	
+						// No further output.
+						die();
+					} else {
+	
+						//Hook before redirecting user to login form
+						do_action( 'freshdesk_logged_in_redirect_before' );
+	
+						// If the current user is not logged in we ask him to visit the login form
+						// first, authenticate and specify the current URL again as the return
+						// to address. Hopefully WordPress will understand this.
+						wp_redirect( wp_login_url( wp_login_url() . '?action=freshdesk-remote-login&&return_to=' . urlencode( $return_to ) ) );
+						die();
+					}
+				}
+	
+				// Is this a logout request? Errors from Freshdesk are handled here too.
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'freshdesk-remote-logout' ) {
+	
+	
+					// Error processing and info messages are done here.
+					$kind = isset( $_REQUEST['kind'] ) ? $_REQUEST['kind'] : 'info';
+					$message = isset( $_REQUEST['message'] ) ? $_REQUEST['message'] : 'nothing';
+	
+					// Depending on the message kind
+					if ( $kind == 'info' ) {
+	
+						// When the kind is an info, it probably means that the logout
+						// was successful, thus, logout of WordPress too.
+						wp_redirect( htmlspecialchars_decode( wp_logout_url() ) );
+						die();
+	
+					} elseif ( $kind == 'error' ) {
+						// If there was an error...
+					?>
+						<p><?php _e( 'Remote authentication failed: ', 'freshdesk' ); ?><?php echo $message; ?>.</p>
+						<ul>
+							<li><a href="<?php echo $this->freshdeskUrl; ?>"><?php _e( 'Try again', 'freshdesk' ); ?></a></li>
+							<li><a href="<?php echo wp_logout_url(); ?>"><?php printf( __( 'Log out of %s', 'freshdesk' ), get_bloginfo( 'name' ) ); ?></a></li>
+							<li><a href="<?php echo admin_url(); ?>"><?php printf( __( 'Return to %s dashboard', 'freshdesk' ), get_bloginfo( 'name' ) ); ?></a></li>
+						</ul>
+					<?php
+					}
+	
+					// No further output.
+					die();
+				}
+			}
+		}
 		
 		/*
 		 * Function Name: fetch_tickets
@@ -37,8 +134,9 @@ if(!class_exists("FreshDeskAPI")){
 			$result = '';
 			if ( is_user_logged_in() ) {
 				global $current_user;
+								
 				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				//echo '<xmp>'; print_r($tickets); echo '</xmp>';
+				
 				$result .= '
 				<div style="float:left;">
 					<form method="post" action="" id="filter_form" name="filter_form">
@@ -109,14 +207,13 @@ if(!class_exists("FreshDeskAPI")){
 				} else {
 					$filterName = 'all_tickets';
 				}
-				$opt = get_option( 'fd_apikey' );
-				//echo '<xmp>'; print_r($opt); echo '</xmp>';
-				if( $opt['use_apikey'] == 'on' ){
-					$apikey = ( $opt['freshdesk_apikey'] != '' ) ? $opt['freshdesk_apikey'] : '';
+				
+				if( $this->opt['use_apikey'] == 'on' ){
+					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
 					$password = "";
 				} else {
-					$apikey = ( $opt['api_username'] != '' ) ? $opt['api_username'] : '';
-					$password = ( $opt['api_pwd'] != '' ) ? $opt['api_pwd'] : '';
+					$apikey = ( $this->opt['api_username'] != '' ) ? $this->opt['api_username'] : '';
+					$password = ( $this->opt['api_pwd'] != '' ) ? $this->opt['api_pwd'] : '';
 				}
 				
 				

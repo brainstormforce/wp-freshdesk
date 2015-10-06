@@ -36,6 +36,7 @@ class FreshDeskSettingsPage{
         $this->options = get_option( 'fd_apikey' );
 		//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		$this->url_options = get_option( 'fd_url' );
+		$this->url_options['freshdesk_url'] = rtrim( $this->url_options['freshdesk_url'], '/' ) . '/';
         ?>
         <div class="wrap">
             <h2>FreshDesk Settings</h2>
@@ -124,6 +125,14 @@ class FreshDeskSettingsPage{
             array( $this, 'print_section_info' ), // Callback
             'my-setting-admin' // Page
         );  
+		
+		add_settings_field(
+            'freshdesk_sharedkey', // ID
+            'FreshDesk Secret Shared Key', // Title 
+            array( $this, 'freshdesk_sharedkey_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
 
         add_settings_field(
             'freshdesk_apikey', // ID
@@ -176,6 +185,22 @@ class FreshDeskSettingsPage{
             'url-admin-setting', // Page
             'freshdesk_url' // Section           
         );
+		
+		add_settings_field(
+            'freshdesk_login_url', // ID
+            'Remote Login URL', // Title 
+            array( $this, 'freshdesk_loginurl_callback' ), // Callback
+            'url-admin-setting', // Page
+            'freshdesk_url' // Section           
+        );
+		
+		add_settings_field(
+            'freshdesk_logout_url', // ID
+            'Remote Logout URL', // Title 
+            array( $this, 'freshdesk_logouturl_callback' ), // Callback
+            'url-admin-setting', // Page
+            'freshdesk_url' // Section           
+        );
     }
 
     /**
@@ -188,6 +213,9 @@ class FreshDeskSettingsPage{
         $new_input = array();
         if( isset( $input['freshdesk_apikey'] ) )
             $new_input['freshdesk_apikey'] = sanitize_text_field( $input['freshdesk_apikey'] );
+			
+		if( isset( $input['freshdesk_sharedkey'] ) )
+            $new_input['freshdesk_sharedkey'] = sanitize_text_field( $input['freshdesk_sharedkey'] );
 			
 		if( isset( $input['api_username'] ) )
             $new_input['api_username'] = sanitize_text_field( $input['api_username'] );
@@ -217,6 +245,17 @@ class FreshDeskSettingsPage{
             isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : '', ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : ''
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
+    }
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function freshdesk_sharedkey_callback(){
+        printf(
+            '<input type="text" id="freshdesk_sharedkey" name="fd_apikey[freshdesk_sharedkey]" value="%s" class="regular-text" />',
+            isset( $this->options['freshdesk_sharedkey'] ) ? esc_attr( $this->options['freshdesk_sharedkey']) : ''
+        );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="' . $this->url_options['freshdesk_url'] . 'admin/security">Account Security page</a> in the <br> Single Sign-On section.</p>' );
     }
 	
 	
@@ -263,6 +302,30 @@ class FreshDeskSettingsPage{
             isset( $this->url_options['freshdesk_url'] ) ? esc_attr( $this->url_options['freshdesk_url']) : ''
         );
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
+    }
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function freshdesk_loginurl_callback(){
+        printf(
+            '<code>' . site_url() . '/wp-login.php?action=freshdesk-remote-login' . '</code>'
+        );
+		printf(
+			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
+		);
+    }
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function freshdesk_logouturl_callback(){
+        printf(
+            '<code>' . site_url() . '/wp-login.php?action=freshdesk-remote-logout' . '</code>'
+        );
+		printf(
+			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
+		);
     }
 }
 
