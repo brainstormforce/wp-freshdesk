@@ -34,16 +34,17 @@ class FreshDeskSettingsPage{
     public function create_admin_page(){
         // Set class property
         $this->options = get_option( 'fd_apikey' );
+		$this->options['freshdesk_url'] = rtrim( $this->options['freshdesk_url'], '/' ) . '/';
 		//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		$this->url_options = get_option( 'fd_url' );
-		$this->url_options['freshdesk_url'] = rtrim( $this->url_options['freshdesk_url'], '/' ) . '/';
+		
         ?>
         <div class="wrap">
             <h2>FreshDesk Settings</h2>
 			<h2 class="nav-tab-wrapper">
-				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active">API Key</a>
+				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active">General Configuration</a>
 				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab">Shortcode</a>
-				<a href="javascript:void(0);" id="tab-url" class="nav-tab">Freshdesk URL</a>
+				<a href="javascript:void(0);" id="tab-url" class="nav-tab">Freshdesk SSO</a>
 			</h2>
 			<div id="api-tab" class="tabs">
 				<form method="post" action="options.php">
@@ -82,6 +83,13 @@ class FreshDeskSettingsPage{
 							jQuery( "#api_username" ).removeAttr("readonly");
 							jQuery( "#api_pwd" ).removeAttr("readonly");
 							jQuery( "#freshdesk_apikey" ).attr( "readonly", "readonly" );
+						}
+					});
+					jQuery('#freshdesk_enable').change(function(){
+						if( jQuery("#freshdesk_enable").is(':checked') ) {
+							jQuery( "#freshdesk_sharedkey" ).removeAttr("readonly");
+						} else {
+							jQuery( "#freshdesk_sharedkey" ).attr( "readonly", "readonly" );
 						}
 					});
 					jQuery('#tab-api').click(function(){
@@ -124,12 +132,12 @@ class FreshDeskSettingsPage{
             '', // Title
             array( $this, 'print_section_info' ), // Callback
             'my-setting-admin' // Page
-        );  
+        );
 		
 		add_settings_field(
-            'freshdesk_sharedkey', // ID
-            'FreshDesk Secret Shared Key', // Title 
-            array( $this, 'freshdesk_sharedkey_callback' ), // Callback
+            'freshdesk_url', // ID
+            'FreshDesk URL', // Title 
+            array( $this, 'freshdesk_url_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
         );
@@ -172,18 +180,27 @@ class FreshDeskSettingsPage{
         );
 		
 		add_settings_section(
-            'freshdesk_url', // ID
+            'freshdesk_url_section', // ID
             '', // Title
             array( $this, 'print_section_info' ), // Callback
             'url-admin-setting' // Page
-        );  
-
-        add_settings_field(
-            'freshdesk_url', // ID
-            'FreshDesk URL', // Title 
-            array( $this, 'freshdesk_url_callback' ), // Callback
+        );
+		
+		add_settings_field(
+            'freshdesk_enable', // ID
+            '', // Title 
+            array( $this, 'freshdesk_enable_callback' ), // Callback
             'url-admin-setting', // Page
-            'freshdesk_url' // Section           
+            'freshdesk_url_section' // Section           
+        );
+
+		
+		add_settings_field(
+            'freshdesk_sharedkey', // ID
+            'FreshDesk Secret Shared Key', // Title 
+            array( $this, 'freshdesk_sharedkey_callback' ), // Callback
+            'url-admin-setting', // Page
+            'freshdesk_url_section' // Section           
         );
 		
 		add_settings_field(
@@ -191,7 +208,7 @@ class FreshDeskSettingsPage{
             'Remote Login URL', // Title 
             array( $this, 'freshdesk_loginurl_callback' ), // Callback
             'url-admin-setting', // Page
-            'freshdesk_url' // Section           
+            'freshdesk_url_section' // Section           
         );
 		
 		add_settings_field(
@@ -199,7 +216,7 @@ class FreshDeskSettingsPage{
             'Remote Logout URL', // Title 
             array( $this, 'freshdesk_logouturl_callback' ), // Callback
             'url-admin-setting', // Page
-            'freshdesk_url' // Section           
+            'freshdesk_url_section' // Section           
         );
     }
 
@@ -213,6 +230,9 @@ class FreshDeskSettingsPage{
         $new_input = array();
         if( isset( $input['freshdesk_apikey'] ) )
             $new_input['freshdesk_apikey'] = sanitize_text_field( $input['freshdesk_apikey'] );
+			
+		if( isset( $input['freshdesk_url'] ) )
+            $new_input['freshdesk_url'] = sanitize_text_field( $input['freshdesk_url'] );
 			
 		if( isset( $input['freshdesk_sharedkey'] ) )
             $new_input['freshdesk_sharedkey'] = sanitize_text_field( $input['freshdesk_sharedkey'] );
@@ -252,10 +272,10 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_sharedkey_callback(){
         printf(
-            '<input type="text" id="freshdesk_sharedkey" name="fd_apikey[freshdesk_sharedkey]" value="%s" class="regular-text" />',
-            isset( $this->options['freshdesk_sharedkey'] ) ? esc_attr( $this->options['freshdesk_sharedkey']) : ''
+            '<input type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />',
+            isset( $this->url_options['freshdesk_sharedkey'] ) ? esc_attr( $this->url_options['freshdesk_sharedkey']) : '', ( $this->url_options['freshdesk_enable'] != 'on' ) ? 'readonly="readonly"' : ''
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="' . $this->url_options['freshdesk_url'] . 'admin/security">Account Security page</a> in the <br> Single Sign-On section.</p>' );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="' . $this->options['freshdesk_url'] . 'admin/security">Account Security page</a> in the <br> Single Sign-On section.</p>' );
     }
 	
 	
@@ -298,8 +318,8 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_url_callback(){
         printf(
-            '<input type="text" id="freshdesk_url" name="fd_url[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />',
-            isset( $this->url_options['freshdesk_url'] ) ? esc_attr( $this->url_options['freshdesk_url']) : ''
+            '<input type="text" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />',
+            isset( $this->options['freshdesk_url'] ) ? esc_attr( $this->options['freshdesk_url']) : ''
         );
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
@@ -309,7 +329,7 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_loginurl_callback(){
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=freshdesk-remote-login' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-login' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
@@ -321,12 +341,24 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_logouturl_callback(){
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=freshdesk-remote-logout' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
 		);
     }
+	
+	
+	/** 
+     * Get the settings option array and print one of its values
+     */
+    public function freshdesk_enable_callback(){
+        printf(
+            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Enable FreshDesk SSO',
+            ( $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : ''
+        );
+    }
+	
 }
 
 if( is_admin() )

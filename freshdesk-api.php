@@ -15,6 +15,7 @@ if(!class_exists("FreshDeskAPI")){
 	
 		private $freshdeskUrl;
 		private $opt;
+		private $options;
 	
 		/*
 		 * Function Name: __construct
@@ -25,9 +26,9 @@ if(!class_exists("FreshDeskAPI")){
 			add_action( 'init', array( $this, 'init' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
-			$options = get_option( 'fd_url' );
-			$this->freshdeskUrl = rtrim( $options['freshdesk_url'], '/' ) . '/';
+			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
+			$this->freshdeskUrl = rtrim( $this->opt['freshdesk_url'], '/' ) . '/';
 		}
 		
 		
@@ -36,13 +37,13 @@ if(!class_exists("FreshDeskAPI")){
 			
 				
 				// This is a login request.
-				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'freshdesk-remote-login' ) {
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
 	
 					// Don't waste time if remote auth is turned off.
-					/*if ( ! isset( $this->settings['enabled'] ) || ! $this->settings['enabled'] ) {
+					if ( !isset( $this->options['freshdesk_enable'] ) || $this->options['freshdesk_enable'] != 'on' ) {
 						_e( 'Remote authentication is not configured yet.', 'freshdesk' );
 						die();
-					}*/
+					}
 	
 					// Filter freshdesk_return_to
 					$return_to = apply_filters( 'freshdesk_return_to', $_REQUEST['return_to'] ) ;
@@ -63,13 +64,13 @@ if(!class_exists("FreshDeskAPI")){
 						$email = $current_user->user_email;
 	
 						// The token is the remote "Shared Secret" under Admin - Security - Enable Single Sign On
-						$token = $this->opt['freshdesk_sharedkey'];
+						$token = $this->options['freshdesk_sharedkey'];
 	
 						// Generate the hash as per http://www.freshdesk.com/api/remote-authentication
 						$hash = md5( $name . $email . $token );
 	
 						// Create the SSO redirect URL and fire the redirect.
-						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=freshdesk-remote-login&return_to=' . urlencode( $return_to ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
+						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=bsf-freshdesk-remote-login&return_to=' . urlencode( $return_to ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
 	
 						//Hook before redirecting logged in user.
 						do_action( 'freshdesk_logged_in_redirect_before' );
@@ -86,13 +87,13 @@ if(!class_exists("FreshDeskAPI")){
 						// If the current user is not logged in we ask him to visit the login form
 						// first, authenticate and specify the current URL again as the return
 						// to address. Hopefully WordPress will understand this.
-						wp_redirect( wp_login_url( wp_login_url() . '?action=freshdesk-remote-login&&return_to=' . urlencode( $return_to ) ) );
+						wp_redirect( wp_login_url( wp_login_url() . '?action=bsf-freshdesk-remote-login&&return_to=' . urlencode( $return_to ) ) );
 						die();
 					}
 				}
 	
 				// Is this a logout request? Errors from Freshdesk are handled here too.
-				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'freshdesk-remote-logout' ) {
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-logout' ) {
 	
 	
 					// Error processing and info messages are done here.
@@ -136,7 +137,7 @@ if(!class_exists("FreshDeskAPI")){
 				global $current_user;
 								
 				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				
+				//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 				$result .= '
 				<div style="float:left;">
 					<form method="post" action="" id="filter_form" name="filter_form">
@@ -207,7 +208,6 @@ if(!class_exists("FreshDeskAPI")){
 				} else {
 					$filterName = 'all_tickets';
 				}
-				
 				if( $this->opt['use_apikey'] == 'on' ){
 					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
 					$password = "";
@@ -219,7 +219,7 @@ if(!class_exists("FreshDeskAPI")){
 				
 				
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
-				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?page=1&filter_name=' . $filterName . $filter;
+				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
 				$ch = curl_init ($url);
 				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
 				curl_setopt($ch, CURLOPT_HEADER, false);
@@ -256,6 +256,7 @@ if(!class_exists("FreshDeskAPI")){
 				foreach( $tickets as $d ) {
 					$html .= '<li>Ticket ID: ' . $d->id . '<br/>
 								Requester ID: ' . $d->requester_id . '<br/>
+								Responder ID: ' . $d->responder_id . '<br/>
 								Status: ' . $d->status_name . '
 								<p><strong>SUBJECT: </strong>
 									<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
@@ -279,6 +280,7 @@ if(!class_exists("FreshDeskAPI")){
 		function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
 			foreach( $tickets as $t ){
+				//echo '<xmp>'; print_r($t); echo '</xmp>';
 				if( $t->status_name == $status ) {
 					$filtered_tickets[] = $t;
 				}
