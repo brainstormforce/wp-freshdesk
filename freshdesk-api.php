@@ -143,31 +143,46 @@ if(!class_exists("FreshDeskAPI")){
 					<form method="post" action="" id="filter_form" name="filter_form">
 						<select id="filter_dropdown" name="filter_dropdown">
 							<option value="all_tickets" ';
-				$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>----All Tickets----</option>
 							<option value="new_and_my_open" ';
-				$result .= ( $_POST["filter_dropdown"] == "new_and_my_open" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "new_and_my_open" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>Open</option>
 							<option value="Pending" ';
-				$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>Pending</option>
 							<option value="Resolved" ';
-				$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>Resolved</option>
 							<option value="Closed" ';
-				$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>Closed</option>
 							<option value="Waiting on Customer" ';
-				$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+				}
 				$result .= '>Waiting on Customer</option>
 							<option value="Waiting on Third Party" ';
-				$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+				if( isset( $_POST["filter_dropdown"] ) ) {
+					$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+				}
+				$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
 				$result .= '>Waiting on Third Party</option>
 						</select>
 					
 					</div>
 					<div style="float:right;">
-						<input type="text" value="' . $_POST['search_txt'] . '" id="search_txt" name="search_txt" placeholder="Search..."/>
+						<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
 					</div>
 					<div style="clear:both;"></div>
 				</form>
