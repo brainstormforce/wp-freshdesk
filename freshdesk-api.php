@@ -33,7 +33,7 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
-		function init(){
+		public function init(){
 			//echo 'vrunda' . $_REQUEST['host_url'] . 'kansara' . $_REQUEST['action'];
 			if ( is_user_logged_in() ) {
 			
@@ -131,13 +131,12 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Fetched all tickets from Freshdesk for current logged in user.
 		 */
 		
-		function fetch_tickets(){
+		public function fetch_tickets(){
 			$result = '';
 			if ( is_user_logged_in() ) {
 				global $current_user;
 								
 				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 				$result .= '
 				<div style="float:left;">
 					<form method="post" action="" id="filter_form" name="filter_form">
@@ -186,18 +185,34 @@ if(!class_exists("FreshDeskAPI")){
 					</div>
 					<div style="clear:both;"></div>
 				</form>
+				<a href="javascript:void(0);" id="ajaxcall">click</a>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
+						tickets = ' . json_encode( $tickets, false ) . ';
 						jQuery("#filter_dropdown").change(function(){
-							jQuery("#filter_form").submit();
+							//jQuery("#filter_form").submit();
+							ajaxcall( "filter", tickets, this.value );
 						});
-						jQuery("#search_txt").keypress(function(e) {
+						jQuery("#search_txt").keyup(function(e) {
 							// Enter pressed?
-							if(e.which == 10 || e.which == 13) {
-								jQuery("#filter_form").submit();
+							if( e.which == 10 || e.which == 13 )
+								return false;
+							if( e.which != 8 && e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+								ajaxcall( "search", tickets, this.value );
 							}
 						});
 					});
+					function ajaxcall( action = "", tickets = "", key = "" ) {
+						jQuery.ajax({
+							type : "post",
+							dataType : "json",
+							url : "' . plugins_url() . '/freshdesk-api/ajax.php' . '",
+							data : {action: action, tickets : tickets, key : key},
+							success: function(response) {
+								jQuery("#tickets_html").html( response );
+							}
+						});
+					}
 				</script>
 				';
 				
@@ -216,7 +231,7 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: API call to Freshdesk to get all tickets of the user(email)
 		 */
 		
-		function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
+		public function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
 			if( !empty( $uemail ) ){
 				/*if( isset( $post_array['filter_dropdown'] ) ) {
 					$filterName = ( $post_array['filter_dropdown'] == 'new_and_my_open' ) ? 'new_and_my_open' : 'all_tickets';
@@ -264,10 +279,11 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Returns HTML string of the tickets
 		 */
 		
-		function get_html( $tickets = '' ){
+		public function get_html( $tickets = '' ){
 			$html = '';
+			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
-				$html .= '<p>Total Tickets: ' . count( $tickets ) . '</p>';
+				$html .= '<div id="tickets_html"><p>Total Tickets: ' . count( $tickets ) . '</p>';
 				$html .= '<ul>';
 				foreach( $tickets as $d ) {
 					$html .= '<li>Ticket ID: ' . $d->id . '<br/>
@@ -280,10 +296,10 @@ if(!class_exists("FreshDeskAPI")){
 								
 							</li>';
 				}
-				$html .= '</ul>';
+				$html .= '</ul><div>';
 				return $html;
 			} else {
-				return '<p>Error!</p>';
+				return '<div id="tickets_html"><p>Error!</p></div>';
 			}
 		}
 		
@@ -293,14 +309,18 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Filters the tickets according to ticket_status
 		 */
 		
-		function filter_tickets( $tickets = '', $status = '' ){
+		public function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
-			foreach( $tickets as $t ){
-				if( $t->status_name == $status ) {
-					$filtered_tickets[] = $t;
+			if( $status != 'all_tickets' ) {
+				foreach( $tickets as $t ){
+					if( $t['status_name'] == $status ) {
+						$filtered_tickets[] = $t;
+					}
 				}
+				return $filtered_tickets;
+			} else {
+				return $tickets;
 			}
-			return $filtered_tickets;
 		}
 		
 		
@@ -309,10 +329,10 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Filters the tickets according to ticket_status
 		 */
 		
-		function search_tickets( $tickets, $txt = '' ){
+		public function search_tickets( $tickets, $txt = '' ){
 			$filtered_tickets = array();
 			foreach( $tickets as $t ){
-				if( strpos( $t->subject, trim( $txt ) ) ) {
+				if(  stristr( $t['subject'], trim( $txt ) ) || stristr( $t['description'], trim( $txt ) ) || stristr( $t['id'], trim( $txt ) ) ) {
 					$filtered_tickets[] = $t;
 				}
 			}
