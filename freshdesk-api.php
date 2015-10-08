@@ -28,25 +28,25 @@ if(!class_exists("FreshDeskAPI")){
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
-			$this->freshdeskUrl = rtrim( $this->opt['freshdesk_url'], '/' ) . '/';
+			$this->freshdeskUrl = ( isset( $this->opt['freshdesk_url'] ) ) ? rtrim( $this->opt['freshdesk_url'], '/' ) . '/' : '';
+			//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		}
 		
 		
 		function init(){
+			//echo 'vrunda' . $_REQUEST['host_url'] . 'kansara' . $_REQUEST['action'];
 			if ( is_user_logged_in() ) {
 			
 				
 				// This is a login request.
 				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
-	
 					// Don't waste time if remote auth is turned off.
 					if ( !isset( $this->options['freshdesk_enable'] ) || $this->options['freshdesk_enable'] != 'on' ) {
 						_e( 'Remote authentication is not configured yet.', 'freshdesk' );
 						die();
 					}
-	
 					// Filter freshdesk_return_to
-					$return_to = apply_filters( 'freshdesk_return_to', $_REQUEST['return_to'] ) ;
+					$return_to = apply_filters( 'freshdesk_return_to', $_REQUEST['host_url'] ) ;
 	
 					global $current_user;
 					wp_get_current_user();
@@ -70,7 +70,7 @@ if(!class_exists("FreshDeskAPI")){
 						$hash = md5( $name . $email . $token );
 	
 						// Create the SSO redirect URL and fire the redirect.
-						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=bsf-freshdesk-remote-login&return_to=' . urlencode( $return_to ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
+						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=bsf-freshdesk-remote-login&return_to=' . urlencode( 'https://' . $return_to . '/' ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
 	
 						//Hook before redirecting logged in user.
 						do_action( 'freshdesk_logged_in_redirect_before' );
@@ -147,9 +147,9 @@ if(!class_exists("FreshDeskAPI")){
 					$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
 				}
 				$result .= '>----All Tickets----</option>
-							<option value="new_and_my_open" ';
+							<option value="Open" ';
 				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "new_and_my_open" ) ? 'selected="selected"' : '';
+					$result .= ( $_POST["filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
 				}
 				$result .= '>Open</option>
 							<option value="Pending" ';
@@ -218,11 +218,12 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
 			if( !empty( $uemail ) ){
-				if( isset( $post_array['filter_dropdown'] ) ) {
+				/*if( isset( $post_array['filter_dropdown'] ) ) {
 					$filterName = ( $post_array['filter_dropdown'] == 'new_and_my_open' ) ? 'new_and_my_open' : 'all_tickets';
 				} else {
 					$filterName = 'all_tickets';
-				}
+				}*/
+				$filterName = 'all_tickets';
 				if( $this->opt['use_apikey'] == 'on' ){
 					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
 					$password = "";
@@ -246,7 +247,7 @@ if(!class_exists("FreshDeskAPI")){
 				curl_close ($ch);
 				$tickets = json_decode( $server_output );
 				if( isset( $post_array['filter_dropdown'] ) ) {
-					$tickets = ( $post_array['filter_dropdown'] != 'new_and_my_open' && $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+					$tickets = ( /*$post_array['filter_dropdown'] != 'new_and_my_open' &&*/ $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
 				}
 				if( isset( $post_array['search_txt'] ) ) {
 					$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
@@ -295,7 +296,6 @@ if(!class_exists("FreshDeskAPI")){
 		function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
 			foreach( $tickets as $t ){
-				//echo '<xmp>'; print_r($t); echo '</xmp>';
 				if( $t->status_name == $status ) {
 					$filtered_tickets[] = $t;
 				}

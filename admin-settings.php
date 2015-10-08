@@ -34,7 +34,7 @@ class FreshDeskSettingsPage{
     public function create_admin_page(){
         // Set class property
         $this->options = get_option( 'fd_apikey' );
-		$this->options['freshdesk_url'] = rtrim( $this->options['freshdesk_url'], '/' ) . '/';
+		$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
 		//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		$this->url_options = get_option( 'fd_url' );
 		
