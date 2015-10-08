@@ -1,9 +1,6 @@
 <?php
 	include( '../../../wp-load.php' );
 	$fdObj = new FreshDeskAPI();
-	//echo '<xmp>'; print_r($fdObj); echo '</xmp>';
-	//echo '<xmp>'; print_r($_POST); echo '</xmp>';
-	//die;
 	$postArray = $_POST;
 	$action = $_POST['action'];
 	$returnArray = array();

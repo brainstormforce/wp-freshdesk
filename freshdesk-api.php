@@ -24,17 +24,17 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
+			wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
 			$this->freshdeskUrl = ( isset( $this->opt['freshdesk_url'] ) ) ? rtrim( $this->opt['freshdesk_url'], '/' ) . '/' : '';
-			//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		}
 		
 		
 		public function init(){
-			//echo 'vrunda' . $_REQUEST['host_url'] . 'kansara' . $_REQUEST['action'];
+		
 			if ( is_user_logged_in() ) {
 			
 				
@@ -185,7 +185,6 @@ if(!class_exists("FreshDeskAPI")){
 					</div>
 					<div style="clear:both;"></div>
 				</form>
-				<a href="javascript:void(0);" id="ajaxcall">click</a>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
 						tickets = ' . json_encode( $tickets, false ) . ';
@@ -197,7 +196,7 @@ if(!class_exists("FreshDeskAPI")){
 							// Enter pressed?
 							if( e.which == 10 || e.which == 13 )
 								return false;
-							if( e.which != 8 && e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+							if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
 								ajaxcall( "search", tickets, this.value );
 							}
 						});
@@ -206,7 +205,7 @@ if(!class_exists("FreshDeskAPI")){
 						jQuery.ajax({
 							type : "post",
 							dataType : "json",
-							url : "' . plugins_url() . '/freshdesk-api/ajax.php' . '",
+							url : "' . plugins_url( "ajax.php", __FILE__ ) . '",
 							data : {action: action, tickets : tickets, key : key},
 							success: function(response) {
 								jQuery("#tickets_html").html( response );

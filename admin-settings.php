@@ -35,12 +35,15 @@ class FreshDeskSettingsPage{
         // Set class property
         $this->options = get_option( 'fd_apikey' );
 		$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
-		//echo '<xmp>'; print_r($this->options); echo '</xmp>';
 		$this->url_options = get_option( 'fd_url' );
 		
         ?>
         <div class="wrap">
-            <h2>FreshDesk Settings</h2>
+            <div class="bend-heading-section">
+				<h1>FreshDesk Settings</h1>
+				<h3>Now your users won't have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!</h3>
+			</div>
+			
 			<h2 class="nav-tab-wrapper">
 				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active">General Configuration</a>
 				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab">Shortcode</a>
@@ -58,9 +61,17 @@ class FreshDeskSettingsPage{
 			<div id="shortcode-tab" style="display:none;" class="tabs">
 				<p class="description1">Paste the below shortcode on your page.</p>
 				<code>[fetch_tickets]</code>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				<code>[fetch_tickets atts="some_atts"]</code>
-				<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:
+					<ul>
+						<li>1) All tickets</li>
+						<li>2) Open</li>
+						<li>3) Resolved</li>
+						<li>4) Closed</li>
+						<li>5) Pending</li>
+						<li>6) Waiting on Customer</li>
+						<li>7) Waiting on Third Party</li>
+					</ul>
+				</p>
 			</div>
 			<div id="url-tab" style="display:none;" class="tabs">
 				<form method="post" action="options.php" id="url_form">
@@ -110,7 +121,6 @@ class FreshDeskSettingsPage{
 						jQuery( '.tabs' ).hide();
 						jQuery( '#url-tab' ).show();
 					});
-					//alert( jQuery('#use_apikey').val() );
 				});
 			</script>
         </div>
@@ -136,7 +146,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'freshdesk_url', // ID
-            'FreshDesk URL', // Title 
+            'Base freshdesk URL', // Title 
             array( $this, 'freshdesk_url_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -144,7 +154,7 @@ class FreshDeskSettingsPage{
 
         add_settings_field(
             'freshdesk_apikey', // ID
-            'FreshDesk API Key', // Title 
+            'API Key', // Title 
             array( $this, 'freshdesk_apikey_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -152,7 +162,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'use_apikey', // ID
-            '', // Title 
+            'Use only API key?', // Title 
             array( $this, 'use_apikey_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -160,7 +170,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'api_username', // ID
-            'Username / Password', // Title 
+            'Username', // Title 
             array( $this, 'api_username_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -168,7 +178,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'api_pwd', // ID
-            '', // Title 
+            'Password', // Title 
             array( $this, 'api_pwd_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -188,7 +198,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'freshdesk_enable', // ID
-            '', // Title 
+            'Enable SSO', // Title 
             array( $this, 'freshdesk_enable_callback' ), // Callback
             'url-admin-setting', // Page
             'freshdesk_url_section' // Section           
@@ -197,7 +207,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'freshdesk_sharedkey', // ID
-            'FreshDesk Secret Shared Key', // Title 
+            'Secret Shared Key', // Title 
             array( $this, 'freshdesk_sharedkey_callback' ), // Callback
             'url-admin-setting', // Page
             'freshdesk_url_section' // Section           
@@ -226,7 +236,7 @@ class FreshDeskSettingsPage{
      * @param array $input Contains all settings fields as array keys
      */
     public function sanitize( $input ){
-		//echo '<xmp>'; print_r($input); echo '</xmp>'; die;
+	
         $new_input = array();
         if( isset( $input['freshdesk_apikey'] ) )
             $new_input['freshdesk_apikey'] = sanitize_text_field( $input['freshdesk_apikey'] );
@@ -253,7 +263,7 @@ class FreshDeskSettingsPage{
      * Print the Section text
      */
     public function print_section_info(){
-        //print '<p class="description">Paste the below shortcode on your page.</p><code>[fetch_tickets]</code>';
+        //Nothing to do here
     }
 
     /** 
@@ -262,7 +272,7 @@ class FreshDeskSettingsPage{
     public function freshdesk_apikey_callback(){
         printf(
             '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />',
-            isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : '', ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : ''
+            isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : '', ( $this->options['use_apikey'] != 'on' && isset( $this->options['use_apikey'] ) ) ? 'readonly="readonly"' : ''
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
@@ -284,8 +294,8 @@ class FreshDeskSettingsPage{
      */
     public function use_apikey_callback(){
         printf(
-            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Use my API key.',
-            ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : ''
+            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Yes/No',
+            ( $this->options['use_apikey'] == 'on' && isset( $this->options['use_apikey'] ) ) ? 'checked="checked"' : ''
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
@@ -344,7 +354,8 @@ class FreshDeskSettingsPage{
             '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
         );
 		printf(
-			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
+			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/><p class="description">Remember that you can always go to:
+<a href="%s" target="_blank">%saccess/normal</a><br/>to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', isset( $this->options['freshdesk_url'] ) ? $this->options['freshdesk_url'] : 'https://your_domain.freshdesk.com/access/normal ', isset( $this->options['freshdesk_url'] ) ? $this->options['freshdesk_url'] : 'https://your_domain.freshdesk.com/access/normal '
 		);
     }
 	
@@ -354,8 +365,8 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_enable_callback(){
         printf(
-            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Enable FreshDesk SSO',
-            ( $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : ''
+            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Yes/No',
+            ( isset( $this->url_options['freshdesk_enable'] ) && $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : ''
         );
     }
 	

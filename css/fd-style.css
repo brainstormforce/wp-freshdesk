@@ -1,0 +1,24 @@
+/* CSS Document */
+
+.bend-heading-section {
+	position: relative;
+}
+.bend-heading-section h1 {
+	margin: 0 200px 20px 0;
+	padding: 0;
+	font-size: 40px;
+	letter-spacing: 0;
+	line-height: 1.3em;
+}
+.bend-heading-section h3 {
+	margin: 0 200px 15px 0;
+	padding: 0;
+	font-size: 18px;
+	font-weight: normal;
+	line-height: 1.45em;
+	letter-spacing: 0;
+	color: #777;
+}
+.tabs {
+	margin:1em 15px;
+}
