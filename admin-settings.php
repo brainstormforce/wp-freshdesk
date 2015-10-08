@@ -127,10 +127,12 @@ class FreshDeskSettingsPage{
         <?php
     }
 
+
     /**
      * Register and add settings
      */
-    public function page_init(){        
+    public function page_init(){
+		wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );      
         register_setting(
             'my_option_group', // Option group
             'fd_apikey', // Option name
@@ -270,9 +272,18 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function freshdesk_apikey_callback(){
+		if( isset( $this->options['freshdesk_apikey'] ) ) {
+			$val1 = esc_attr( $this->options['freshdesk_apikey']);
+		} else {
+			$val1 = '';
+		}
+		if( isset( $this->options['use_apikey'] ) ) {
+			$val2 = ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : '';
+		} else {
+			$val2 = '';
+		}
         printf(
-            '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />',
-            isset( $this->options['freshdesk_apikey'] ) ? esc_attr( $this->options['freshdesk_apikey']) : '', ( $this->options['use_apikey'] != 'on' && isset( $this->options['use_apikey'] ) ) ? 'readonly="readonly"' : ''
+            '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
@@ -281,11 +292,20 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function freshdesk_sharedkey_callback(){
+		if( isset( $this->url_options['freshdesk_sharedkey'] ) ) {
+			$val1 = esc_attr( $this->url_options['freshdesk_sharedkey']);
+		} else {
+			$val1 = '';
+		}
+		if( isset( $this->url_options['freshdesk_enable'] ) ) {
+			$val2 = ( $this->url_options['freshdesk_enable'] != 'on' ) ? 'readonly="readonly"' : '';
+		} else {
+			$val2 = '';
+		}
         printf(
-            '<input type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />',
-            isset( $this->url_options['freshdesk_sharedkey'] ) ? esc_attr( $this->url_options['freshdesk_sharedkey']) : '', ( $this->url_options['freshdesk_enable'] != 'on' ) ? 'readonly="readonly"' : ''
+            '<input type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="' . $this->options['freshdesk_url'] . 'admin/security">Account Security page</a> in the <br> Single Sign-On section.</p>' );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
     }
 	
 	
@@ -293,9 +313,13 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function use_apikey_callback(){
+		if( isset( $this->options['use_apikey'] ) ) {
+			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
+		} else {
+			$val = '';
+		}
         printf(
-            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Yes/No',
-            ( $this->options['use_apikey'] == 'on' && isset( $this->options['use_apikey'] ) ) ? 'checked="checked"' : ''
+            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Yes/No', $val
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
@@ -306,9 +330,14 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function api_username_callback(){
+		if( isset( $this->options['api_username'] ) && isset( $this->options['use_apikey'] ) ) {
+			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_username']) : '' ;
+			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
+		} else {
+			$val1 = $val2 = '';
+		}
         printf(
-            '<input type="text" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>',
-            ( isset( $this->options['api_username'] ) && ( $this->options['use_apikey'] != 'on' ) ) ? esc_attr( $this->options['api_username']) : '', ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : ''
+            '<input type="text" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>', $val1, $val2
         );
     }
 	
@@ -316,9 +345,14 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function api_pwd_callback(){
+		if( isset( $this->options['api_pwd'] ) && isset( $this->options['use_apikey'] ) ) {
+			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_pwd']) : '' ;
+			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
+		} else {
+			$val1 = $val2 = '';
+		}
         printf(
-            '<input type="password" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>',
-            ( isset( $this->options['api_pwd'] ) && ( $this->options['use_apikey'] != 'on' ) ) ? esc_attr( $this->options['api_pwd']) : '', ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : ''
+            '<input type="password" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>', $val1, $val2
         );
     }
 	
@@ -327,9 +361,13 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function freshdesk_url_callback(){
+		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
+			$val = esc_attr( $this->options['freshdesk_url']);
+		} else {
+			$val = '';
+		}
         printf(
-            '<input type="text" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />',
-            isset( $this->options['freshdesk_url'] ) ? esc_attr( $this->options['freshdesk_url']) : ''
+            '<input type="text" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
         );
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
@@ -350,12 +388,19 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function freshdesk_logouturl_callback(){
+		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
+			$val = $this->options['freshdesk_url'];
+		} else {
+			$val = 'https://your_domain.freshdesk.com/access/normal';
+		}
         printf(
             '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
         );
 		printf(
-			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/><p class="description">Remember that you can always go to:
-<a href="%s" target="_blank">%saccess/normal</a><br/>to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', isset( $this->options['freshdesk_url'] ) ? $this->options['freshdesk_url'] : 'https://your_domain.freshdesk.com/access/normal ', isset( $this->options['freshdesk_url'] ) ? $this->options['freshdesk_url'] : 'https://your_domain.freshdesk.com/access/normal '
+			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
+			<p class="description">Remember that you can always go to:
+<a href="%s" target="_blank">%saccess/normal</a><br/>
+			to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', $val, $val
 		);
     }
 	
@@ -364,9 +409,13 @@ class FreshDeskSettingsPage{
      * Get the settings option array and print one of its values
      */
     public function freshdesk_enable_callback(){
+		if( isset( $this->url_options['freshdesk_enable'] ) ){
+			$val = ( $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : '';
+		} else {
+			$val = '';
+		}
         printf(
-            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Yes/No',
-            ( isset( $this->url_options['freshdesk_enable'] ) && $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : ''
+            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Yes/No', $val 
         );
     }
 	

@@ -24,7 +24,6 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
-			wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
@@ -192,10 +191,13 @@ if(!class_exists("FreshDeskAPI")){
 							//jQuery("#filter_form").submit();
 							ajaxcall( "filter", tickets, this.value );
 						});
-						jQuery("#search_txt").keyup(function(e) {
+						jQuery("#search_txt").on( "keyup keypress", function(e) {
 							// Enter pressed?
-							if( e.which == 10 || e.which == 13 )
+							if( e.keyCode  == 10 || e.keyCode == 13 ) {
+								//alert("enter");
+								e.preventDefault();
 								return false;
+							}
 							if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
 								ajaxcall( "search", tickets, this.value );
 							}
