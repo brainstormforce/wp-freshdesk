@@ -139,125 +139,128 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function fetch_tickets( $atts ){
 			$result = '';
+			if( isset( $this->opt['freshdesk_apikey'] ) && isset( $this->options['freshdesk_sharedkey'] ) && $this->opt['freshdesk_apikey'] != '' && $this->options['freshdesk_sharedkey'] != '' ) {
+				if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
 			
-			if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
-			
-				switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
-					case 'Open':
-						$_POST["filter_dropdown"] = 'Open';
-						break;
-					case 'Closed':
-						$_POST["filter_dropdown"] = 'Closed';
-						break;
-					case 'Resolved':
-						$_POST["filter_dropdown"] = 'Resolved';
-						break;
-					case 'Waiting On Third Party':
-						$_POST["filter_dropdown"] = 'Waiting on Third Party';
-						break;
-					case 'Waiting On Customer':
-						$_POST["filter_dropdown"] = 'Waiting on Customer';
-						break;
-					case 'Pending':
-						$_POST["filter_dropdown"] = 'Pending';
-						break;
-					default:
-						break;
-				}
-			}
-			if ( is_user_logged_in() ) {
-				global $current_user;
-								
-				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
-				$result .= '
-				<div style="float:left;">
-					<form method="post" action="" id="filter_form" name="filter_form">
-						<select id="filter_dropdown" name="filter_dropdown">
-							<option value="all_tickets" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>----All Tickets----</option>
-							<option value="Open" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Open</option>
-							<option value="Pending" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Pending</option>
-							<option value="Resolved" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Resolved</option>
-							<option value="Closed" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Closed</option>
-							<option value="Waiting on Customer" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Waiting on Customer</option>
-							<option value="Waiting on Third Party" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
-				}
-				$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
-				$result .= '>Waiting on Third Party</option>
-						</select>
-					
-					</div>
-					<div style="float:right;">
-						<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
-					</div>
-					<div style="clear:both;"></div>
-				</form>
-				<script type="text/javascript">
-					jQuery(document).ready(function(){
-						tickets = ' . json_encode( $ajaxTickets, false ) . ';
-						jQuery("#filter_dropdown").change(function(){
-							//jQuery("#filter_form").submit();
-							ajaxcall( "filter", tickets, this.value );
-						});
-						jQuery("#search_txt").on( "keyup keypress", function(e) {
-							// Enter pressed?
-							if( e.keyCode  == 10 || e.keyCode == 13 ) {
-								//alert("enter");
-								e.preventDefault();
-								return false;
-							}
-							if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
-								ajaxcall( "search", tickets, this.value );
-							}
-						});
-					});
-					function ajaxcall( action, tickets, key ) {
-						jQuery.ajax({
-							type : "post",
-							dataType : "json",
-							url : "' . plugins_url( "ajax.php", __FILE__ ) . '",
-							data : {action: action, tickets : tickets, key : key},
-							success: function(response) {
-								jQuery("#tickets_html").html( response );
-							}
-						});
+					switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
+						case 'Open':
+							$_POST["filter_dropdown"] = 'Open';
+							break;
+						case 'Closed':
+							$_POST["filter_dropdown"] = 'Closed';
+							break;
+						case 'Resolved':
+							$_POST["filter_dropdown"] = 'Resolved';
+							break;
+						case 'Waiting On Third Party':
+							$_POST["filter_dropdown"] = 'Waiting on Third Party';
+							break;
+						case 'Waiting On Customer':
+							$_POST["filter_dropdown"] = 'Waiting on Customer';
+							break;
+						case 'Pending':
+							$_POST["filter_dropdown"] = 'Pending';
+							break;
+						default:
+							break;
 					}
-				</script>
-				';
-				
-				if( $tickets ) {
-					$result .= $this->get_html( $tickets );
-				} else {
-					$result .= '<p>No tickets</p>';
 				}
+				if ( is_user_logged_in() ) {
+					global $current_user;
+									
+					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
+					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+					$result .= '
+					<div style="float:left;">
+						<form method="post" action="" id="filter_form" name="filter_form">
+							<select id="filter_dropdown" name="filter_dropdown">
+								<option value="all_tickets" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>----All Tickets----</option>
+								<option value="Open" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Open</option>
+								<option value="Pending" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Pending</option>
+								<option value="Resolved" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Resolved</option>
+								<option value="Closed" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Closed</option>
+								<option value="Waiting on Customer" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Waiting on Customer</option>
+								<option value="Waiting on Third Party" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+					}
+					$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
+					$result .= '>Waiting on Third Party</option>
+							</select>
+						
+						</div>
+						<div style="float:right;">
+							<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
+						</div>
+						<div style="clear:both;"></div>
+					</form>
+					<script type="text/javascript">
+						jQuery(document).ready(function(){
+							tickets = ' . json_encode( $ajaxTickets, false ) . ';
+							jQuery("#filter_dropdown").change(function(){
+								//jQuery("#filter_form").submit();
+								ajaxcall( "filter", tickets, this.value );
+							});
+							jQuery("#search_txt").on( "keyup keypress", function(e) {
+								// Enter pressed?
+								if( e.keyCode  == 10 || e.keyCode == 13 ) {
+									//alert("enter");
+									e.preventDefault();
+									return false;
+								}
+								if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+									ajaxcall( "search", tickets, this.value );
+								}
+							});
+						});
+						function ajaxcall( action, tickets, key ) {
+							jQuery.ajax({
+								type : "post",
+								dataType : "json",
+								url : "' . plugins_url( "ajax.php", __FILE__ ) . '",
+								data : {action: action, tickets : tickets, key : key},
+								success: function(response) {
+									jQuery("#tickets_html").html( response );
+								}
+							});
+						}
+					</script>
+					';
+					
+					if( $tickets ) {
+						$result .= $this->get_html( $tickets );
+					} else {
+						$result .= '<p>No tickets</p>';
+					}
+				}
+				return $result;
+			} else {
+				return '<p>Please set settings from the admin panel.</p>';
 			}
-			return $result;	
 		}
 		
 		
@@ -290,14 +293,18 @@ if(!class_exists("FreshDeskAPI")){
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
 				$tickets = json_decode( $server_output );
+				if( isset( $tickets ) ) {
+					if( isset( $post_array['filter_dropdown'] ) ) {
+						$tickets = json_decode( json_encode( $tickets ), true );
+						$tickets = ( $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+					}
+					if( isset( $post_array['search_txt'] ) ) {
+						$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
+					}
+				} else {
+					$tickets = false;
+				}
 				
-				if( isset( $post_array['filter_dropdown'] ) ) {
-					$tickets = json_decode( json_encode( $tickets ), true );
-					$tickets = ( $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
-				}
-				if( isset( $post_array['search_txt'] ) ) {
-					$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
-				}
 				return $tickets;
 			} else{
 				return false;
