@@ -13,6 +13,7 @@ include_once( ABSPATH . 'wp-load.php' );
 if(!class_exists("FreshDeskAPI")){
 	class FreshDeskAPI{
 	
+		//Class Variables
 		private $freshdeskUrl;
 		private $opt;
 		private $options;
@@ -32,10 +33,14 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
+		
+		/*
+		 * Function Name: init
+		 * Function Description: Initialization
+		 */
 		public function init(){
 		
 			if ( is_user_logged_in() ) {
-			
 				
 				// This is a login request.
 				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
@@ -124,6 +129,8 @@ if(!class_exists("FreshDeskAPI")){
 				}
 			}
 		}
+		
+		
 		
 		/*
 		 * Function Name: fetch_tickets
@@ -271,8 +278,6 @@ if(!class_exists("FreshDeskAPI")){
 					$password = ( $this->opt['api_pwd'] != '' ) ? $this->opt['api_pwd'] : '';
 				}
 				
-				
-				
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
 				$ch = curl_init ($url);
@@ -288,7 +293,6 @@ if(!class_exists("FreshDeskAPI")){
 				
 				if( isset( $post_array['filter_dropdown'] ) ) {
 					$tickets = json_decode( json_encode( $tickets ), true );
-					
 					$tickets = ( $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
 				}
 				if( isset( $post_array['search_txt'] ) ) {
@@ -352,8 +356,8 @@ if(!class_exists("FreshDeskAPI")){
 		
 		
 		/*
-		 * Function Name: filter_tickets
-		 * Function Description: Filters the tickets according to ticket_status
+		 * Function Name: search_tickets
+		 * Function Description: Searches the tickets according to input text
 		 */
 		
 		public function search_tickets( $tickets, $txt = '' ){
