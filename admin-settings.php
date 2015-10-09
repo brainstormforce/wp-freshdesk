@@ -61,17 +61,37 @@ class FreshDeskSettingsPage{
 			<div id="shortcode-tab" style="display:none;" class="tabs">
 				<p class="description1">Paste the below shortcode on your page.</p>
 				<code>[fetch_tickets]</code>
-				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:
-					<ul>
-						<li>1) All tickets</li>
-						<li>2) Open</li>
-						<li>3) Resolved</li>
-						<li>4) Closed</li>
-						<li>5) Pending</li>
-						<li>6) Waiting on Customer</li>
-						<li>7) Waiting on Third Party</li>
-					</ul>
-				</p>
+				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:</p>
+				<table>
+					<tr>
+						<td>All tickets</td>
+						<td><code>[fetch_tickets]</code></td>
+					</tr>
+					<tr>
+						<td>Open</td>
+						<td><code>[fetch_tickets filter="Open"]</code></td>
+					</tr>
+					<tr>
+						<td>Resolved</td>
+						<td><code>[fetch_tickets filter="Resolved"]</code></td>
+					</tr>
+					<tr>
+						<td>Closed</td>
+						<td><code>[fetch_tickets filter="Closed"]</code></td>
+					</tr>
+					<tr>
+						<td>Pending</td>
+						<td><code>[fetch_tickets filter="Pending"]</code></td>
+					</tr>
+					<tr>
+						<td>Waiting on Customer</td>
+						<td><code>[fetch_tickets filter="Waiting on Customer"]</code></td>
+					</tr>
+					<tr>
+						<td>Waiting on Third Party</td>
+						<td><code>[fetch_tickets filter="Waiting on Third Party"]</code></td>
+					</tr>
+				</table>
 			</div>
 			<div id="url-tab" style="display:none;" class="tabs">
 				<form method="post" action="options.php" id="url_form">
@@ -309,8 +329,9 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	 /** 
-     * Get the settings option array and print one of its values
+	
+	 /*
+     * Callback function for "FreshDesk Admin Username"
      */
     public function use_apikey_callback(){
 		if( isset( $this->options['use_apikey'] ) ) {
@@ -326,8 +347,8 @@ class FreshDeskSettingsPage{
 	
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	/*
+     * Callback function for "FreshDesk Admin Username"
      */
     public function api_username_callback(){
 		if( isset( $this->options['api_username'] ) && isset( $this->options['use_apikey'] ) ) {
@@ -341,8 +362,10 @@ class FreshDeskSettingsPage{
         );
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	
+	/*
+     * Callback function for "FreshDesk Admin Password"
      */
     public function api_pwd_callback(){
 		if( isset( $this->options['api_pwd'] ) && isset( $this->options['use_apikey'] ) ) {
@@ -357,8 +380,9 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	/* 
+     * Callback function for "FreshDesk URL"
      */
     public function freshdesk_url_callback(){
 		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
@@ -372,8 +396,10 @@ class FreshDeskSettingsPage{
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	
+	/* 
+     * Callback function for "Login URL" for SSO
      */
     public function freshdesk_loginurl_callback(){
         printf(
@@ -384,8 +410,9 @@ class FreshDeskSettingsPage{
 		);
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	/*
+     * Callback function for "Logout URL" for SSO
      */
     public function freshdesk_logouturl_callback(){
 		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
@@ -405,8 +432,8 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	/*
+     * Callback function for "Enable SSO" checkbox
      */
     public function freshdesk_enable_callback(){
 		if( isset( $this->url_options['freshdesk_enable'] ) ){
@@ -422,7 +449,7 @@ class FreshDeskSettingsPage{
 }
 
 if( is_admin() )
-    $my_settings_page = new FreshDeskSettingsPage();
+    new FreshDeskSettingsPage();
 
 
 

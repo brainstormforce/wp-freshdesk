@@ -22,3 +22,8 @@
 .tabs {
 	margin:1em 15px;
 }
+#shortcode-tab table tbody tr td{
+	border-bottom: 1px solid #e0e0e0;
+    min-width: 160px;
+    padding: 7px;
+}

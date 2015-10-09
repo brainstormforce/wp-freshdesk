@@ -130,12 +130,39 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Fetched all tickets from Freshdesk for current logged in user.
 		 */
 		
-		public function fetch_tickets(){
+		public function fetch_tickets( $atts ){
 			$result = '';
+			
+			if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
+			
+				switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
+					case 'Open':
+						$_POST["filter_dropdown"] = 'Open';
+						break;
+					case 'Closed':
+						$_POST["filter_dropdown"] = 'Closed';
+						break;
+					case 'Resolved':
+						$_POST["filter_dropdown"] = 'Resolved';
+						break;
+					case 'Waiting On Third Party':
+						$_POST["filter_dropdown"] = 'Waiting on Third Party';
+						break;
+					case 'Waiting On Customer':
+						$_POST["filter_dropdown"] = 'Waiting on Customer';
+						break;
+					case 'Pending':
+						$_POST["filter_dropdown"] = 'Pending';
+						break;
+					default:
+						break;
+				}
+			}
 			if ( is_user_logged_in() ) {
 				global $current_user;
 								
 				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
+				$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 				$result .= '
 				<div style="float:left;">
 					<form method="post" action="" id="filter_form" name="filter_form">
@@ -186,7 +213,7 @@ if(!class_exists("FreshDeskAPI")){
 				</form>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
-						tickets = ' . json_encode( $tickets, false ) . ';
+						tickets = ' . json_encode( $ajaxTickets, false ) . ';
 						jQuery("#filter_dropdown").change(function(){
 							//jQuery("#filter_form").submit();
 							ajaxcall( "filter", tickets, this.value );
@@ -203,7 +230,7 @@ if(!class_exists("FreshDeskAPI")){
 							}
 						});
 					});
-					function ajaxcall( action = "", tickets = "", key = "" ) {
+					function ajaxcall( action, tickets, key ) {
 						jQuery.ajax({
 							type : "post",
 							dataType : "json",
@@ -234,11 +261,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
 			if( !empty( $uemail ) ){
-				/*if( isset( $post_array['filter_dropdown'] ) ) {
-					$filterName = ( $post_array['filter_dropdown'] == 'new_and_my_open' ) ? 'new_and_my_open' : 'all_tickets';
-				} else {
-					$filterName = 'all_tickets';
-				}*/
+			
 				$filterName = 'all_tickets';
 				if( $this->opt['use_apikey'] == 'on' ){
 					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
@@ -262,8 +285,11 @@ if(!class_exists("FreshDeskAPI")){
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
 				$tickets = json_decode( $server_output );
+				
 				if( isset( $post_array['filter_dropdown'] ) ) {
-					$tickets = ( /*$post_array['filter_dropdown'] != 'new_and_my_open' &&*/ $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+					$tickets = json_decode( json_encode( $tickets ), true );
+					
+					$tickets = ( $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
 				}
 				if( isset( $post_array['search_txt'] ) ) {
 					$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
