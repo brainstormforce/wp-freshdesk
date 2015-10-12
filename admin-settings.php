@@ -266,6 +266,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk API Key"
      */
     public function freshdesk_apikey_callback(){
+	
 		if( isset( $this->options['freshdesk_apikey'] ) ) {
 			$val1 = esc_attr( $this->options['freshdesk_apikey']);
 		} else {
@@ -274,7 +275,7 @@ class FreshDeskSettingsPage{
 		if( isset( $this->options['use_apikey'] ) ) {
 			$val2 = ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : '';
 		} else {
-			$val2 = '';
+			$val2 = 'readonly="readonly"';
 		}
         printf(
             '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
@@ -327,7 +328,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Username"
      */
     public function api_username_callback(){
-		if( isset( $this->options['api_username'] ) && isset( $this->options['use_apikey'] ) ) {
+		if( isset( $this->options['api_username'] ) && !isset( $this->options['use_apikey'] ) ) {
 			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_username']) : '' ;
 			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
 		} else {
@@ -344,7 +345,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Password"
      */
     public function api_pwd_callback(){
-		if( isset( $this->options['api_pwd'] ) && isset( $this->options['use_apikey'] ) ) {
+		if( isset( $this->options['api_pwd'] ) && !isset( $this->options['use_apikey'] ) ) {
 			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_pwd']) : '' ;
 			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
 		} else {

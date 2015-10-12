@@ -25,11 +25,37 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
+			//add_action( 'admin_init', array( $this, 'ajax_init' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
 			$this->freshdeskUrl = ( isset( $this->opt['freshdesk_url'] ) ) ? rtrim( $this->opt['freshdesk_url'], '/' ) . '/' : '';
+		}
+		
+		
+		function ajax_init(){
+			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );	
+		}
+		
+		
+		function process_filter_tickets(){
+			global $current_user;
+			$postArray = $_POST;
+			$returnArray = array();
+			
+			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+			$tickets = json_decode( json_encode( $tickets ), true );
+			if( isset( $postArray['filter_dropdown'] ) ) {
+				$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
+			}
+			if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
+				$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
+			}
+			
+			$returnArray = $this->get_html( $filteredTickets );
+			echo $returnArray; die;
 		}
 		
 		
@@ -39,13 +65,14 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Initialization
 		 */
 		public function init(){
-		
+			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );
 			if ( is_user_logged_in() ) {
 				
 				// This is a login request.
 				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
 					// Don't waste time if remote auth is turned off.
-					if ( !isset( $this->options['freshdesk_enable'] ) || $this->options['freshdesk_enable'] != 'on' ) {
+					if ( !isset( $this->options['freshdesk_enable'] ) && $this->options['freshdesk_enable'] != 'on' && !isset( $this->options['freshdesk_sharedkey'] ) && $this->options['freshdesk_sharedkey'] != '' ) {
 						_e( 'Remote authentication is not configured yet.', 'freshdesk' );
 						die();
 					}
@@ -139,7 +166,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function fetch_tickets( $atts ){
 			$result = '';
-			if( isset( $this->opt['freshdesk_apikey'] ) && isset( $this->options['freshdesk_sharedkey'] ) && $this->opt['freshdesk_apikey'] != '' && $this->options['freshdesk_sharedkey'] != '' ) {
+			if( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) {
 				if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
 			
 					switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
@@ -217,6 +244,7 @@ if(!class_exists("FreshDeskAPI")){
 							<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
 						</div>
 						<div style="clear:both;"></div>
+						<input type="hidden" id="action" name="action" value="filter_tickets"/>
 					</form>
 					<script type="text/javascript">
 						jQuery(document).ready(function(){
@@ -238,11 +266,12 @@ if(!class_exists("FreshDeskAPI")){
 							});
 						});
 						function ajaxcall( action, tickets, key ) {
+							var data = jQuery("#filter_form").serialize();
 							jQuery.ajax({
 								type : "post",
-								dataType : "json",
-								url : "' . plugins_url( "ajax.php", __FILE__ ) . '",
-								data : {action: action, tickets : tickets, key : key},
+								dataType : "html",
+								url : "' . admin_url('admin-ajax.php') . '",
+								data : data,
 								success: function(response) {
 									jQuery("#tickets_html").html( response );
 								}
@@ -349,6 +378,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
+			
 			if( $status != 'all_tickets' ) {
 				foreach( $tickets as $t ){
 					if( $t['status_name'] == $status ) {
