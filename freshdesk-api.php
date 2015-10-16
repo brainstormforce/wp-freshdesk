@@ -350,10 +350,25 @@ if(!class_exists("FreshDeskAPI")){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
-				$html .= '<div id="tickets_html"><p>Total Tickets: ' . count( $tickets ) . '</p>';
-				$html .= '<ul>';
+			
+				$html .= '<div id="tickets_html">
+							<table>
+								<tr><td colspan="3"><p>Total Tickets: ' . count( $tickets ) . '</p></td></tr>
+								<tr>
+									<th>Ticket ID</th>
+									<th>Subject</th>
+									<th>Status</th>
+								</tr>';
+				//$html .= '<ul>';
 				foreach( $tickets as $d ) {
-					$html .= '<li>Ticket ID: ' . $d->id . '<br/>
+					$html .= '
+								<tr>
+									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->display_id . '</a></td>
+									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
+									<td>' . $d->status_name . '</td>
+								</tr>
+					';
+					/*$html .= '<li>Ticket ID: ' . $d->id . '<br/>
 								Requester ID: ' . $d->requester_id . '<br/>
 								Responder ID: ' . $d->responder_id . '<br/>
 								Status: ' . $d->status_name . '
@@ -361,9 +376,10 @@ if(!class_exists("FreshDeskAPI")){
 									<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
 								</p>
 								
-							</li>';
+							</li>';*/
 				}
-				$html .= '</ul><div>';
+				//$html .= '</ul></div>';
+				$html .= '</table></div>';
 				return $html;
 			} else {
 				return '<div id="tickets_html"><p>Error!</p></div>';
@@ -438,8 +454,8 @@ function fd_plugin_redirect() {
 function fd_plugin_activate() {
 	add_option('fd_do_activation_redirect', true);
 	if( !isset( $_GET['activate-multi'] ) ) {
-			wp_redirect( 'options-general.php?page=fd-setting-admin' );
-		}
+		wp_redirect( 'options-general.php?page=fd-setting-admin' );
+	}
 }
 
 new FreshDeskAPI();
