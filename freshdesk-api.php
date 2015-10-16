@@ -13,6 +13,7 @@ include_once( ABSPATH . 'wp-load.php' );
 if(!class_exists("FreshDeskAPI")){
 	class FreshDeskAPI{
 	
+		//Class Variables
 		private $freshdeskUrl;
 		private $opt;
 		private $options;
@@ -24,6 +25,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
+			//add_action( 'admin_init', array( $this, 'ajax_init' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
@@ -32,15 +34,45 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
-		public function init(){
+		function ajax_init(){
+			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );	
+		}
 		
-			if ( is_user_logged_in() ) {
+		
+		function process_filter_tickets(){
+			global $current_user;
+			$postArray = $_POST;
+			$returnArray = array();
 			
+			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+			$tickets = json_decode( json_encode( $tickets ), true );
+			if( isset( $postArray['filter_dropdown'] ) ) {
+				$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
+			}
+			if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
+				$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
+			}
+			
+			$returnArray = $this->get_html( $filteredTickets );
+			echo $returnArray; die;
+		}
+		
+		
+		
+		/*
+		 * Function Name: init
+		 * Function Description: Initialization
+		 */
+		public function init(){
+			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			if ( is_user_logged_in() ) {
 				
 				// This is a login request.
 				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
 					// Don't waste time if remote auth is turned off.
-					if ( !isset( $this->options['freshdesk_enable'] ) || $this->options['freshdesk_enable'] != 'on' ) {
+					if ( !isset( $this->options['freshdesk_enable'] ) && $this->options['freshdesk_enable'] != 'on' && !isset( $this->options['freshdesk_sharedkey'] ) && $this->options['freshdesk_sharedkey'] != '' ) {
 						_e( 'Remote authentication is not configured yet.', 'freshdesk' );
 						die();
 					}
@@ -125,105 +157,139 @@ if(!class_exists("FreshDeskAPI")){
 			}
 		}
 		
+		
+		
 		/*
 		 * Function Name: fetch_tickets
 		 * Function Description: Fetched all tickets from Freshdesk for current logged in user.
 		 */
 		
-		public function fetch_tickets(){
+		public function fetch_tickets( $atts ){
 			$result = '';
-			if ( is_user_logged_in() ) {
-				global $current_user;
-								
-				$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-				$result .= '
-				<div style="float:left;">
-					<form method="post" action="" id="filter_form" name="filter_form">
-						<select id="filter_dropdown" name="filter_dropdown">
-							<option value="all_tickets" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>----All Tickets----</option>
-							<option value="Open" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Open</option>
-							<option value="Pending" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Pending</option>
-							<option value="Resolved" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Resolved</option>
-							<option value="Closed" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Closed</option>
-							<option value="Waiting on Customer" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
-				}
-				$result .= '>Waiting on Customer</option>
-							<option value="Waiting on Third Party" ';
-				if( isset( $_POST["filter_dropdown"] ) ) {
-					$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
-				}
-				$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
-				$result .= '>Waiting on Third Party</option>
-						</select>
-					
-					</div>
-					<div style="float:right;">
-						<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
-					</div>
-					<div style="clear:both;"></div>
-				</form>
-				<script type="text/javascript">
-					jQuery(document).ready(function(){
-						tickets = ' . json_encode( $tickets, false ) . ';
-						jQuery("#filter_dropdown").change(function(){
-							//jQuery("#filter_form").submit();
-							ajaxcall( "filter", tickets, this.value );
-						});
-						jQuery("#search_txt").on( "keyup keypress", function(e) {
-							// Enter pressed?
-							if( e.keyCode  == 10 || e.keyCode == 13 ) {
-								//alert("enter");
-								e.preventDefault();
-								return false;
-							}
-							if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
-								ajaxcall( "search", tickets, this.value );
-							}
-						});
-					});
-					function ajaxcall( action = "", tickets = "", key = "" ) {
-						jQuery.ajax({
-							type : "post",
-							dataType : "json",
-							url : "' . plugins_url( "ajax.php", __FILE__ ) . '",
-							data : {action: action, tickets : tickets, key : key},
-							success: function(response) {
-								jQuery("#tickets_html").html( response );
-							}
-						});
+			if( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) {
+				if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
+			
+					switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
+						case 'Open':
+							$_POST["filter_dropdown"] = 'Open';
+							break;
+						case 'Closed':
+							$_POST["filter_dropdown"] = 'Closed';
+							break;
+						case 'Resolved':
+							$_POST["filter_dropdown"] = 'Resolved';
+							break;
+						case 'Waiting On Third Party':
+							$_POST["filter_dropdown"] = 'Waiting on Third Party';
+							break;
+						case 'Waiting On Customer':
+							$_POST["filter_dropdown"] = 'Waiting on Customer';
+							break;
+						case 'Pending':
+							$_POST["filter_dropdown"] = 'Pending';
+							break;
+						default:
+							break;
 					}
-				</script>
-				';
-				
-				if( $tickets ) {
-					$result .= $this->get_html( $tickets );
-				} else {
-					$result .= '<p>No tickets</p>';
 				}
+				if ( is_user_logged_in() ) {
+					global $current_user;
+									
+					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
+					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+					$result .= '
+					<div style="float:left;">
+						<form method="post" action="" id="filter_form" name="filter_form">
+							<select id="filter_dropdown" name="filter_dropdown">
+								<option value="all_tickets" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>----All Tickets----</option>
+								<option value="Open" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Open</option>
+								<option value="Pending" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Pending</option>
+								<option value="Resolved" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Resolved</option>
+								<option value="Closed" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Closed</option>
+								<option value="Waiting on Customer" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+					}
+					$result .= '>Waiting on Customer</option>
+								<option value="Waiting on Third Party" ';
+					if( isset( $_POST["filter_dropdown"] ) ) {
+						$result .= ( $_POST["filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+					}
+					$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
+					$result .= '>Waiting on Third Party</option>
+							</select>
+						
+						</div>
+						<div style="float:right;">
+							<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="Search..."/>
+						</div>
+						<div style="clear:both;"></div>
+						<input type="hidden" id="action" name="action" value="filter_tickets"/>
+					</form>
+					<script type="text/javascript">
+						jQuery(document).ready(function(){
+							tickets = ' . json_encode( $ajaxTickets, false ) . ';
+							jQuery("#filter_dropdown").change(function(){
+								//jQuery("#filter_form").submit();
+								ajaxcall( "filter", tickets, this.value );
+							});
+							jQuery("#search_txt").on( "keyup keypress", function(e) {
+								// Enter pressed?
+								if( e.keyCode  == 10 || e.keyCode == 13 ) {
+									//alert("enter");
+									e.preventDefault();
+									return false;
+								}
+								if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+									ajaxcall( "search", tickets, this.value );
+								}
+							});
+						});
+						function ajaxcall( action, tickets, key ) {
+							var data = jQuery("#filter_form").serialize();
+							jQuery.ajax({
+								type : "post",
+								dataType : "html",
+								url : "' . admin_url('admin-ajax.php') . '",
+								data : data,
+								success: function(response) {
+									jQuery("#tickets_html").html( response );
+								}
+							});
+						}
+					</script>
+					';
+					
+					if( $tickets ) {
+						$result .= $this->get_html( $tickets );
+					} else {
+						$result .= '<p>No tickets</p>';
+					}
+				}
+				return $result;
+			} else {
+				return '<p>Please set settings from the admin panel.</p>';
 			}
-			return $result;	
 		}
 		
 		
@@ -234,11 +300,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
 			if( !empty( $uemail ) ){
-				/*if( isset( $post_array['filter_dropdown'] ) ) {
-					$filterName = ( $post_array['filter_dropdown'] == 'new_and_my_open' ) ? 'new_and_my_open' : 'all_tickets';
-				} else {
-					$filterName = 'all_tickets';
-				}*/
+			
 				$filterName = 'all_tickets';
 				if( $this->opt['use_apikey'] == 'on' ){
 					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
@@ -247,8 +309,6 @@ if(!class_exists("FreshDeskAPI")){
 					$apikey = ( $this->opt['api_username'] != '' ) ? $this->opt['api_username'] : '';
 					$password = ( $this->opt['api_pwd'] != '' ) ? $this->opt['api_pwd'] : '';
 				}
-				
-				
 				
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
@@ -262,12 +322,18 @@ if(!class_exists("FreshDeskAPI")){
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
 				$tickets = json_decode( $server_output );
-				if( isset( $post_array['filter_dropdown'] ) ) {
-					$tickets = ( /*$post_array['filter_dropdown'] != 'new_and_my_open' &&*/ $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+				if( isset( $tickets ) ) {
+					if( isset( $post_array['filter_dropdown'] ) ) {
+						$tickets = json_decode( json_encode( $tickets ), true );
+						$tickets = ( $post_array['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['filter_dropdown'] ) : $tickets ;
+					}
+					if( isset( $post_array['search_txt'] ) ) {
+						$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
+					}
+				} else {
+					$tickets = false;
 				}
-				if( isset( $post_array['search_txt'] ) ) {
-					$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
-				}
+				
 				return $tickets;
 			} else{
 				return false;
@@ -312,6 +378,7 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
+			
 			if( $status != 'all_tickets' ) {
 				foreach( $tickets as $t ){
 					if( $t['status_name'] == $status ) {
@@ -326,8 +393,8 @@ if(!class_exists("FreshDeskAPI")){
 		
 		
 		/*
-		 * Function Name: filter_tickets
-		 * Function Description: Filters the tickets according to ticket_status
+		 * Function Name: search_tickets
+		 * Function Description: Searches the tickets according to input text
 		 */
 		
 		public function search_tickets( $tickets, $txt = '' ){

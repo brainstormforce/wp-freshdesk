@@ -1,5 +1,6 @@
 <?php
 class FreshDeskSettingsPage{
+
     /**
      * Holds the values to be used in the fields callbacks
      */
@@ -14,7 +15,9 @@ class FreshDeskSettingsPage{
         add_action( 'admin_init', array( $this, 'page_init' ) );
     }
 
-    /**
+
+
+    /*
      * Add options page
      */
     public function add_plugin_page(){
@@ -28,15 +31,17 @@ class FreshDeskSettingsPage{
         );
     }
 
-    /**
+
+
+    /*
      * Options page callback
      */
     public function create_admin_page(){
+	
         // Set class property
         $this->options = get_option( 'fd_apikey' );
 		$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
 		$this->url_options = get_option( 'fd_url' );
-		
         ?>
         <div class="wrap">
             <div class="bend-heading-section">
@@ -61,17 +66,37 @@ class FreshDeskSettingsPage{
 			<div id="shortcode-tab" style="display:none;" class="tabs">
 				<p class="description1">Paste the below shortcode on your page.</p>
 				<code>[fetch_tickets]</code>
-				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:
-					<ul>
-						<li>1) All tickets</li>
-						<li>2) Open</li>
-						<li>3) Resolved</li>
-						<li>4) Closed</li>
-						<li>5) Pending</li>
-						<li>6) Waiting on Customer</li>
-						<li>7) Waiting on Third Party</li>
-					</ul>
-				</p>
+				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:</p>
+				<table>
+					<tr>
+						<td>All tickets</td>
+						<td><code>[fetch_tickets]</code></td>
+					</tr>
+					<tr>
+						<td>Open</td>
+						<td><code>[fetch_tickets filter="Open"]</code></td>
+					</tr>
+					<tr>
+						<td>Resolved</td>
+						<td><code>[fetch_tickets filter="Resolved"]</code></td>
+					</tr>
+					<tr>
+						<td>Closed</td>
+						<td><code>[fetch_tickets filter="Closed"]</code></td>
+					</tr>
+					<tr>
+						<td>Pending</td>
+						<td><code>[fetch_tickets filter="Pending"]</code></td>
+					</tr>
+					<tr>
+						<td>Waiting on Customer</td>
+						<td><code>[fetch_tickets filter="Waiting on Customer"]</code></td>
+					</tr>
+					<tr>
+						<td>Waiting on Third Party</td>
+						<td><code>[fetch_tickets filter="Waiting on Third Party"]</code></td>
+					</tr>
+				</table>
 			</div>
 			<div id="url-tab" style="display:none;" class="tabs">
 				<form method="post" action="options.php" id="url_form">
@@ -82,58 +107,22 @@ class FreshDeskSettingsPage{
 						submit_button();?>
 				</form>
 			</div>
-            
-			<script type="text/javascript">
-				jQuery(document).ready(function(){
-					jQuery('#use_apikey').change(function(){
-						if( jQuery("#use_apikey").is(':checked') ) {
-							jQuery( "#freshdesk_apikey" ).removeAttr("readonly");
-							jQuery( "#api_username" ).attr( "readonly", "readonly" );
-							jQuery( "#api_pwd" ).attr( "readonly", "readonly" );
-						} else {
-							jQuery( "#api_username" ).removeAttr("readonly");
-							jQuery( "#api_pwd" ).removeAttr("readonly");
-							jQuery( "#freshdesk_apikey" ).attr( "readonly", "readonly" );
-						}
-					});
-					jQuery('#freshdesk_enable').change(function(){
-						if( jQuery("#freshdesk_enable").is(':checked') ) {
-							jQuery( "#freshdesk_sharedkey" ).removeAttr("readonly");
-						} else {
-							jQuery( "#freshdesk_sharedkey" ).attr( "readonly", "readonly" );
-						}
-					});
-					jQuery('#tab-api').click(function(){
-						jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-						jQuery( this ).addClass( "nav-tab-active" );
-						jQuery( '.tabs' ).hide();
-						jQuery( '#api-tab' ).show();
-					});
-					jQuery('#tab-shortcode').click(function(){
-						jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-						jQuery( this ).addClass( "nav-tab-active" );
-						jQuery( '.tabs' ).hide();
-						jQuery( '#shortcode-tab' ).show();
-					});
-					jQuery('#tab-url').click(function(){
-						jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-						jQuery( this ).addClass( "nav-tab-active" );
-						jQuery( '.tabs' ).hide();
-						jQuery( '#url-tab' ).show();
-					});
-				});
-			</script>
         </div>
         <?php
     }
 
 
-    /**
+    /*
      * Register and add settings
      */
     public function page_init(){
-		wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );      
-        register_setting(
+	
+		//Enqueue all styles and scripts.
+		wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
+		wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );  
+		
+		// Register the setting tab
+		register_setting(
             'my_option_group', // Option group
             'fd_apikey', // Option name
             array( $this, 'sanitize' ) // Sanitize
@@ -186,6 +175,7 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
+		// Register the setting tab		
 		register_setting(
             'url_option', // Option group
             'fd_url' // Option name
@@ -231,8 +221,9 @@ class FreshDeskSettingsPage{
             'freshdesk_url_section' // Section           
         );
     }
+	
 
-    /**
+    /*
      * Sanitize each setting field as needed
      *
      * @param array $input Contains all settings fields as array keys
@@ -261,17 +252,21 @@ class FreshDeskSettingsPage{
         return $new_input;
     }
 
-    /** 
+
+    /* 
      * Print the Section text
      */
     public function print_section_info(){
         //Nothing to do here
     }
+	
+	
 
-    /** 
-     * Get the settings option array and print one of its values
+    /*
+     * Callback function for "FreshDesk API Key"
      */
     public function freshdesk_apikey_callback(){
+	
 		if( isset( $this->options['freshdesk_apikey'] ) ) {
 			$val1 = esc_attr( $this->options['freshdesk_apikey']);
 		} else {
@@ -280,7 +275,7 @@ class FreshDeskSettingsPage{
 		if( isset( $this->options['use_apikey'] ) ) {
 			$val2 = ( $this->options['use_apikey'] != 'on' ) ? 'readonly="readonly"' : '';
 		} else {
-			$val2 = '';
+			$val2 = 'readonly="readonly"';
 		}
         printf(
             '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
@@ -288,8 +283,10 @@ class FreshDeskSettingsPage{
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	
+	/*
+     * Callback function for "FreshDesk Shared Secret Key"
      */
     public function freshdesk_sharedkey_callback(){
 		if( isset( $this->url_options['freshdesk_sharedkey'] ) ) {
@@ -309,8 +306,9 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	 /** 
-     * Get the settings option array and print one of its values
+	
+	 /*
+     * Callback function for "FreshDesk Admin Username"
      */
     public function use_apikey_callback(){
 		if( isset( $this->options['use_apikey'] ) ) {
@@ -326,11 +324,11 @@ class FreshDeskSettingsPage{
 	
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	/*
+     * Callback function for "FreshDesk Admin Username"
      */
     public function api_username_callback(){
-		if( isset( $this->options['api_username'] ) && isset( $this->options['use_apikey'] ) ) {
+		if( isset( $this->options['api_username'] ) && !isset( $this->options['use_apikey'] ) ) {
 			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_username']) : '' ;
 			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
 		} else {
@@ -341,11 +339,13 @@ class FreshDeskSettingsPage{
         );
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	
+	/*
+     * Callback function for "FreshDesk Admin Password"
      */
     public function api_pwd_callback(){
-		if( isset( $this->options['api_pwd'] ) && isset( $this->options['use_apikey'] ) ) {
+		if( isset( $this->options['api_pwd'] ) && !isset( $this->options['use_apikey'] ) ) {
 			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_pwd']) : '' ;
 			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
 		} else {
@@ -357,8 +357,9 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	/* 
+     * Callback function for "FreshDesk URL"
      */
     public function freshdesk_url_callback(){
 		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
@@ -372,8 +373,10 @@ class FreshDeskSettingsPage{
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	
+	/* 
+     * Callback function for "Login URL" for SSO
      */
     public function freshdesk_loginurl_callback(){
         printf(
@@ -384,8 +387,9 @@ class FreshDeskSettingsPage{
 		);
     }
 	
-	/** 
-     * Get the settings option array and print one of its values
+	
+	/*
+     * Callback function for "Logout URL" for SSO
      */
     public function freshdesk_logouturl_callback(){
 		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
@@ -405,8 +409,8 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	/** 
-     * Get the settings option array and print one of its values
+	/*
+     * Callback function for "Enable SSO" checkbox
      */
     public function freshdesk_enable_callback(){
 		if( isset( $this->url_options['freshdesk_enable'] ) ){
@@ -422,7 +426,7 @@ class FreshDeskSettingsPage{
 }
 
 if( is_admin() )
-    $my_settings_page = new FreshDeskSettingsPage();
+    new FreshDeskSettingsPage();
 
 
 
