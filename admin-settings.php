@@ -55,7 +55,7 @@ class FreshDeskSettingsPage{
 				<a href="javascript:void(0);" id="tab-url" class="nav-tab">Freshdesk SSO</a>
 			</h2>
 			<div id="api-tab" class="tabs">
-				<form method="post" action="options.php">
+				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
 						settings_fields( 'my_option_group' );   
@@ -99,7 +99,7 @@ class FreshDeskSettingsPage{
 				</table>
 			</div>
 			<div id="url-tab" style="display:none;" class="tabs">
-				<form method="post" action="options.php" id="url_form">
+				<form method="post" action="options.php" id="url_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
 						settings_fields( 'url_option' );   
@@ -118,8 +118,14 @@ class FreshDeskSettingsPage{
     public function page_init(){
 	
 		//Enqueue all styles and scripts.
-		wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
-		wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );  
+		//wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
+		//wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );
+		
+		wp_register_script( 'fd-script', plugins_url('js/fd-script.js', __FILE__), array('jquery'), '1.1', true );
+		wp_enqueue_script( 'fd-script' );
+		
+		wp_register_style( 'fd-style', plugins_url('css/fd-style.css', __FILE__) );
+		wp_enqueue_style( 'fd-style' );
 		
 		// Register the setting tab
 		register_setting(
@@ -328,11 +334,15 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Username"
      */
     public function api_username_callback(){
-		if( isset( $this->options['api_username'] ) && !isset( $this->options['use_apikey'] ) ) {
-			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_username']) : '' ;
-			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
+	
+		if( !isset( $this->options['use_apikey'] ) ) {
+			if( isset( $this->options['api_username'] ) ) {
+				$val1 = esc_attr( $this->options['api_username'] );
+				$val2 = '';
+			}
 		} else {
-			$val1 = $val2 = '';
+			$val1 = '';
+			$val2 = 'readonly="readonly"';
 		}
         printf(
             '<input type="text" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>', $val1, $val2
@@ -345,11 +355,16 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Password"
      */
     public function api_pwd_callback(){
-		if( isset( $this->options['api_pwd'] ) && !isset( $this->options['use_apikey'] ) ) {
-			$val1 = ( $this->options['use_apikey'] != 'on' ) ? esc_attr( $this->options['api_pwd']) : '' ;
-			$val2 = ( $this->options['use_apikey'] == 'on' ) ? 'readonly="readonly"' : '';
+	
+		if( !isset( $this->options['use_apikey'] ) ) {
+			if( isset( $this->options['api_pwd'] ) ) {
+				$val1 = esc_attr( $this->options['api_pwd'] );
+				$val2 = '';
+			}
+			
 		} else {
-			$val1 = $val2 = '';
+			$val1 = '';
+			$val2 = 'readonly="readonly"';
 		}
         printf(
             '<input type="password" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>', $val1, $val2
@@ -403,7 +418,7 @@ class FreshDeskSettingsPage{
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
 			<p class="description">Remember that you can always go to:
-<a href="%s" target="_blank">%saccess/normal</a><br/>
+<a href="%slogin/normal" target="_blank">%saccess/normal</a><br/>
 			to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', $val, $val
 		);
     }

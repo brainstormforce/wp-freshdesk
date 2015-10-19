@@ -26,6 +26,7 @@ if(!class_exists("FreshDeskAPI")){
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
 			//add_action( 'admin_init', array( $this, 'ajax_init' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
@@ -34,9 +35,9 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
-		function ajax_init(){
-			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
-			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );	
+		function enqueue_scripts() {
+			wp_register_style( 'style', plugins_url('css/style.css', __FILE__) );
+			wp_enqueue_style( 'style' );
 		}
 		
 		
@@ -67,6 +68,7 @@ if(!class_exists("FreshDeskAPI")){
 		public function init(){
 			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
 			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			
 			if ( is_user_logged_in() ) {
 				
 				// This is a login request.
@@ -321,7 +323,9 @@ if(!class_exists("FreshDeskAPI")){
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
+				
 				$tickets = json_decode( $server_output );
+				echo '<xmp>'; print_r( $tickets ); echo '</xmp>';
 				if( isset( $tickets ) ) {
 					if( isset( $post_array['filter_dropdown'] ) ) {
 						$tickets = json_decode( json_encode( $tickets ), true );
@@ -350,20 +354,26 @@ if(!class_exists("FreshDeskAPI")){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
-				$html .= '<div id="tickets_html"><p>Total Tickets: ' . count( $tickets ) . '</p>';
-				$html .= '<ul>';
+			
+				$html .= '<div id="tickets_html" class="lic-table">
+							<table class="lic-table-list">
+								<tr><td colspan="3"><p>Total Tickets: ' . count( $tickets ) . '</p></td></tr>
+								<tr>
+									<th width="10%">Ticket ID</th>
+									<th>Subject</th>
+									<th>Status</th>
+								</tr>';
 				foreach( $tickets as $d ) {
-					$html .= '<li>Ticket ID: ' . $d->id . '<br/>
-								Requester ID: ' . $d->requester_id . '<br/>
-								Responder ID: ' . $d->responder_id . '<br/>
-								Status: ' . $d->status_name . '
-								<p><strong>SUBJECT: </strong>
-									<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a>
-								</p>
-								
-							</li>';
+					$html .= '
+								<tr class="sp-registered-site">
+									<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
+									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
+									<td>' . $d->status_name . '</td>
+								</tr>
+					';
 				}
-				$html .= '</ul><div>';
+				
+				$html .= '</table></div>';
 				return $html;
 			} else {
 				return '<div id="tickets_html"><p>Error!</p></div>';
@@ -438,8 +448,8 @@ function fd_plugin_redirect() {
 function fd_plugin_activate() {
 	add_option('fd_do_activation_redirect', true);
 	if( !isset( $_GET['activate-multi'] ) ) {
-			wp_redirect( 'options-general.php?page=fd-setting-admin' );
-		}
+		wp_redirect( 'options-general.php?page=fd-setting-admin' );
+	}
 }
 
 new FreshDeskAPI();
