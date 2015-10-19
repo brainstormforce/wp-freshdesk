@@ -409,7 +409,7 @@ class FreshDeskSettingsPage{
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
 			<p class="description">Remember that you can always go to:
-<a href="%s" target="_blank">%saccess/normal</a><br/>
+<a href="%saccess/normal" target="_blank">%saccess/normal</a><br/>
 			to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', $val, $val
 		);
     }
