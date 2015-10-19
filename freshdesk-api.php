@@ -26,6 +26,7 @@ if(!class_exists("FreshDeskAPI")){
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
 			//add_action( 'admin_init', array( $this, 'ajax_init' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_shortcode( "fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
 			$this->options = get_option( 'fd_url' );
@@ -34,9 +35,9 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
-		function ajax_init(){
-			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
-			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );	
+		function enqueue_scripts() {
+			wp_register_style( 'style', plugins_url('css/style.css', __FILE__) );
+			wp_enqueue_style( 'style' );
 		}
 		
 		
@@ -67,6 +68,7 @@ if(!class_exists("FreshDeskAPI")){
 		public function init(){
 			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
 			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );
+			
 			if ( is_user_logged_in() ) {
 				
 				// This is a login request.
@@ -351,19 +353,19 @@ if(!class_exists("FreshDeskAPI")){
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
 			
-				$html .= '<div id="tickets_html">
-							<table>
+				$html .= '<div id="tickets_html" class="lic-table">
+							<table class="lic-table-list">
 								<tr><td colspan="3"><p>Total Tickets: ' . count( $tickets ) . '</p></td></tr>
 								<tr>
-									<th>Ticket ID</th>
+									<th width="10%">Ticket ID</th>
 									<th>Subject</th>
 									<th>Status</th>
 								</tr>';
 				//$html .= '<ul>';
 				foreach( $tickets as $d ) {
 					$html .= '
-								<tr>
-									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->display_id . '</a></td>
+								<tr class="sp-registered-site">
+									<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
 									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
 									<td>' . $d->status_name . '</td>
 								</tr>

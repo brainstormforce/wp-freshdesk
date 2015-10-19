@@ -118,8 +118,14 @@ class FreshDeskSettingsPage{
     public function page_init(){
 	
 		//Enqueue all styles and scripts.
-		wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
-		wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );  
+		//wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
+		//wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );
+		
+		wp_register_script( 'fd-script', plugins_url('js/fd-script.js', __FILE__), array('jquery'), '1.1', true );
+		wp_enqueue_script( 'fd-script' );
+		
+		wp_register_style( 'fd-style', plugins_url('css/fd-style.css', __FILE__) );
+		wp_enqueue_style( 'fd-style' );
 		
 		// Register the setting tab
 		register_setting(
