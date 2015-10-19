@@ -356,19 +356,19 @@ if(!class_exists("FreshDeskAPI")){
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
 			
 				$html .= '<div id="tickets_html" class="lic-table">
+							<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
 							<table class="lic-table-list">
-								<tr><td colspan="3"><p>Total Tickets: ' . count( $tickets ) . '</p></td></tr>
 								<tr>
-									<th width="10%">Ticket ID</th>
+									<th width="15%">Ticket ID</th>
 									<th>Subject</th>
-									<th>Status</th>
+									<th width="20%">Status</th>
 								</tr>';
 				foreach( $tickets as $d ) {
 					$html .= '
 								<tr class="sp-registered-site">
-									<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
+									<td width="15%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
 									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
-									<td>' . $d->status_name . '</td>
+									<td width="20%">' . $d->status_name . '</td>
 								</tr>
 					';
 				}
@@ -376,7 +376,14 @@ if(!class_exists("FreshDeskAPI")){
 				$html .= '</table></div>';
 				return $html;
 			} else {
-				return '<div id="tickets_html"><p>Error!</p></div>';
+				if( isset( $tickets->require_login ) ) {
+					$msg = 'Invalid Credentials';
+				} else if( isset( $tickets->errors ) ) {
+					$msg = 'Invalid User';
+				} else {
+					$msg = 'Error!';
+				}
+				return '<div id="tickets_html"><p>' . $msg . '</p></div>';
 			}
 		}
 		
