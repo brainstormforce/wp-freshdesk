@@ -325,7 +325,7 @@ if(!class_exists("FreshDeskAPI")){
 				curl_close ($ch);
 				
 				$tickets = json_decode( $server_output );
-				echo '<xmp>'; print_r( $tickets ); echo '</xmp>';
+				//echo '<xmp>'; print_r( $tickets ); echo '</xmp>';
 				if( isset( $tickets ) ) {
 					if( isset( $post_array['filter_dropdown'] ) ) {
 						$tickets = json_decode( json_encode( $tickets ), true );
