@@ -301,9 +301,9 @@ class FreshDeskSettingsPage{
 			$val1 = '';
 		}
 		if( isset( $this->url_options['freshdesk_enable'] ) ) {
-			$val2 = ( $this->url_options['freshdesk_enable'] != 'on' ) ? 'readonly="readonly"' : '';
-		} else {
 			$val2 = '';
+		} else {
+			$val2 = 'readonly="readonly"';
 		}
         printf(
             '<input type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
