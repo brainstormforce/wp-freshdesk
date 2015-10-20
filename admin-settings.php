@@ -40,7 +40,9 @@ class FreshDeskSettingsPage{
 	
         // Set class property
         $this->options = get_option( 'fd_apikey' );
-		$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
+		if( $this->options ){
+			$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
+		}
 		$this->url_options = get_option( 'fd_url' );
         ?>
         <div class="wrap">
@@ -181,6 +183,14 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
+		add_settings_field(
+            'no_tickets_msg', // ID
+            'No Tickets Error Message', // Title 
+            array( $this, 'no_tickets_msg_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
 		// Register the setting tab		
 		register_setting(
             'url_option', // Option group
@@ -254,6 +264,9 @@ class FreshDeskSettingsPage{
 			
 		if( isset( $input['use_apikey'] ) )
             $new_input['use_apikey'] = sanitize_text_field( $input['use_apikey'] );
+			
+		if( isset( $input['no_tickets_msg'] ) )
+            $new_input['no_tickets_msg'] = sanitize_text_field( $input['no_tickets_msg'] );
 
         return $new_input;
     }
@@ -272,7 +285,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk API Key"
      */
     public function freshdesk_apikey_callback(){
-	
+		$val1 = $val2 = '';
 		if( isset( $this->options['freshdesk_apikey'] ) ) {
 			$val1 = esc_attr( $this->options['freshdesk_apikey']);
 		} else {
@@ -295,6 +308,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Shared Secret Key"
      */
     public function freshdesk_sharedkey_callback(){
+		$val1 = $val2 = '';
 		if( isset( $this->url_options['freshdesk_sharedkey'] ) ) {
 			$val1 = esc_attr( $this->url_options['freshdesk_sharedkey']);
 		} else {
@@ -308,7 +322,7 @@ class FreshDeskSettingsPage{
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
     }
 	
 	
@@ -317,10 +331,14 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Username"
      */
     public function use_apikey_callback(){
+		$val = '';
 		if( isset( $this->options['use_apikey'] ) ) {
 			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
 		} else {
 			$val = '';
+		}
+		if( !$this->options ){
+			$val = 'checked="checked"';
 		}
         printf(
 				'<div class="onoffswitch">
@@ -339,7 +357,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Username"
      */
     public function api_username_callback(){
-	
+		$val1 = $val2 = '';
 		if( !isset( $this->options['use_apikey'] ) ) {
 			if( isset( $this->options['api_username'] ) ) {
 				$val1 = esc_attr( $this->options['api_username'] );
@@ -360,7 +378,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk Admin Password"
      */
     public function api_pwd_callback(){
-	
+		$val1 = $val2 = '';
 		if( !isset( $this->options['use_apikey'] ) ) {
 			if( isset( $this->options['api_pwd'] ) ) {
 				$val1 = esc_attr( $this->options['api_pwd'] );
@@ -382,6 +400,7 @@ class FreshDeskSettingsPage{
      * Callback function for "FreshDesk URL"
      */
     public function freshdesk_url_callback(){
+		$val = '';
 		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
 			$val = esc_attr( $this->options['freshdesk_url']);
 		} else {
@@ -412,10 +431,11 @@ class FreshDeskSettingsPage{
      * Callback function for "Logout URL" for SSO
      */
     public function freshdesk_logouturl_callback(){
+		$val = '';
 		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
 			$val = $this->options['freshdesk_url'];
 		} else {
-			$val = 'https://your_domain.freshdesk.com/access/normal';
+			$val = 'https://your_domain.freshdesk.com/';
 		}
         printf(
             '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
@@ -433,6 +453,7 @@ class FreshDeskSettingsPage{
      * Callback function for "Enable SSO" checkbox
      */
     public function freshdesk_enable_callback(){
+		$val = '';
 		if( isset( $this->url_options['freshdesk_enable'] ) ){
 			$val = ( $this->url_options['freshdesk_enable'] == 'on' ) ? 'checked="checked"' : '';
 		} else {
@@ -448,6 +469,17 @@ class FreshDeskSettingsPage{
 				</div>',$val 
         );
     }
+	
+	
+	public function no_tickets_msg_callback(){
+		$val = '';
+		if( isset( $this->options['no_tickets_msg'] ) ){
+			$val = ( $this->options['no_tickets_msg'] != '' ) ? $this->options['no_tickets_msg'] : '';
+		}
+        printf(
+            '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_apikey[no_tickets_msg]" value="%s" class="regular-text">', $val
+        );
+	}
 	
 }
 

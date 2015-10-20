@@ -48,14 +48,31 @@ if(!class_exists("FreshDeskAPI")){
 			
 			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 			$tickets = json_decode( json_encode( $tickets ), true );
-			if( isset( $postArray['filter_dropdown'] ) ) {
-				$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
-			}
-			if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
-				$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
+			
+			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
+				if( isset( $postArray['filter_dropdown'] ) ) {
+					$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
+				}
+				if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
+					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
+				}
+				
+				$returnArray = $this->get_html( $filteredTickets );
+			} else {
+				if( isset( $tickets->require_login ) ) {
+					$msg = 'Invalid Credentials';
+				} else if( isset( $tickets->errors ) ) {
+					if( isset( $tickets->errors->no_email ) ){
+						$msg = 'Invalid User';
+					} else {
+						$msg = 'Invalid Freshdesk URL';
+					}
+				} else {
+					$msg = 'Error!';
+				}
+				$returnArray = '<div id="tickets_html"><p>' . $msg . '</p></div>';
 			}
 			
-			$returnArray = $this->get_html( $filteredTickets );
 			echo $returnArray; die;
 		}
 		
@@ -247,45 +264,49 @@ if(!class_exists("FreshDeskAPI")){
 						</div>
 						<div style="clear:both;"></div>
 						<input type="hidden" id="action" name="action" value="filter_tickets"/>
-					</form>
-					<script type="text/javascript">
-						jQuery(document).ready(function(){
-							tickets = ' . json_encode( $ajaxTickets, false ) . ';
-							jQuery("#filter_dropdown").change(function(){
-								//jQuery("#filter_form").submit();
-								ajaxcall( "filter", tickets, this.value );
+					</form>';
+					
+					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
+						$result .= 
+						'<script type="text/javascript">
+							jQuery(document).ready(function(){
+								tickets = ' . json_encode( $ajaxTickets, false ) . ';
+								jQuery("#filter_dropdown").change(function(){
+									//jQuery("#filter_form").submit();
+									ajaxcall( "filter", tickets, this.value );
+								});
+								jQuery("#search_txt").on( "keyup keypress", function(e) {
+									// Enter pressed?
+									if( e.keyCode  == 10 || e.keyCode == 13 ) {
+										//alert("enter");
+										e.preventDefault();
+										return false;
+									}
+									if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+										ajaxcall( "search", tickets, this.value );
+									}
+								});
 							});
-							jQuery("#search_txt").on( "keyup keypress", function(e) {
-								// Enter pressed?
-								if( e.keyCode  == 10 || e.keyCode == 13 ) {
-									//alert("enter");
-									e.preventDefault();
-									return false;
-								}
-								if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
-									ajaxcall( "search", tickets, this.value );
-								}
-							});
-						});
-						function ajaxcall( action, tickets, key ) {
-							var data = jQuery("#filter_form").serialize();
-							jQuery.ajax({
-								type : "post",
-								dataType : "html",
-								url : "' . admin_url('admin-ajax.php') . '",
-								data : data,
-								success: function(response) {
-									jQuery("#tickets_html").html( response );
-								}
-							});
-						}
-					</script>
-					';
+							function ajaxcall( action, tickets, key ) {
+								var data = jQuery("#filter_form").serialize();
+								jQuery.ajax({
+									type : "post",
+									dataType : "html",
+									url : "' . admin_url('admin-ajax.php') . '",
+									data : data,
+									success: function(response) {
+										jQuery("#tickets_html").html( response );
+									}
+								});
+							}
+						</script>
+						';
+					}
 					
 					if( $tickets ) {
 						$result .= $this->get_html( $tickets );
 					} else {
-						$result .= '<p>No tickets</p>';
+						$result .= ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? '<p>' . $this->opt['no_tickets_msg'] . '</p>' : '<p>No tickets</p>' ;
 					}
 				}
 				return $result;
@@ -399,7 +420,6 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function filter_tickets( $tickets = '', $status = '' ){
 			$filtered_tickets = array();
-			
 			if( $status != 'all_tickets' ) {
 				foreach( $tickets as $t ){
 					if( $t['status_name'] == $status ) {
