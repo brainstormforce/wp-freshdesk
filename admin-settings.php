@@ -44,6 +44,7 @@ class FreshDeskSettingsPage{
 			$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
 		}
 		$this->url_options = get_option( 'fd_url' );
+		$this->display_option = get_option( 'fd_display' );
         ?>
         <div class="wrap">
             <div class="bend-heading-section">
@@ -55,6 +56,7 @@ class FreshDeskSettingsPage{
 				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active">General Configuration</a>
 				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab">Shortcode</a>
 				<a href="javascript:void(0);" id="tab-url" class="nav-tab">Freshdesk SSO</a>
+				<a href="javascript:void(0);" id="tab-display" class="nav-tab">Display Settings</a>
 			</h2>
 			<div id="api-tab" class="tabs">
 				<form method="post" action="options.php" autocomplete="off">
@@ -106,6 +108,15 @@ class FreshDeskSettingsPage{
 						// This prints out all hidden setting fields
 						settings_fields( 'url_option' );   
 						do_settings_sections( 'url-admin-setting' );
+						submit_button();?>
+				</form>
+			</div>
+			<div id="display-tab" style="display:none;" class="tabs">
+				<form method="post" action="options.php" id="display_form" autocomplete="off">
+					<?php
+						// This prints out all hidden setting fields
+						settings_fields( 'display_option' );   
+						do_settings_sections( 'display-admin-setting' );
 						submit_button();?>
 				</form>
 			</div>
@@ -236,6 +247,67 @@ class FreshDeskSettingsPage{
             'url-admin-setting', // Page
             'freshdesk_url_section' // Section           
         );
+		
+		// Register the display setting tab		
+		register_setting(
+            'display_option', // Option group
+            'fd_display' // Option name
+        );
+		
+		add_settings_section(
+            'freshdesk_display_section', // ID
+            '', // Title
+            array( $this, 'print_section_info' ), // Callback
+            'display-admin-setting' // Page
+        );
+		/*
+		add_settings_field(
+            'fd_display_display_id', // ID
+            'Ticket ID', // Title 
+            array( $this, 'fd_display_display_id_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );*/
+		
+		add_settings_field(
+            'fd_display_description', // ID
+            'Description', // Title 
+            array( $this, 'fd_display_description_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
+		add_settings_field(
+            'fd_display_priority_name', // ID
+            'Priority', // Title 
+            array( $this, 'fd_display_priority_name_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
+		add_settings_field(
+            'fd_display_updated_at', // ID
+            'Updated Date', // Title 
+            array( $this, 'fd_display_updated_at_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
+		/*add_settings_field(
+            'fd_display_subject', // ID
+            'Subject', // Title 
+            array( $this, 'fd_display_subject_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
+		add_settings_field(
+            'fd_display_status_name', // ID
+            'Status', // Title 
+            array( $this, 'fd_display_status_name_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );*/
     }
 	
 
@@ -267,6 +339,15 @@ class FreshDeskSettingsPage{
 			
 		if( isset( $input['no_tickets_msg'] ) )
             $new_input['no_tickets_msg'] = sanitize_text_field( $input['no_tickets_msg'] );
+			
+		if( isset( $input['fd_display_description'] ) )
+            $new_input['fd_display_description'] = sanitize_text_field( $input['fd_display_description'] );
+			
+		if( isset( $input['fd_display_priority_name'] ) )
+            $new_input['fd_display_priority_name'] = sanitize_text_field( $input['fd_display_priority_name'] );
+			
+		if( isset( $input['fd_display_updated_at'] ) )
+            $new_input['fd_display_updated_at'] = sanitize_text_field( $input['fd_display_updated_at'] );
 
         return $new_input;
     }
@@ -478,6 +559,85 @@ class FreshDeskSettingsPage{
 		}
         printf(
             '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_apikey[no_tickets_msg]" value="%s" class="regular-text">', $val
+        );
+	}
+	
+	/*public function fd_display_display_id_callback(){
+		$val = ( isset( $this->display_option['fd_display_display_id'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_display_id]" class="onoffswitch-checkbox" id="fd_display_display_id" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_display_id">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
+        );
+	}*/
+	
+	public function fd_display_description_callback(){
+		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_description]" class="onoffswitch-checkbox" id="fd_display_description" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_description">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
+        );
+	}
+	
+	/*public function fd_display_subject_callback(){
+		$val = ( isset( $this->display_option['fd_display_subject'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_subject]" class="onoffswitch-checkbox" id="fd_display_subject" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_subject">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
+        );
+	}*/
+	
+	/*public function fd_display_status_name_callback(){
+		$val = ( isset( $this->display_option['fd_display_status_name'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_status_name]" class="onoffswitch-checkbox" id="fd_display_status_name" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_status_name">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
+        );
+	}*/
+	
+	public function fd_display_priority_name_callback(){
+		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_priority_name]" class="onoffswitch-checkbox" id="fd_display_priority_name" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_priority_name">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
+        );
+	}
+	
+	
+	public function fd_display_updated_at_callback(){
+		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
+		printf(
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_display[fd_display_updated_at]" class="onoffswitch-checkbox" id="fd_display_updated_at" style="display:none;" %s>
+					<label class="onoffswitch-label" for="fd_display_updated_at">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
         );
 	}
 	

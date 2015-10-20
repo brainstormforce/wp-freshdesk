@@ -37,6 +37,12 @@
 			jQuery( '.tabs' ).hide();
 			jQuery( '#url-tab' ).show();
 		});
+		jQuery('#tab-display').click(function(){
+			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
+			jQuery( this ).addClass( "nav-tab-active" );
+			jQuery( '.tabs' ).hide();
+			jQuery( '#display-tab' ).show();
+		});
 		jQuery('.onoffswitch').on('onUltimateSwitchClick',function(){
 			//alert('on');
 			setTimeout(function(){

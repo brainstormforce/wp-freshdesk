@@ -17,6 +17,7 @@ if(!class_exists("FreshDeskAPI")){
 		private $freshdeskUrl;
 		private $opt;
 		private $options;
+		private $display_option;
 	
 		/*
 		 * Function Name: __construct
@@ -32,6 +33,7 @@ if(!class_exists("FreshDeskAPI")){
 			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
 			$this->freshdeskUrl = ( isset( $this->opt['freshdesk_url'] ) ) ? rtrim( $this->opt['freshdesk_url'], '/' ) . '/' : '';
+			$this->display_option = get_option( 'fd_display' );
 		}
 		
 		
@@ -304,6 +306,7 @@ if(!class_exists("FreshDeskAPI")){
 					}
 					
 					if( $tickets ) {
+						//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 						$result .= $this->get_html( $tickets );
 					} else {
 						$result .= ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? '<p>' . $this->opt['no_tickets_msg'] . '</p>' : '<p>No tickets</p>' ;
@@ -374,24 +377,52 @@ if(!class_exists("FreshDeskAPI")){
 		public function get_html( $tickets = '' ){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
+			//echo '<xmp>'; print_r($tickets); echo '</xmp>';
+			
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
 			
 				$html .= '<div id="tickets_html" class="lic-table">
 							<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
 							<table class="lic-table-list">
 								<tr>
-									<th width="15%">Ticket ID</th>
+									<th>Ticket ID</th>
 									<th>Subject</th>
-									<th width="20%">Status</th>
-								</tr>';
+									<th>Status</th>';
+				if( isset( $this->display_option ) ) {
+					if( $this->display_option != '' ) {
+						foreach( $this->display_option as $key=>$value ){
+							$html .= '
+							<th>' . str_replace( "_", " ", str_replace( "fd_display_", "", $key ) ) . '</th>';
+							//echo str_replace( "fd_display_", "", $key ) . '<br/>';
+						}
+					}
+				}
+				$html .= 
+								'</tr>';
 				foreach( $tickets as $d ) {
 					$html .= '
 								<tr class="sp-registered-site">
 									<td width="15%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
 									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
-									<td width="20%">' . $d->status_name . '</td>
-								</tr>
-					';
+									<td>' . $d->status_name . '</td>';
+					if( isset( $this->display_option ) ) {
+						if( $this->display_option != '' ) {
+							foreach( $this->display_option as $key=>$value ){
+								$index = str_replace( "fd_display_", "", $key );
+								if( $index == 'description' ){
+									$data = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description ;
+								} else if( $index == 'updated_at' ){
+									$data = date( 'n M, Y', strtotime( $d->$index ) );
+								} else {
+									$data = '<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->$index . '</a>';
+								}
+								$html .= '
+										<td>' . $data . '</td>';
+							}
+						}
+					}
+					$html .= 
+								'</tr>';
 				}
 				
 				$html .= '</table></div>';
