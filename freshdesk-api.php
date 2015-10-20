@@ -290,7 +290,7 @@ if(!class_exists("FreshDeskAPI")){
 				}
 				return $result;
 			} else {
-				return '<p>Please set settings from the admin panel.</p>';
+				return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
 			}
 		}
 		
@@ -379,7 +379,11 @@ if(!class_exists("FreshDeskAPI")){
 				if( isset( $tickets->require_login ) ) {
 					$msg = 'Invalid Credentials';
 				} else if( isset( $tickets->errors ) ) {
-					$msg = 'Invalid User';
+					if( isset( $tickets->errors->no_email ) ){
+						$msg = 'Invalid User';
+					} else {
+						$msg = 'Invalid Freshdesk URL';
+					}
 				} else {
 					$msg = 'Error!';
 				}

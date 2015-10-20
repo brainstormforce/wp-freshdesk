@@ -284,7 +284,7 @@ class FreshDeskSettingsPage{
 			$val2 = 'readonly="readonly"';
 		}
         printf(
-            '<input type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
+            '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
@@ -306,7 +306,7 @@ class FreshDeskSettingsPage{
 			$val2 = 'readonly="readonly"';
 		}
         printf(
-            '<input type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
+            '<input autocomplete="off" type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
 		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
     }
@@ -323,11 +323,16 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            '<input type="checkbox" name="fd_apikey[use_apikey]" id="use_apikey" %s >Yes/No', $val
+				'<div class="onoffswitch">
+					<input type="checkbox" name="fd_apikey[use_apikey]" class="onoffswitch-checkbox" id="use_apikey" style="display:none;" %s>
+					<label class="onoffswitch-label" for="use_apikey">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>', $val
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
-	
 	
 	
 	/*
@@ -345,7 +350,7 @@ class FreshDeskSettingsPage{
 			$val2 = 'readonly="readonly"';
 		}
         printf(
-            '<input type="text" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>', $val1, $val2
+            '<input type="text" autocomplete="off" placeholder="Username" id="api_username" name="fd_apikey[api_username]" value="%s" class="regular-text" %s>', $val1, $val2
         );
     }
 	
@@ -367,7 +372,7 @@ class FreshDeskSettingsPage{
 			$val2 = 'readonly="readonly"';
 		}
         printf(
-            '<input type="password" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>', $val1, $val2
+            '<input type="password" autocomplete="off" placeholder="Password" id="api_pwd" name="fd_apikey[api_pwd]" class="regular-text" value="%s" %s>', $val1, $val2
         );
     }
 	
@@ -383,7 +388,7 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            '<input type="text" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
+            '<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
         );
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
@@ -434,7 +439,13 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            '<input type="checkbox" name="fd_url[freshdesk_enable]" id="freshdesk_enable" %s >Yes/No', $val 
+            	'<div class="onoffswitch">
+					<input type="checkbox" name="fd_url[freshdesk_enable]" class="onoffswitch-checkbox" id="freshdesk_enable" style="display:none;" %s>
+					<label class="onoffswitch-label" for="freshdesk_enable">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>',$val 
         );
     }
 	
