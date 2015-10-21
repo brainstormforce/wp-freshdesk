@@ -387,7 +387,7 @@ if(!class_exists("FreshDeskAPI")){
 							<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
 							<table class="lic-table-list">
 								<tr>
-									<th>Ticket ID</th>
+									<th width="10%">ID</th>
 									<th>Subject</th>
 									<th>Status</th>';
 				if( isset( $this->display_option ) ) {
@@ -404,7 +404,7 @@ if(!class_exists("FreshDeskAPI")){
 				foreach( $tickets as $d ) {
 					$html .= '
 								<tr class="sp-registered-site">
-									<td width="15%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
+									<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
 									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
 									<td>' . $d->status_name . '</td>';
 					if( isset( $this->display_option ) ) {

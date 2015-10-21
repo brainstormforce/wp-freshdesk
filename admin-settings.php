@@ -422,13 +422,27 @@ class FreshDeskSettingsPage{
 			$val = 'checked="checked"';
 		}
         printf(
-				'<div class="onoffswitch">
+				'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="use_apikey" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
+										<label for="use_apikey"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>', $val
+				/*'<div class="onoffswitch">
 					<input type="checkbox" name="fd_apikey[use_apikey]" class="onoffswitch-checkbox" id="use_apikey" style="display:none;" %s>
 					<label class="onoffswitch-label" for="use_apikey">
 						<span class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
 					</label>
-				</div>', $val
+				</div>', $val*/
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
@@ -541,13 +555,27 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            	'<div class="onoffswitch">
+            	'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="freshdesk_enable" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
+										<label for="freshdesk_enable"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>', $val
+				/*'<div class="onoffswitch">
 					<input type="checkbox" name="fd_url[freshdesk_enable]" class="onoffswitch-checkbox" id="freshdesk_enable" style="display:none;" %s>
 					<label class="onoffswitch-label" for="freshdesk_enable">
 						<span class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
 					</label>
-				</div>',$val 
+				</div>',$val*/ 
         );
     }
 	
@@ -578,13 +606,27 @@ class FreshDeskSettingsPage{
 	public function fd_display_description_callback(){
 		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
 		printf(
-            	'<div class="onoffswitch">
+            	'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="fd_display_description" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
+										<label for="fd_display_description"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>', $val
+				/*'<div class="onoffswitch">
 					<input type="checkbox" name="fd_display[fd_display_description]" class="onoffswitch-checkbox" id="fd_display_description" style="display:none;" %s>
 					<label class="onoffswitch-label" for="fd_display_description">
 						<span class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
 					</label>
-				</div>',$val 
+				</div>',$val*/ 
         );
 	}
 	
@@ -617,13 +659,27 @@ class FreshDeskSettingsPage{
 	public function fd_display_priority_name_callback(){
 		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
 		printf(
-            	'<div class="onoffswitch">
+				'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="fd_display_priority_name" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
+										<label for="fd_display_priority_name"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>', $val
+            	/*'<div class="onoffswitch">
 					<input type="checkbox" name="fd_display[fd_display_priority_name]" class="onoffswitch-checkbox" id="fd_display_priority_name" style="display:none;" %s>
 					<label class="onoffswitch-label" for="fd_display_priority_name">
 						<span class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
 					</label>
-				</div>',$val 
+				</div>',$val*/ 
         );
 	}
 	
@@ -631,13 +687,27 @@ class FreshDeskSettingsPage{
 	public function fd_display_updated_at_callback(){
 		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
 		printf(
-            	'<div class="onoffswitch">
+				'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="fd_display_updated_at" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
+										<label for="fd_display_updated_at"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>',$val
+            	/*'<div class="onoffswitch">
 					<input type="checkbox" name="fd_display[fd_display_updated_at]" class="onoffswitch-checkbox" id="fd_display_updated_at" style="display:none;" %s>
 					<label class="onoffswitch-label" for="fd_display_updated_at">
 						<span class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
 					</label>
-				</div>',$val 
+				</div>',$val*/ 
         );
 	}
 	
