@@ -189,14 +189,6 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
-		add_settings_field(
-            'no_tickets_msg', // ID
-            'No Tickets Error Message', // Title 
-            array( $this, 'no_tickets_msg_callback' ), // Callback
-            'my-setting-admin', // Page
-            'setting_section_id' // Section           
-        );
-		
 		// Register the setting tab		
 		register_setting(
             'url_option', // Option group
@@ -280,6 +272,13 @@ class FreshDeskSettingsPage{
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
         );
+		add_settings_field(
+            'no_tickets_msg', // ID
+            'No Tickets Error Message', // Title 
+            array( $this, 'no_tickets_msg_callback' ), // Callback
+            'display-setting-admin', // Page
+            'freshdesk_display_section' // Section           
+        );
 		
     }
 	
@@ -311,7 +310,7 @@ class FreshDeskSettingsPage{
             $new_input['use_apikey'] = sanitize_text_field( $input['use_apikey'] );
 			
 		if( isset( $input['no_tickets_msg'] ) )
-            $new_input['no_tickets_msg'] = sanitize_text_field( $input['no_tickets_msg'] );
+            $new_input['no_tickets_msg'] = ( $input['no_tickets_msg'] );
 			
 		if( isset( $input['fd_display_description'] ) )
             $new_input['fd_display_description'] = sanitize_text_field( $input['fd_display_description'] );
@@ -539,7 +538,7 @@ class FreshDeskSettingsPage{
 	public function no_tickets_msg_callback(){
 		$val = '';
 		if( isset( $this->options['no_tickets_msg'] ) ){
-			$val = ( $this->options['no_tickets_msg'] != '' ) ? $this->options['no_tickets_msg'] : '';
+			$val = ( $this->options['no_tickets_msg'] != '' ) ? htmlentities( $this->options['no_tickets_msg'] ) : '';
 		}
         printf(
             '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_apikey[no_tickets_msg]" value="%s" class="regular-text">', $val

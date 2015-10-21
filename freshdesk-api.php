@@ -61,15 +61,19 @@ if(!class_exists("FreshDeskAPI")){
 			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 			$tickets = json_decode( json_encode( $tickets ), true );
 			
-			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
+			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
 				if( isset( $postArray['filter_dropdown'] ) ) {
 					$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
 				}
 				if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
 					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
 				}
-				
-				$returnArray = $this->get_html( $filteredTickets );
+				//echo '<xmp>'; print_r($filteredTickets); echo '</xmp>';
+				if( empty( $filteredTickets ) ) {
+					$returnArray = '<div id="tickets_html"><p>No tickets for "' . $postArray['filter_dropdown'] . '" category.</p></div>';
+				} else {
+					$returnArray = $this->get_html( $filteredTickets );
+				}
 			} else {
 				if( isset( $tickets->require_login ) ) {
 					$msg = 'Invalid Credentials';
@@ -79,7 +83,9 @@ if(!class_exists("FreshDeskAPI")){
 					} else {
 						$msg = 'Invalid Freshdesk URL';
 					}
-				} else {
+				} else if( empty( $tickets ) ){
+					$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
+				}else {
 					$msg = 'Error!';
 				}
 				$returnArray = '<div id="tickets_html"><p>' . $msg . '</p></div>';
@@ -277,6 +283,9 @@ if(!class_exists("FreshDeskAPI")){
 						<div style="clear:both;"></div>
 						<input type="hidden" id="action" name="action" value="filter_tickets"/>
 					</form>';
+					$result .= '<section id="dark-bg" style="display:none;" class="dark-bg">
+								<section id="loading"><img src="' . plugins_url("images/loading.gif",__FILE__) . '"></section>
+							</section>';
 					
 					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
 						$result .= 
@@ -285,6 +294,7 @@ if(!class_exists("FreshDeskAPI")){
 								tickets = ' . json_encode( $ajaxTickets, false ) . ';
 								jQuery("#filter_dropdown").change(function(){
 									//jQuery("#filter_form").submit();
+									jQuery("#dark-bg").show();
 									ajaxcall( "filter", tickets, this.value );
 								});
 								jQuery("#search_txt").on( "keyup keypress", function(e) {
@@ -308,19 +318,40 @@ if(!class_exists("FreshDeskAPI")){
 									data : data,
 									success: function(response) {
 										jQuery("#tickets_html").html( response );
+										jQuery("#dark-bg").hide();
 									}
 								});
+								//jQuery("#dark-bg").hide();
 							}
 						</script>
 						';
 					}
 					
-					if( $tickets ) {
+					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
+						$result .= $this->get_html( $tickets );
+					} else {
+						if( isset( $tickets->require_login ) ) {
+							$msg = 'Invalid Credentials';
+						} else if( isset( $tickets->errors ) ) {
+							if( isset( $tickets->errors->no_email ) ){
+								$msg = 'Invalid User';
+							} else {
+								$msg = 'Invalid Freshdesk URL';
+							}
+						} else if( empty( $tickets ) ) {
+							$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
+						}else {
+							$msg = 'Error!';
+						}
+						$result = '<div id="tickets_html"><p>' . $msg . '</p></div>';
+					}
+					
+					/*if( $tickets ) {
 						//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 						$result .= $this->get_html( $tickets );
 					} else {
 						$result .= ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? '<p>' . $this->opt['no_tickets_msg'] . '</p>' : '<p>No tickets</p>' ;
-					}
+					}*/
 					return $result;
 				} else {
 					return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
@@ -389,9 +420,8 @@ if(!class_exists("FreshDeskAPI")){
 		public function get_html( $tickets = '' ){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
-			//echo '<xmp>'; print_r($tickets); echo '</xmp>';
 			
-			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) {
+			//if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
 			
 				$html .= '<div id="tickets_html" class="lic-table">
 							<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
@@ -438,7 +468,7 @@ if(!class_exists("FreshDeskAPI")){
 				
 				$html .= '</table></div>';
 				return $html;
-			} else {
+			/*} else {
 				if( isset( $tickets->require_login ) ) {
 					$msg = 'Invalid Credentials';
 				} else if( isset( $tickets->errors ) ) {
@@ -447,11 +477,13 @@ if(!class_exists("FreshDeskAPI")){
 					} else {
 						$msg = 'Invalid Freshdesk URL';
 					}
-				} else {
+				} else if( empty( $tickets ) ) {
+					$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
+				}else {
 					$msg = 'Error!';
 				}
 				return '<div id="tickets_html"><p>' . $msg . '</p></div>';
-			}
+			}*/
 		}
 		
 		

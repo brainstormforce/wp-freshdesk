@@ -34,3 +34,6 @@ table.lic-table-list tr td a {
 	color: #757575;
 	text-decoration:none;
 }
+
+.dark-bg{background:none repeat scroll 0 0 #0B0B0B;height:100%;left:0;opacity:0.8;overflow:hidden;position:fixed;top:0;width:100%;z-index:1042;}
+#loading{left: 47%;margin: 30px;padding: 0;position: fixed;top: 40%;width: 3%;z-index: 56456;}
