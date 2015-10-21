@@ -187,34 +187,34 @@ if(!class_exists("FreshDeskAPI")){
 		
 		public function fetch_tickets( $atts ){
 			$result = '';
-			if( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) {
-				if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
-			
-					switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
-						case 'Open':
-							$_POST["filter_dropdown"] = 'Open';
-							break;
-						case 'Closed':
-							$_POST["filter_dropdown"] = 'Closed';
-							break;
-						case 'Resolved':
-							$_POST["filter_dropdown"] = 'Resolved';
-							break;
-						case 'Waiting On Third Party':
-							$_POST["filter_dropdown"] = 'Waiting on Third Party';
-							break;
-						case 'Waiting On Customer':
-							$_POST["filter_dropdown"] = 'Waiting on Customer';
-							break;
-						case 'Pending':
-							$_POST["filter_dropdown"] = 'Pending';
-							break;
-						default:
-							break;
-					}
-				}
-				if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 					global $current_user;
+				if( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) {
+					if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
+				
+						switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
+							case 'Open':
+								$_POST["filter_dropdown"] = 'Open';
+								break;
+							case 'Closed':
+								$_POST["filter_dropdown"] = 'Closed';
+								break;
+							case 'Resolved':
+								$_POST["filter_dropdown"] = 'Resolved';
+								break;
+							case 'Waiting On Third Party':
+								$_POST["filter_dropdown"] = 'Waiting on Third Party';
+								break;
+							case 'Waiting On Customer':
+								$_POST["filter_dropdown"] = 'Waiting on Customer';
+								break;
+							case 'Pending':
+								$_POST["filter_dropdown"] = 'Pending';
+								break;
+							default:
+								break;
+						}
+					}
 									
 					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
 					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
@@ -311,10 +311,12 @@ if(!class_exists("FreshDeskAPI")){
 					} else {
 						$result .= ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? '<p>' . $this->opt['no_tickets_msg'] . '</p>' : '<p>No tickets</p>' ;
 					}
+					return $result;
+				} else {
+					return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
 				}
-				return $result;
-			} else {
-				return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
+			} else{
+				return '<p><a href="' . wp_login_url() . '" title="Login">Login</a> to view your tickets!</p>';
 			}
 		}
 		
@@ -412,7 +414,7 @@ if(!class_exists("FreshDeskAPI")){
 								if( $index == 'description' ){
 									$data = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description ;
 								} else if( $index == 'updated_at' ){
-									$data = date( 'n M, Y', strtotime( $d->$index ) );
+									$data = date( 'n M, Y, g:i A', strtotime( $d->$index ) );
 								} else {
 									$data = '<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->$index . '</a>';
 								}
