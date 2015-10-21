@@ -16,7 +16,6 @@ class FreshDeskSettingsPage{
     }
 
 
-
     /*
      * Add options page
      */
@@ -30,7 +29,6 @@ class FreshDeskSettingsPage{
             array( $this, 'create_admin_page' )
         );
     }
-
 
 
     /*
@@ -130,10 +128,7 @@ class FreshDeskSettingsPage{
      */
     public function page_init(){
 	
-		//Enqueue all styles and scripts.
-		//wp_enqueue_style( 'fd-style', plugins_url( "css/fd-style.css", __FILE__ ) );
-		//wp_enqueue_script( 'fd-script', plugins_url( "js/fd-script.js", __FILE__ ) );
-		
+		//Enqueue all styles and scripts.		
 		wp_register_script( 'fd-script', plugins_url('js/fd-script.js', __FILE__), array('jquery'), '1.1', true );
 		wp_enqueue_script( 'fd-script' );
 		
@@ -260,14 +255,7 @@ class FreshDeskSettingsPage{
             array( $this, 'print_section_info' ), // Callback
             'display-admin-setting' // Page
         );
-		/*
-		add_settings_field(
-            'fd_display_display_id', // ID
-            'Ticket ID', // Title 
-            array( $this, 'fd_display_display_id_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );*/
+		
 		
 		add_settings_field(
             'fd_display_description', // ID
@@ -293,21 +281,6 @@ class FreshDeskSettingsPage{
             'freshdesk_display_section' // Section           
         );
 		
-		/*add_settings_field(
-            'fd_display_subject', // ID
-            'Subject', // Title 
-            array( $this, 'fd_display_subject_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
-		add_settings_field(
-            'fd_display_status_name', // ID
-            'Status', // Title 
-            array( $this, 'fd_display_status_name_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );*/
     }
 	
 
@@ -360,7 +333,6 @@ class FreshDeskSettingsPage{
         //Nothing to do here
     }
 	
-	
 
     /*
      * Callback function for "FreshDesk API Key"
@@ -382,8 +354,7 @@ class FreshDeskSettingsPage{
         );
 		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
     }
-	
-	
+		
 	
 	/*
      * Callback function for "FreshDesk Shared Secret Key"
@@ -406,8 +377,7 @@ class FreshDeskSettingsPage{
 		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
     }
 	
-	
-	
+		
 	 /*
      * Callback function for "FreshDesk Admin Username"
      */
@@ -436,13 +406,6 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>', $val
-				/*'<div class="onoffswitch">
-					<input type="checkbox" name="fd_apikey[use_apikey]" class="onoffswitch-checkbox" id="use_apikey" style="display:none;" %s>
-					<label class="onoffswitch-label" for="use_apikey">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>', $val*/
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
@@ -468,7 +431,6 @@ class FreshDeskSettingsPage{
     }
 	
 	
-	
 	/*
      * Callback function for "FreshDesk Admin Password"
      */
@@ -489,8 +451,7 @@ class FreshDeskSettingsPage{
         );
     }
 	
-	
-	
+		
 	/* 
      * Callback function for "FreshDesk URL"
      */
@@ -506,8 +467,7 @@ class FreshDeskSettingsPage{
         );
 		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
     }
-	
-	
+		
 	
 	/* 
      * Callback function for "Login URL" for SSO
@@ -568,18 +528,14 @@ class FreshDeskSettingsPage{
 							</div>
 						</div>
 					</div>
-				</div>', $val
-				/*'<div class="onoffswitch">
-					<input type="checkbox" name="fd_url[freshdesk_enable]" class="onoffswitch-checkbox" id="freshdesk_enable" style="display:none;" %s>
-					<label class="onoffswitch-label" for="freshdesk_enable">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val*/ 
+				</div>', $val 
         );
     }
 	
 	
+	/*
+     * Callback function for no ticket message text box
+     */
 	public function no_tickets_msg_callback(){
 		$val = '';
 		if( isset( $this->options['no_tickets_msg'] ) ){
@@ -590,19 +546,10 @@ class FreshDeskSettingsPage{
         );
 	}
 	
-	/*public function fd_display_display_id_callback(){
-		$val = ( isset( $this->display_option['fd_display_display_id'] ) ) ? 'checked="checked"' : '';
-		printf(
-            	'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_display_id]" class="onoffswitch-checkbox" id="fd_display_display_id" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_display_id">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val 
-        );
-	}*/
 	
+	/*
+     * Callback function for display description text box
+     */
 	public function fd_display_description_callback(){
 		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
 		printf(
@@ -620,42 +567,13 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>', $val
-				/*'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_description]" class="onoffswitch-checkbox" id="fd_display_description" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_description">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val*/ 
         );
 	}
-	
-	/*public function fd_display_subject_callback(){
-		$val = ( isset( $this->display_option['fd_display_subject'] ) ) ? 'checked="checked"' : '';
-		printf(
-            	'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_subject]" class="onoffswitch-checkbox" id="fd_display_subject" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_subject">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val 
-        );
-	}*/
-	
-	/*public function fd_display_status_name_callback(){
-		$val = ( isset( $this->display_option['fd_display_status_name'] ) ) ? 'checked="checked"' : '';
-		printf(
-            	'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_status_name]" class="onoffswitch-checkbox" id="fd_display_status_name" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_status_name">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val 
-        );
-	}*/
-	
+
+
+	/*
+     * Callback function for display ticket priority text box
+     */
 	public function fd_display_priority_name_callback(){
 		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
 		printf(
@@ -673,17 +591,13 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>', $val
-            	/*'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_priority_name]" class="onoffswitch-checkbox" id="fd_display_priority_name" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_priority_name">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val*/ 
         );
 	}
 	
 	
+	/*
+     * Callback function for display ticket updated at date text box
+     */
 	public function fd_display_updated_at_callback(){
 		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
 		printf(
@@ -701,13 +615,6 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>',$val
-            	/*'<div class="onoffswitch">
-					<input type="checkbox" name="fd_display[fd_display_updated_at]" class="onoffswitch-checkbox" id="fd_display_updated_at" style="display:none;" %s>
-					<label class="onoffswitch-label" for="fd_display_updated_at">
-						<span class="onoffswitch-inner"></span>
-						<span class="onoffswitch-switch"></span>
-					</label>
-				</div>',$val*/ 
         );
 	}
 	

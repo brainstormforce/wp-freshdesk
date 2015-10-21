@@ -37,11 +37,21 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
+		/*
+		 * Function Name: enqueue_scripts
+		 * Function Description: Adds scripts to wp pages
+		 */
+		
 		function enqueue_scripts() {
 			wp_register_style( 'style', plugins_url('css/style.css', __FILE__) );
 			wp_enqueue_style( 'style' );
 		}
 		
+		
+		/*
+		 * Function Name: process_filter_tickets
+		 * Function Description: AJAX call function for ticket search/filter
+		 */
 		
 		function process_filter_tickets(){
 			global $current_user;
@@ -395,7 +405,6 @@ if(!class_exists("FreshDeskAPI")){
 						foreach( $this->display_option as $key=>$value ){
 							$html .= '
 							<th>' . str_replace( "_", " ", str_replace( "fd_display_", "", $key ) ) . '</th>';
-							//echo str_replace( "fd_display_", "", $key ) . '<br/>';
 						}
 					}
 				}
