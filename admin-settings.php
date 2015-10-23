@@ -248,10 +248,18 @@ class FreshDeskSettingsPage{
             'display-admin-setting' // Page
         );
 		
+		add_settings_field(
+            'fd_display_use_css', // ID
+            'Use predefined CSS', // Title 
+            array( $this, 'fd_display_use_css_callback' ), // Callback
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
 		
 		add_settings_field(
             'fd_display_description', // ID
-            'Description', // Title 
+            'Show Description', // Title 
             array( $this, 'fd_display_description_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
@@ -259,7 +267,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'fd_display_priority_name', // ID
-            'Priority', // Title 
+            'Show Priority', // Title 
             array( $this, 'fd_display_priority_name_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
@@ -267,7 +275,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'fd_display_updated_at', // ID
-            'Updated Date', // Title 
+            'Show Updated Date', // Title 
             array( $this, 'fd_display_updated_at_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
@@ -617,6 +625,30 @@ class FreshDeskSettingsPage{
 									<div class="switch">
 										<input id="fd_display_updated_at" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
 										<label for="fd_display_updated_at"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>',$val
+        );
+	}
+	
+	
+	/*
+     * Callback function to use/not use plugin css
+     */
+	public function fd_display_use_css_callback(){
+		$val = ( isset( $this->display_option['fd_display_use_css'] ) ) ? 'checked="checked"' : '';
+		printf(
+				'<div id="wrapper">
+					<div id="main">
+						<div class="container">
+							<div class="settings">
+								<div class="row">
+									<div class="switch">
+										<input id="fd_display_use_css" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
+										<label for="fd_display_use_css"></label>
 									</div>
 								</div>
 							</div>

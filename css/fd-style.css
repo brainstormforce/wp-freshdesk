@@ -1,5 +1,113 @@
 /* CSS Document */
 
+
+/* Loader */
+#fd-dark-bg {position:fixed; top:0; left:0;}
+
+.bsf-cntlst-loader {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(242, 242, 242, 0.95);
+	z-index: 99999;
+	visibility: hidden;
+	-webkit-transition: visibility 600ms linear, background-color 600ms linear;
+	-moz-transition: visibility 600ms linear, background-color 600ms linear;
+	transition: visibility 600ms linear, background-color 600ms linear;
+}
+.bsf-cntlst-loader .smile-loader {
+	position: absolute !important;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+.bsf-cntlst-loader.bsf-fixed-loader .smile-loader {
+    top: 150px;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+.smile-loading-bar {
+	display: inline-block;
+	width: 6px;
+	height: 29px;
+	border-radius: 4px;
+	-webkit-animation: loading 1s ease-in-out infinite;
+	-moz-animation: loading 1s ease-in-out infinite;
+	animation: loading 1s ease-in-out infinite;
+	margin-right: 1px;
+}
+.smile-loading-bar:nth-child(1) {
+  background-color: #3498db;
+  -webkit-animation-delay: 0;
+  -moz-animation-delay: 0;
+  animation-delay: 0;
+}
+.smile-loading-bar:nth-child(2) {
+  background-color: #e74c3c;
+  -webkit-animation-delay: 0.09s;
+  -moz-animation-delay: 0.09s;
+  animation-delay: 0.09s;
+}
+.smile-loading-bar:nth-child(3) {
+  background-color: #f1c40f;
+  -webkit-animation-delay: .18s;
+  -moz-animation-delay: .18s;
+  animation-delay: .18s;
+}
+.smile-loading-bar:nth-child(4) {
+  background-color: #2ecc71;
+  -webkit-animation-delay: .27s;
+  -moz-animation-delay: .27s;
+  animation-delay: .27s;
+}
+@-webkit-keyframes loading {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  20% {
+    -webkit-transform: scale(1, 2.2);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+@-moz-keyframes loading {
+  0% {
+    -moz-transform: scale(1);
+  }
+  20% {
+    -moz-transform: scale(1, 2.2);
+  }
+  40% {
+    -moz-transform: scale(1);
+  }
+}
+@keyframes loading {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1, 2.2);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.dark-bg{background:none repeat scroll 0 0 #0B0B0B;height:100%;left:0;opacity:0.8;overflow:hidden;position:fixed;top:0;width:100%;z-index:1042;}
+
+#loading{left: 47%;margin: 30px;padding: 0;position: fixed;top: 40%;width: 3%;z-index: 56456;}
+
+.clear{clear:both;}
+
+.right{float:right;}
+
+.left{float:left;}
+
+
 .bend-heading-section {
 	position: relative;
 }

@@ -8,17 +8,17 @@
 			data : data,
 			success: function(response) {
 				jQuery("#tickets_html").html( response );
-				jQuery("#dark-bg").hide();
+				jQuery("#fd-dark-bg").hide();
 			}
 		});
-		//jQuery("#dark-bg").hide();
+		//jQuery("#fd-dark-bg").hide();
 	}
 	jQuery(document).ready(function(){
 		var call_ajax_flag = jQuery('#call_ajax_flag').val();
 		jQuery("#filter_dropdown").change(function(){
 			//jQuery("#filter_form").submit();
 			if( call_ajax_flag == 1 ) {
-				jQuery("#dark-bg").show();
+				jQuery("#fd-dark-bg").show();
 				ajaxcall( "filter", this.value );
 			}
 		});

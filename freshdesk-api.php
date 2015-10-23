@@ -46,8 +46,15 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function enqueue_scripts() {
-			wp_register_style( 'style', plugins_url('css/style.css', __FILE__) );
-			wp_enqueue_style( 'style' );
+			//echo '<xmp>'; print_r($this->display_option); echo '</xmp>';
+			if( isset( $this->display_option['fd_display_use_css'] ) && $this->display_option['fd_display_use_css'] != '' ){
+				if( $this->display_option['fd_display_use_css'] == 'on' ){
+					wp_register_style( 'fd-table', plugins_url('css/fd-table.css', __FILE__) );
+					wp_enqueue_style( 'fd-table' );
+				}
+			}
+			wp_register_style( 'fd-style', plugins_url('css/fd-style.css', __FILE__) );
+			wp_enqueue_style( 'fd-style' );
 			wp_register_script( 'fd-script-frontend', plugins_url('js/fd-script-frontend.js', __FILE__), array('jquery'), '1.1', true );
 			wp_enqueue_script( 'fd-script-frontend' );
 		}
@@ -293,9 +300,18 @@ if(!class_exists("FreshDeskAPI")){
 						<input type="hidden" id="call_ajax_flag" name="call_ajax_flag" value="' . $is_call_ajax_flag . '"/>
 					</form>';
 					
-					$result .= '<section id="dark-bg" style="display:none;" class="dark-bg">
+					$result .= '<div class="bsf-cntlst-loader" style="visibility: visible;overflow: hidden; display:none;" id="fd-dark-bg">
+									<div class="smile-loader">
+										<div class="smile-loading-bar"></div>
+										<div class="smile-loading-bar"></div>
+										<div class="smile-loading-bar"></div>
+										<div class="smile-loading-bar"></div>
+									</div>
+								</div>';
+					
+					/*$result .= '<section id="dark-bg" style="display:none;" class="dark-bg">
 								<section id="loading"><img src="' . plugins_url("images/loading.gif",__FILE__) . '"></section>
-							</section>';
+							</section>';*/
 							
 					$result .= 
 							'<script type="text/javascript">
@@ -438,9 +454,10 @@ if(!class_exists("FreshDeskAPI")){
 								case 'no_tickets_msg':
 									break;
 								case 'fd_display_priority_name':
-								default:
 									$index = str_replace( "fd_display_", "", $key );
 									$data = '<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->$index . '</a>';
+									break;
+								default:
 									break;
 							}
 							if( $data != '' ) {
