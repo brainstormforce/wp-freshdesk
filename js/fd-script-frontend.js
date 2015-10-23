@@ -22,14 +22,14 @@
 				ajaxcall( "filter", this.value );
 			}
 		});
-		jQuery("#search_txt").on( "keyup keypress", function(e) {
+		jQuery("#search_txt").on( "keyup", function(e) {
 			// Enter pressed?
 			if( e.keyCode  == 10 || e.keyCode == 13 ) {
 				//alert("enter");
 				e.preventDefault();
 				return false;
 			}
-			if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 && this.value.length >= 2) {
+			if( e.which != 9 && e.which != 10 && e.which != 13 && e.which != 37 && e.which != 38 && e.which != 39 && e.which != 40 ) {
 				if( call_ajax_flag == 1 ) {
 					ajaxcall( "search", this.value );
 				}

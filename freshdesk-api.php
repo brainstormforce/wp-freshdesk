@@ -69,18 +69,17 @@ if(!class_exists("FreshDeskAPI")){
 			global $current_user;
 			$postArray = $_POST;
 			$returnArray = array();
-			
+			//echo '<xmp>'; print_r($postArray); echo '</xmp>';
 			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 			$tickets = json_decode( json_encode( $tickets ), true );
-			
+			$filteredTickets = $tickets;
 			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
 				if( isset( $postArray['filter_dropdown'] ) ) {
 					$filteredTickets = ( $postArray['filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['filter_dropdown'] ) : $tickets ;
 				}
 				if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
-					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $postArray['search_txt'] ) : $tickets ;
+					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $filteredTickets, $postArray['search_txt'] ) : $tickets ;
 				}
-				//echo '<xmp>'; print_r($filteredTickets); echo '</xmp>';
 				if( empty( $filteredTickets ) ) {
 					$returnArray = '<div id="tickets_html"><p> ' . __( 'No tickets for "' . strtoupper( str_replace( '_', ' ', $postArray['filter_dropdown'] ) ) . '" category.' ) . '</p></div>';
 				} else {
