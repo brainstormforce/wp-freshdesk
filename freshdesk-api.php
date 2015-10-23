@@ -241,7 +241,7 @@ if(!class_exists("FreshDeskAPI")){
 					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
 					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 					$result .= '
-					<div style="float:left;">
+					<div class="left">
 						<form method="post" action="" id="filter_form" name="filter_form">
 							<select id="filter_dropdown" name="filter_dropdown">
 								<option value="all_tickets" ';
@@ -283,10 +283,10 @@ if(!class_exists("FreshDeskAPI")){
 							</select>
 						
 						</div>
-						<div style="float:right;">
+						<div class="right">
 							<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...' ) . '"/>
 						</div>
-						<div style="clear:both;"></div>';
+						<div class="clear"></div>';
 					$is_call_ajax_flag = ( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) ? '1' : '0';
 					$result .= '
 						<input type="hidden" id="action" name="action" value="filter_tickets"/>
@@ -391,8 +391,6 @@ if(!class_exists("FreshDeskAPI")){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			
-			//if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
-			//echo '<xmp>'; print_r($this->display_option); echo '</xmp>';
 			$html .= '<div id="tickets_html" class="lic-table fwt-table-responsive">
 						<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
 						<table class="lic-table-list">
