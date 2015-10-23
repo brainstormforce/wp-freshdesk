@@ -51,10 +51,10 @@ class FreshDeskSettingsPage{
 			</div>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active">General Configuration</a>
-				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab">Shortcode</a>
-				<a href="javascript:void(0);" id="tab-url" class="nav-tab">Freshdesk SSO</a>
-				<a href="javascript:void(0);" id="tab-display" class="nav-tab">Display Settings</a>
+				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration' ); ?></a>
+				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcode' ); ?></a>
+				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO' ); ?></a>
+				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings' ); ?></a>
 			</h2>
 			<div id="api-tab" class="tabs">
 				<form method="post" action="options.php" autocomplete="off">
@@ -66,37 +66,37 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="tabs">
-				<p class="description1">Paste the below shortcode on your page.</p>
-				<code>[fetch_tickets]</code>
-				<p>This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:</p>
+				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.' ); ?></p>
+				<code>[fd_fetch_tickets]</code>
+				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:'); ?></p>
 				<table>
 					<tr>
-						<td>All tickets</td>
-						<td><code>[fetch_tickets]</code></td>
+						<td><?php echo __( 'All tickets' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Open</td>
-						<td><code>[fetch_tickets filter="Open"]</code></td>
+						<td><?php echo __( 'Open' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Open"]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Resolved</td>
-						<td><code>[fetch_tickets filter="Resolved"]</code></td>
+						<td><?php echo __( 'Resolved' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Resolved"]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Closed</td>
-						<td><code>[fetch_tickets filter="Closed"]</code></td>
+						<td><?php echo __( 'Closed'); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Closed"]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Pending</td>
-						<td><code>[fetch_tickets filter="Pending"]</code></td>
+						<td><?php echo __( 'Pending' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Pending"]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Waiting on Customer</td>
-						<td><code>[fetch_tickets filter="Waiting on Customer"]</code></td>
+						<td><?php echo __( 'Waiting on Customer' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Customer"]' ); ?></code></td>
 					</tr>
 					<tr>
-						<td>Waiting on Third Party</td>
-						<td><code>[fetch_tickets filter="Waiting on Third Party"]</code></td>
+						<td><?php echo __( 'Waiting on Third Party' ); ?></td>
+						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Third Party"]' ); ?></code></td>
 					</tr>
 				</table>
 			</div>

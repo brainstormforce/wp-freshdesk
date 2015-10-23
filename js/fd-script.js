@@ -42,6 +42,5 @@
 			jQuery( this ).addClass( "nav-tab-active" );
 			jQuery( '.tabs' ).hide();
 			jQuery( '#display-tab' ).show();
-		});
-		
+		});		
 	});

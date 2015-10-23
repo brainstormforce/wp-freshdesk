@@ -37,3 +37,39 @@ table.lic-table-list tr td a {
 
 .dark-bg{background:none repeat scroll 0 0 #0B0B0B;height:100%;left:0;opacity:0.8;overflow:hidden;position:fixed;top:0;width:100%;z-index:1042;}
 #loading{left: 47%;margin: 30px;padding: 0;position: fixed;top: 40%;width: 3%;z-index: 56456;}
+
+@media screen and (max-width: 767px) {
+    .fwt-table-responsive {
+        width: 100%;
+        margin-bottom: 15px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+        border: 1px solid #ddd
+    }
+
+    .fwt-table-responsive > .table {
+        margin-bottom: 0
+    }
+
+    .fwt-table-responsive > .table > thead > tr > th, .fwt-table-responsive > .table > tbody > tr > th, .fwt-table-responsive > .table > tfoot > tr > th, .fwt-table-responsive > .table > thead > tr > td, .fwt-table-responsive > .table > tbody > tr > td, .fwt-table-responsive > .table > tfoot > tr > td {
+        white-space: nowrap
+    }
+
+    .fwt-table-responsive > .table-bordered {
+        border: 0
+    }
+
+    .fwt-table-responsive > .table-bordered > thead > tr > th:first-child, .fwt-table-responsive > .table-bordered > tbody > tr > th:first-child, .fwt-table-responsive > .table-bordered > tfoot > tr > th:first-child, .fwt-table-responsive > .table-bordered > thead > tr > td:first-child, .fwt-table-responsive > .table-bordered > tbody > tr > td:first-child, .fwt-table-responsive > .table-bordered > tfoot > tr > td:first-child {
+        border-left: 0
+    }
+
+    .fwt-table-responsive > .table-bordered > thead > tr > th:last-child, .fwt-table-responsive > .table-bordered > tbody > tr > th:last-child, .fwt-table-responsive > .table-bordered > tfoot > tr > th:last-child, .fwt-table-responsive > .table-bordered > thead > tr > td:last-child, .fwt-table-responsive > .table-bordered > tbody > tr > td:last-child, .fwt-table-responsive > .table-bordered > tfoot > tr > td:last-child {
+        border-right: 0
+    }
+
+    .fwt-table-responsive > .table-bordered > tbody > tr:last-child > th, .fwt-table-responsive > .table-bordered > tfoot > tr:last-child > th, .fwt-table-responsive > .table-bordered > tbody > tr:last-child > td, .fwt-table-responsive > .table-bordered > tfoot > tr:last-child > td {
+        border-bottom: 0
+    }
+}
