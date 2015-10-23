@@ -272,11 +272,20 @@ class FreshDeskSettingsPage{
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
         );
+		
 		add_settings_field(
             'no_tickets_msg', // ID
             'No Tickets Error Message', // Title 
             array( $this, 'no_tickets_msg_callback' ), // Callback
-            'display-setting-admin', // Page
+            'display-admin-setting', // Page
+            'freshdesk_display_section' // Section           
+        );
+		
+		add_settings_field(
+            'invalid_user_msg', // ID
+            'Invalid User Error Message', // Title 
+            array( $this, 'invalid_user_msg_callback' ), // Callback
+            'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
         );
 		
@@ -537,11 +546,11 @@ class FreshDeskSettingsPage{
      */
 	public function no_tickets_msg_callback(){
 		$val = '';
-		if( isset( $this->options['no_tickets_msg'] ) ){
-			$val = ( $this->options['no_tickets_msg'] != '' ) ? htmlentities( $this->options['no_tickets_msg'] ) : '';
+		if( isset( $this->display_option['no_tickets_msg'] ) ){
+			$val = ( $this->display_option['no_tickets_msg'] != '' ) ? htmlentities( $this->display_option['no_tickets_msg'] ) : '';
 		}
         printf(
-            '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_apikey[no_tickets_msg]" value="%s" class="regular-text">', $val
+            '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" value="%s" class="regular-text">', $val
         );
 	}
 	
@@ -614,6 +623,20 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>',$val
+        );
+	}
+	
+	
+	/*
+     * Callback function for invalid user message text box
+     */
+	public function invalid_user_msg_callback(){
+		$val = '';
+		if( isset( $this->display_option['invalid_user_msg'] ) ){
+			$val = ( $this->display_option['invalid_user_msg'] != '' ) ? htmlentities( $this->display_option['invalid_user_msg'] ) : '';
+		}
+        printf(
+            '<input type="text" autocomplete="off" placeholder="Eg: Invalid User!" id="invalid_user_msg" name="fd_display[invalid_user_msg]" value="%s" class="regular-text">', $val
         );
 	}
 	

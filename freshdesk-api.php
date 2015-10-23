@@ -79,12 +79,12 @@ if(!class_exists("FreshDeskAPI")){
 					$msg = 'Invalid Credentials';
 				} else if( isset( $tickets->errors ) ) {
 					if( isset( $tickets->errors->no_email ) ){
-						$msg = 'Invalid User';
+						$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : 'Invalid User';
 					} else {
 						$msg = 'Invalid Freshdesk URL';
 					}
 				} else if( empty( $tickets ) ){
-					$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
+					$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : 'No tickets';
 				}else {
 					$msg = 'Error!';
 				}
@@ -202,6 +202,7 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		public function fetch_tickets( $atts ){
+		
 			$result = '';
 			if ( is_user_logged_in() ) {
 					global $current_user;
@@ -326,7 +327,7 @@ if(!class_exists("FreshDeskAPI")){
 						</script>
 						';
 					}
-					
+					//echo '<xmp>'; print_r( $tickets ); echo '</xmp>';
 					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
 						$result .= $this->get_html( $tickets );
 					} else {
@@ -334,24 +335,17 @@ if(!class_exists("FreshDeskAPI")){
 							$msg = 'Invalid Credentials';
 						} else if( isset( $tickets->errors ) ) {
 							if( isset( $tickets->errors->no_email ) ){
-								$msg = 'Invalid User';
+								$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : 'Invalid User';
 							} else {
 								$msg = 'Invalid Freshdesk URL';
 							}
 						} else if( empty( $tickets ) ) {
-							$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
+							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : 'No tickets';
 						}else {
 							$msg = 'Error!';
 						}
 						$result = '<div id="tickets_html"><p>' . $msg . '</p></div>';
 					}
-					
-					/*if( $tickets ) {
-						//echo '<xmp>'; print_r($tickets); echo '</xmp>';
-						$result .= $this->get_html( $tickets );
-					} else {
-						$result .= ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? '<p>' . $this->opt['no_tickets_msg'] . '</p>' : '<p>No tickets</p>' ;
-					}*/
 					return $result;
 				} else {
 					return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
@@ -422,68 +416,71 @@ if(!class_exists("FreshDeskAPI")){
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			
 			//if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
+			//echo '<xmp>'; print_r($this->display_option); echo '</xmp>';
+			$html .= '<div id="tickets_html" class="lic-table">
+						<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
+						<table class="lic-table-list">
+							<tr>
+								<th width="10%">ID</th>
+								<th>Subject</th>
+								<th>Status</th>';
+			if( isset( $this->display_option ) ) {
+				if( $this->display_option != '' ) {
+					foreach( $this->display_option as $key=>$value ){
+						switch( $key ){
+							case 'fd_display_description':
+							case 'fd_display_priority_name':
+							case 'fd_display_updated_at':
+								$html .= '<th>' . str_replace( "_", " ", str_replace( "fd_display_", "", $key ) ) . '</th>';
+								break;
+							case 'no_tickets_msg':
+							default:
+								break;
+						}
+					}
+				}
+			}
 			
-				$html .= '<div id="tickets_html" class="lic-table">
-							<div><p>Total Tickets: ' . count( $tickets ) . '</p></div>
-							<table class="lic-table-list">
-								<tr>
-									<th width="10%">ID</th>
-									<th>Subject</th>
-									<th>Status</th>';
+			$html .= '</tr>';
+			
+			foreach( $tickets as $d ) {
+				$html .= '
+							<tr class="sp-registered-site">
+								<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
+								<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
+								<td>' . $d->status_name . '</td>';
 				if( isset( $this->display_option ) ) {
 					if( $this->display_option != '' ) {
 						foreach( $this->display_option as $key=>$value ){
-							$html .= '
-							<th>' . str_replace( "_", " ", str_replace( "fd_display_", "", $key ) ) . '</th>';
+							$data = '';
+							switch( $key ){
+								case 'fd_display_description':
+									$data = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description ;
+									break;
+								case 'fd_display_updated_at':
+									$diff = ( strtotime( date_i18n('Y-m-d H:i:s') ) - strtotime( date_i18n( 'Y-m-d H:i:s', false, 'gmt' ) ) );
+									$data = date_i18n( 'j M, Y, g:i A', strtotime( $d->updated_at ) + $diff );
+									break;
+								case 'no_tickets_msg':
+									break;
+								case 'fd_display_priority_name':
+								default:
+									$index = str_replace( "fd_display_", "", $key );
+									$data = '<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->$index . '</a>';
+									break;
+							}
+							if( $data != '' ) {
+								$html .= '<td>' . $data . '</td>';
+							}
 						}
 					}
 				}
 				$html .= 
-								'</tr>';
-				foreach( $tickets as $d ) {
-					$html .= '
-								<tr class="sp-registered-site">
-									<td width="10%"><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">#' . $d->display_id . '</a></td>
-									<td><a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->subject . '</a></td>
-									<td>' . $d->status_name . '</td>';
-					if( isset( $this->display_option ) ) {
-						if( $this->display_option != '' ) {
-							foreach( $this->display_option as $key=>$value ){
-								$index = str_replace( "fd_display_", "", $key );
-								if( $index == 'description' ){
-									$data = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description ;
-								} else if( $index == 'updated_at' ){
-									$data = date( 'n M, Y, g:i A', strtotime( $d->$index ) );
-								} else {
-									$data = '<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">' . $d->$index . '</a>';
-								}
-								$html .= '
-										<td>' . $data . '</td>';
-							}
-						}
-					}
-					$html .= 
-								'</tr>';
-				}
-				
-				$html .= '</table></div>';
-				return $html;
-			/*} else {
-				if( isset( $tickets->require_login ) ) {
-					$msg = 'Invalid Credentials';
-				} else if( isset( $tickets->errors ) ) {
-					if( isset( $tickets->errors->no_email ) ){
-						$msg = 'Invalid User';
-					} else {
-						$msg = 'Invalid Freshdesk URL';
-					}
-				} else if( empty( $tickets ) ) {
-					$msg = ( isset( $this->opt['no_tickets_msg'] ) && $this->opt['no_tickets_msg'] != '' ) ? $this->opt['no_tickets_msg'] : 'No tickets';
-				}else {
-					$msg = 'Error!';
-				}
-				return '<div id="tickets_html"><p>' . $msg . '</p></div>';
-			}*/
+							'</tr>';
+			}
+			
+			$html .= '</table></div>';
+			return $html;
 		}
 		
 		
