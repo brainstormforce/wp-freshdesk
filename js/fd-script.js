@@ -19,28 +19,12 @@
 				jQuery( "#freshdesk_sharedkey" ).attr( "readonly", "readonly" );
 			}
 		});
-		jQuery('#tab-api').click(function(){
+		jQuery('.nav-tab').click(function(){
+			var id = jQuery(this).attr('id');
+			var arr = id.split('-');
 			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
 			jQuery( this ).addClass( "nav-tab-active" );
 			jQuery( '.tabs' ).hide();
-			jQuery( '#api-tab' ).show();
+			jQuery( '#' + arr[1] + '-' + arr[0] ).show();
 		});
-		jQuery('#tab-shortcode').click(function(){
-			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-			jQuery( this ).addClass( "nav-tab-active" );
-			jQuery( '.tabs' ).hide();
-			jQuery( '#shortcode-tab' ).show();
-		});
-		jQuery('#tab-url').click(function(){
-			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-			jQuery( this ).addClass( "nav-tab-active" );
-			jQuery( '.tabs' ).hide();
-			jQuery( '#url-tab' ).show();
-		});
-		jQuery('#tab-display').click(function(){
-			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-			jQuery( this ).addClass( "nav-tab-active" );
-			jQuery( '.tabs' ).hide();
-			jQuery( '#display-tab' ).show();
-		});		
 	});
