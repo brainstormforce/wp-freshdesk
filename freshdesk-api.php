@@ -1,11 +1,11 @@
 <?php
 /**
-* Plugin Name: Freshdesk API
+* Plugin Name: WP Freshdesk
 * Plugin URI: 
-* Description: Lorem Ipsum.
+* Description: With this plugin, your users will be able to see their tickets on your FreshDesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
 * Version: 1.0
-* Author: Vrunda Kansara
-* Author URI: 
+* Author: Brainstorm Force
+* Author URI: https://www.brainstormforce.com/
 * License:
 */
 
