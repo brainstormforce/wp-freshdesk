@@ -247,7 +247,7 @@ if(!class_exists("FreshDeskAPI")){
 					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
 					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 					$result .= '
-					<div class="left">
+					<div class="fd-filter-dropdown">
 						<form method="post" action="" id="filter_form" name="filter_form">
 							<select id="filter_dropdown" name="filter_dropdown">
 								<option value="all_tickets" ';
@@ -289,7 +289,7 @@ if(!class_exists("FreshDeskAPI")){
 							</select>
 						
 						</div>
-						<div class="right">
+						<div class="fd-search-box">
 							<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...' ) . '"/>
 						</div>
 						<div class="clear"></div>';
