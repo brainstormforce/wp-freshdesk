@@ -24,7 +24,7 @@
 			var arr = id.split('-');
 			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
 			jQuery( this ).addClass( "nav-tab-active" );
-			jQuery( '.tabs' ).hide();
+			jQuery( '.fd-tabs' ).hide();
 			jQuery( '#' + arr[1] + '-' + arr[0] ).show();
 		});
 	});

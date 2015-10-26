@@ -45,7 +45,7 @@ class FreshDeskSettingsPage{
 		$this->display_option = get_option( 'fd_display' );
         ?>
         <div class="wrap">
-            <div class="bend-heading-section">
+            <div class="fd-heading-section">
 				<h1>FreshDesk Settings</h1>
 				<h3>Now your users won't have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!</h3>
 			</div>
@@ -56,7 +56,7 @@ class FreshDeskSettingsPage{
 				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO' ); ?></a>
 				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings' ); ?></a>
 			</h2>
-			<div id="api-tab" class="tabs">
+			<div id="api-tab" class="fd-tabs">
 				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -65,7 +65,7 @@ class FreshDeskSettingsPage{
 						submit_button();?>
 				</form>
 			</div>
-			<div id="shortcode-tab" style="display:none;" class="tabs">
+			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
 				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.' ); ?></p>
 				<code>[fd_fetch_tickets]</code>
 				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:'); ?></p>
@@ -100,7 +100,7 @@ class FreshDeskSettingsPage{
 					</tr>
 				</table>
 			</div>
-			<div id="url-tab" style="display:none;" class="tabs">
+			<div id="url-tab" style="display:none;" class="fd-tabs">
 				<form method="post" action="options.php" id="url_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -109,7 +109,7 @@ class FreshDeskSettingsPage{
 						submit_button();?>
 				</form>
 			</div>
-			<div id="display-tab" style="display:none;" class="tabs">
+			<div id="display-tab" style="display:none;" class="fd-tabs">
 				<form method="post" action="options.php" id="display_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -408,13 +408,13 @@ class FreshDeskSettingsPage{
 			$val = 'checked="checked"';
 		}
         printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="use_apikey" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
 										<label for="use_apikey"></label>
 									</div>
 								</div>
@@ -531,13 +531,13 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            	'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="freshdesk_enable" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
+            	'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="freshdesk_enable" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
 										<label for="freshdesk_enable"></label>
 									</div>
 								</div>
@@ -569,13 +569,13 @@ class FreshDeskSettingsPage{
 	public function fd_display_description_callback(){
 		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
 		printf(
-            	'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_description" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
+            	'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_description" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
 										<label for="fd_display_description"></label>
 									</div>
 								</div>
@@ -593,13 +593,13 @@ class FreshDeskSettingsPage{
 	public function fd_display_priority_name_callback(){
 		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_priority_name" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_priority_name" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
 										<label for="fd_display_priority_name"></label>
 									</div>
 								</div>
@@ -617,13 +617,13 @@ class FreshDeskSettingsPage{
 	public function fd_display_updated_at_callback(){
 		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_updated_at" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_updated_at" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
 										<label for="fd_display_updated_at"></label>
 									</div>
 								</div>
@@ -641,13 +641,13 @@ class FreshDeskSettingsPage{
 	public function fd_display_use_css_callback(){
 		$val = ( isset( $this->display_option['fd_display_use_css'] ) ) ? 'checked="checked"' : '';
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_use_css" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_use_css" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
 										<label for="fd_display_use_css"></label>
 									</div>
 								</div>
