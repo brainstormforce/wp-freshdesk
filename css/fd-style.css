@@ -183,8 +183,8 @@
 ============================================================ */
 input.fd-toggle-round + label {
   padding: 2px;
-  width: 80px;
-  height: 35px;
+  width: 70px;
+  height: 30px;
   background-color: #dddddd;
   -webkit-border-radius: 60px;
   -moz-border-radius: 60px;
@@ -214,7 +214,7 @@ input.fd-toggle-round + label:before {
   transition: background 0.4s;
 }
 input.fd-toggle-round + label:after {
-  width: 36px;
+  width: 30px;
   background-color: #fff;
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;
@@ -233,7 +233,7 @@ input.fd-toggle-round:checked + label:before {
   background-color: #34a7c1;
 }
 input.fd-toggle-round:checked + label:after {
-  margin-left: 46px;
+  margin-left: 42px;
 }
 
 @media screen and (max-width: 767px) {

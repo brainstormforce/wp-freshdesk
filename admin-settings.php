@@ -46,15 +46,15 @@ class FreshDeskSettingsPage{
         ?>
         <div class="wrap">
             <div class="fd-heading-section">
-				<h1>FreshDesk Settings</h1>
-				<h3>Now your users won't have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!</h3>
+				<h1><?php echo __( 'FreshDesk Settings', 'freshdesk-api' ); ?></h1>
+				<h3><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></h3>
 			</div>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration' ); ?></a>
-				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcode' ); ?></a>
-				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO' ); ?></a>
-				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings' ); ?></a>
+				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcode', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
 			</h2>
 			<div id="api-tab" class="fd-tabs">
 				<form method="post" action="options.php" autocomplete="off">
@@ -66,37 +66,37 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
-				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.' ); ?></p>
+				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.', 'freshdesk-api' ); ?></p>
 				<code>[fd_fetch_tickets]</code>
-				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:'); ?></p>
+				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:', 'freshdesk-api' ); ?></p>
 				<table>
 					<tr>
-						<td><?php echo __( 'All tickets' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets]' ); ?></code></td>
+						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Open' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Open"]' ); ?></code></td>
+						<td><?php echo __( 'Open', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Open"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Resolved' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Resolved"]' ); ?></code></td>
+						<td><?php echo __( 'Resolved', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Resolved"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Closed'); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Closed"]' ); ?></code></td>
+						<td><?php echo __( 'Closed', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Closed"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Pending' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Pending"]' ); ?></code></td>
+						<td><?php echo __( 'Pending', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Pending"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Customer' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Customer"]' ); ?></code></td>
+						<td><?php echo __( 'Waiting on Customer', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Waiting on Customer"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Third Party' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Third Party"]' ); ?></code></td>
+						<td><?php echo __( 'Waiting on Third Party', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Waiting on Third Party"]</code></td>
 					</tr>
 				</table>
 			</div>
