@@ -17,6 +17,10 @@
 	font-style: oblique;
 }
 
+.fd-use-apikey-yesno {
+	margin-left: 80px;
+}
+
 
 /* Loader */
 #fd-dark-bg {position:fixed; top:0; left:0;}

@@ -422,7 +422,7 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"></label>
+										<label for="use_apikey"><p class="fd-use-apikey-yesno"><strong>Yes/No</strong></p></label>
 									</div>
 								</div>
 							</div>
