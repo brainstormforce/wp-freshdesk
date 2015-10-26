@@ -30,7 +30,6 @@ if(!class_exists("FreshDeskAPI")){
 		function __construct(){
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'plugins_loaded', array( $this, 'fd_load_textdomain' ) );
-			//add_action( 'admin_init', array( $this, 'ajax_init' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_shortcode( "fd_fetch_tickets", array($this, "fetch_tickets"));
 			include_once( 'admin-settings.php' );
@@ -57,7 +56,7 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function enqueue_scripts() {
-			//echo '<xmp>'; print_r($this->display_option); echo '</xmp>';
+		
 			if( isset( $this->display_option['fd_display_use_css'] ) && $this->display_option['fd_display_use_css'] != '' ){
 				if( $this->display_option['fd_display_use_css'] == 'on' ){
 					wp_register_style( 'fd-table', plugins_url('css/fd-table.css', __FILE__) );
@@ -80,7 +79,7 @@ if(!class_exists("FreshDeskAPI")){
 			global $current_user;
 			$postArray = $_POST;
 			$returnArray = array();
-			//echo '<xmp>'; print_r($postArray); echo '</xmp>';
+			
 			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 			$tickets = json_decode( json_encode( $tickets ), true );
 			$filteredTickets = $tickets;
@@ -319,10 +318,6 @@ if(!class_exists("FreshDeskAPI")){
 										<div class="fd-smile-loading-bar"></div>
 									</div>
 								</div>';
-					
-					/*$result .= '<section id="dark-bg" style="display:none;" class="dark-bg">
-								<section id="loading"><img src="' . plugins_url("images/loading.gif",__FILE__) . '"></section>
-							</section>';*/
 							
 					$result .= 
 							'<script type="text/javascript">
@@ -330,7 +325,7 @@ if(!class_exists("FreshDeskAPI")){
 							</script>
 							';
 							
-					//echo '<xmp>'; print_r( $tickets ); echo '</xmp>';
+
 					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
 						$result .= $this->get_html( $tickets );
 					} else {
@@ -380,23 +375,6 @@ if(!class_exists("FreshDeskAPI")){
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
 				
-				/*$args = array(
-					'method' => 'POST',
-					'timeout' => 45,
-					'redirection' => 5,
-					'httpversion' => '1.0',
-					'blocking' => true,
-					'headers' => array(),
-					'body' => $fields,
-					'cookies' => array()
-				);
-				$fields_string='';
-				foreach( $fields as $key=>$value ) { $fields_string .= $key . '=' . urlencode( $value ) . '&'; }
-				rtrim($fields_string, '&');
-				$result = wp_remote_post( $url, $args );
-				//$result = wp_remote_post( $url . '?' . $fields_string, $args);
-				echo '<xmp>'; print_r( $result ); echo '</xmp>';*/
-				
 				$ch = curl_init ($url);
 				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
 				curl_setopt($ch, CURLOPT_HEADER, false);
@@ -406,7 +384,6 @@ if(!class_exists("FreshDeskAPI")){
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				$server_output = curl_exec ($ch);
 				curl_close ($ch);
-				//echo '<xmp>'; print_r( $server_output ); echo '</xmp>';
 				
 				$tickets = json_decode( $server_output );
 				
