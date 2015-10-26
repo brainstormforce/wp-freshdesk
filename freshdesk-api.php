@@ -91,7 +91,7 @@ if(!class_exists("FreshDeskAPI")){
 					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $filteredTickets, $postArray['search_txt'] ) : $tickets ;
 				}
 				if( empty( $filteredTickets ) ) {
-					$returnArray = '<div id="fd-tickets_html"><p> ' . __( 'No tickets for "' . strtoupper( str_replace( '_', ' ', $postArray['fd-filter_dropdown'] ) ) . '" category.', 'freshdesk-api' ) . '</p></div>';
+					$returnArray = '<div id="fd-tickets_html"><p> ' . __( 'No tickets for "' . strtoupper( str_replace( '_', ' ', $postArray['fd-filter_dropdown'] ) ) . '" category.', 'freshdesk-api' ) . '</p><div class="fd-more-ticket">Could not find what you are searching for? Click <a href="' . $this->freshdeskUrl . 'support/tickets" target="_blank">here</a> to check all your old tickets.</div></div>';
 				} else {
 					$returnArray = $this->get_html( $filteredTickets );
 				}
@@ -338,7 +338,7 @@ if(!class_exists("FreshDeskAPI")){
 								$msg = __( 'Invalid Freshdesk URL' , 'freshdesk-api');
 							}
 						} else if( empty( $tickets ) ) {
-							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets' );
+							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets', 'freshdesk-api' );
 						}else {
 							$msg = __( 'Error!', 'freshdesk-api' );
 						}
