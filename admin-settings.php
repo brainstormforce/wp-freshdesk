@@ -365,6 +365,10 @@ class FreshDeskSettingsPage{
 		} else {
 			$val2 = 'readonly="readonly"';
 		}
+		if( empty( $this->options ) ) {
+			$val1 = '';
+			$val2 = '';
+		}
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
@@ -407,6 +411,9 @@ class FreshDeskSettingsPage{
 		if( !$this->options ){
 			$val = 'checked="checked"';
 		}
+		if( empty( $this->options ) ) {
+			$val = 'checked="checked"';
+		}
         printf(
 				'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -438,6 +445,12 @@ class FreshDeskSettingsPage{
 				$val2 = '';
 			}
 		} else {
+			if( isset( $this->options['api_username'] ) ) {
+				$val1 = esc_attr( $this->options['api_username'] );
+			}
+			$val2 = 'readonly="readonly"';
+		}
+		if( empty( $this->options ) ) {
 			$val1 = '';
 			$val2 = 'readonly="readonly"';
 		}
@@ -459,6 +472,12 @@ class FreshDeskSettingsPage{
 			}
 			
 		} else {
+			if( isset( $this->options['api_username'] ) ) {
+				$val1 = esc_attr( $this->options['api_username'] );
+			}
+			$val2 = 'readonly="readonly"';
+		}
+		if( empty( $this->options ) ) {
 			$val1 = '';
 			$val2 = 'readonly="readonly"';
 		}
