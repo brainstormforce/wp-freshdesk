@@ -2,7 +2,7 @@
 /**
 * Plugin Name: WP Freshdesk
 * Plugin URI: 
-* Description: With this plugin, your users will be able to see their tickets on your FreshDesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
+* Description: With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
 * Version: 1.0
 * Author: Brainstorm Force
 * Author URI: https://www.brainstormforce.com/
@@ -346,7 +346,7 @@ if(!class_exists("FreshDeskAPI")){
 					}
 					return $result;
 				} else {
-					return '<p>Please configure settings for <strong>FreshDesk API</strong> from <a href="' . admin_url( '/options-general.php?page=fd-setting-admin' ) . '" target="_blank">admin panel</a></p>';
+					return '<p>Please configure settings for <strong>Freshdesk API</strong> from <a href="' . admin_url( '/options-general.php?page=wp-freshdesk' ) . '" target="_blank">admin panel</a></p>';
 				}
 			} else{
 				return '<p><a href="' . wp_login_url() . '" title="Login">Login</a> to view your tickets!</p>';
@@ -536,7 +536,7 @@ function fd_plugin_redirect() {
 	if ( get_option( 'fd_do_activation_redirect', false ) ) {
 		delete_option( 'fd_do_activation_redirect' );
 		if( !isset( $_GET['activate-multi'] ) ) {
-			wp_redirect( 'options-general.php?page=fd-setting-admin' );
+			wp_redirect( 'options-general.php?page=wp-freshdesk' );
 		}
 	}
 }
@@ -549,7 +549,7 @@ function fd_plugin_redirect() {
 function fd_plugin_activate() {
 	add_option('fd_do_activation_redirect', true);
 	if( !isset( $_GET['activate-multi'] ) ) {
-		wp_redirect( 'options-general.php?page=fd-setting-admin' );
+		wp_redirect( 'options-general.php?page=wp-freshdesk' );
 	}
 }
 

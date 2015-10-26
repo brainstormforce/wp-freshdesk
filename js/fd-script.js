@@ -6,10 +6,16 @@
 				jQuery( "#freshdesk_apikey" ).removeAttr("readonly");
 				jQuery( "#api_username" ).attr( "readonly", "readonly" );
 				jQuery( "#api_pwd" ).attr( "readonly", "readonly" );
+				jQuery( '.fd-use-apikey-yesno' ).removeClass( "fd-use-apikey-no" );
+				jQuery( '.fd-use-apikey-yesno' ).addClass( "fd-use-apikey-yes" );
+				jQuery( '.fd-use-apikey-yesno' ).html( "Yes" );
 			} else {
 				jQuery( "#api_username" ).removeAttr("readonly");
 				jQuery( "#api_pwd" ).removeAttr("readonly");
 				jQuery( "#freshdesk_apikey" ).attr( "readonly", "readonly" );
+				jQuery( '.fd-use-apikey-yesno' ).removeClass( "fd-use-apikey-yes" );
+				jQuery( '.fd-use-apikey-yesno' ).addClass( "fd-use-apikey-no" );
+				jQuery( '.fd-use-apikey-yesno' ).html( "No" );
 			}
 		});
 		jQuery('#freshdesk_enable').change(function(){

@@ -20,6 +20,12 @@
 .fd-use-apikey-yesno {
 	margin-left: 80px;
 }
+.fd-use-apikey-yes {
+	color: #34A7C1;
+}
+.fd-use-apikey-no {
+	color: #6F7979;
+}
 
 
 /* Loader */

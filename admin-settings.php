@@ -23,9 +23,9 @@ class FreshDeskSettingsPage{
         // This page will be under "Settings"
         add_options_page(
             'Settings Admin', 
-            'FreshDesk Settings', 
+            'WP Freshdesk', 
             'manage_options', 
-            'fd-setting-admin', 
+            'wp-freshdesk', 
             array( $this, 'create_admin_page' )
         );
     }
@@ -46,8 +46,8 @@ class FreshDeskSettingsPage{
         ?>
         <div class="wrap">
             <div class="fd-heading-section">
-				<h1><?php echo __( 'FreshDesk Settings', 'freshdesk-api' ); ?></h1>
-				<h3><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></h3>
+				<h1><?php echo __( 'Freshdesk Settings', 'freshdesk-api' ); ?></h1>
+				<h3><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></h3>
 			</div>
 			
 			<h2 class="nav-tab-wrapper">
@@ -351,7 +351,7 @@ class FreshDeskSettingsPage{
 	
 
     /*
-     * Callback function for "FreshDesk API Key"
+     * Callback function for "Freshdesk API Key"
      */
     public function freshdesk_apikey_callback(){
 		$val1 = $val2 = '';
@@ -377,7 +377,7 @@ class FreshDeskSettingsPage{
 		
 	
 	/*
-     * Callback function for "FreshDesk Shared Secret Key"
+     * Callback function for "Freshdesk Shared Secret Key"
      */
     public function freshdesk_sharedkey_callback(){
 		$val1 = $val2 = '';
@@ -399,10 +399,12 @@ class FreshDeskSettingsPage{
 	
 		
 	 /*
-     * Callback function for "FreshDesk Admin Username"
+     * Callback function for "Freshdesk Admin Username"
      */
     public function use_apikey_callback(){
 		$val = '';
+		$class = '';
+		$yesno = '';
 		if( isset( $this->options['use_apikey'] ) ) {
 			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
 		} else {
@@ -414,6 +416,13 @@ class FreshDeskSettingsPage{
 		if( empty( $this->options ) ) {
 			$val = 'checked="checked"';
 		}
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
         printf(
 				'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -422,20 +431,20 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"><p class="fd-use-apikey-yesno"><strong>Yes/No</strong></p></label>
+										<label for="use_apikey"><p class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
 	
 	
 	/*
-     * Callback function for "FreshDesk Admin Username"
+     * Callback function for "Freshdesk Admin Username"
      */
     public function api_username_callback(){
 		$val1 = $val2 = '';
@@ -461,7 +470,7 @@ class FreshDeskSettingsPage{
 	
 	
 	/*
-     * Callback function for "FreshDesk Admin Password"
+     * Callback function for "Freshdesk Admin Password"
      */
     public function api_pwd_callback(){
 		$val1 = $val2 = '';
@@ -488,7 +497,7 @@ class FreshDeskSettingsPage{
 	
 		
 	/* 
-     * Callback function for "FreshDesk URL"
+     * Callback function for "Freshdesk URL"
      */
     public function freshdesk_url_callback(){
 		$val = '';
@@ -500,7 +509,7 @@ class FreshDeskSettingsPage{
         printf(
             '<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
         );
-		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
+		printf( '<p id="timezone-description" class="description">This is the base Freshdesk support URL.</p>' );
     }
 		
 	
