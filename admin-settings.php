@@ -399,7 +399,7 @@ class FreshDeskSettingsPage{
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%s/admin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', $val
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', $val
 		);
     }
 	
