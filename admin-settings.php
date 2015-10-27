@@ -250,7 +250,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'fd_display_use_css', // ID
-            'Use predefined CSS', // Title 
+            'Use Predefined CSS', // Title 
             array( $this, 'fd_display_use_css_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
