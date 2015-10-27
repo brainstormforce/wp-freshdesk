@@ -6,16 +6,10 @@
 				jQuery( "#freshdesk_apikey" ).removeAttr("readonly");
 				jQuery( "#api_username" ).attr( "readonly", "readonly" );
 				jQuery( "#api_pwd" ).attr( "readonly", "readonly" );
-				jQuery( '.fd-use-apikey-yesno' ).removeClass( "fd-use-apikey-no" );
-				jQuery( '.fd-use-apikey-yesno' ).addClass( "fd-use-apikey-yes" );
-				jQuery( '.fd-use-apikey-yesno' ).html( "Yes" );
 			} else {
 				jQuery( "#api_username" ).removeAttr("readonly");
 				jQuery( "#api_pwd" ).removeAttr("readonly");
 				jQuery( "#freshdesk_apikey" ).attr( "readonly", "readonly" );
-				jQuery( '.fd-use-apikey-yesno' ).removeClass( "fd-use-apikey-yes" );
-				jQuery( '.fd-use-apikey-yesno' ).addClass( "fd-use-apikey-no" );
-				jQuery( '.fd-use-apikey-yesno' ).html( "No" );
 			}
 		});
 		jQuery('#freshdesk_enable').change(function(){
@@ -33,4 +27,18 @@
 			jQuery( '.fd-tabs' ).hide();
 			jQuery( '#' + arr[1] + '-' + arr[0] ).show();
 		});
+		
+		jQuery('.fd-toggle').click(function(){
+			var id = jQuery(this).attr('id');
+			if( jQuery("#"+id).is(':checked') ) {
+				jQuery( "#"+id+'-p' ).removeClass( "fd-use-apikey-no" );
+				jQuery( "#"+id+'-p' ).addClass( "fd-use-apikey-yes" );
+				jQuery( "#"+id+'-p' ).html( "Yes" );
+			} else {
+				jQuery( "#"+id+'-p' ).removeClass( "fd-use-apikey-yes" );
+				jQuery( "#"+id+'-p' ).addClass( "fd-use-apikey-no" );
+				jQuery( "#"+id+'-p' ).html( "No" );
+			}
+		});
+		
 	});

@@ -128,7 +128,7 @@ if(!class_exists("FreshDeskAPI")){
 			if ( is_user_logged_in() ) {
 				
 				// This is a login request.
-				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-login' ) {
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'fd-remote-login' ) {
 					// Don't waste time if remote auth is turned off.
 					if ( !isset( $this->options['freshdesk_enable'] ) && $this->options['freshdesk_enable'] != 'on' && !isset( $this->options['freshdesk_sharedkey'] ) && $this->options['freshdesk_sharedkey'] != '' ) {
 						__( 'Remote authentication is not configured yet.', 'freshdesk-api' );
@@ -159,7 +159,7 @@ if(!class_exists("FreshDeskAPI")){
 						$hash = md5( $name . $email . $token );
 	
 						// Create the SSO redirect URL and fire the redirect.
-						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=bsf-freshdesk-remote-login&return_to=' . urlencode( 'https://' . $return_to . '/' ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
+						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=fd-remote-login&return_to=' . urlencode( 'https://' . $return_to . '/' ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
 	
 						//Hook before redirecting logged in user.
 						do_action( 'freshdesk_logged_in_redirect_before' );
@@ -176,13 +176,13 @@ if(!class_exists("FreshDeskAPI")){
 						// If the current user is not logged in we ask him to visit the login form
 						// first, authenticate and specify the current URL again as the return
 						// to address. Hopefully WordPress will understand this.
-						wp_redirect( wp_login_url( wp_login_url() . '?action=bsf-freshdesk-remote-login&&return_to=' . urlencode( $return_to ) ) );
+						wp_redirect( wp_login_url( wp_login_url() . '?action=fd-remote-login&&return_to=' . urlencode( $return_to ) ) );
 						die();
 					}
 				}
 	
 				// Is this a logout request? Errors from Freshdesk are handled here too.
-				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bsf-freshdesk-remote-logout' ) {
+				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'fd-remote-logout' ) {
 	
 	
 					// Error processing and info messages are done here.

@@ -46,7 +46,7 @@ class FreshDeskSettingsPage{
         ?>
         <div class="wrap">
             <div class="fd-heading-section">
-				<h1><?php echo __( 'Freshdesk Settings', 'freshdesk-api' ); ?></h1>
+				<h1><?php echo __( 'WP Freshdesk Settings', 'freshdesk-api' ); ?></h1>
 				<h3><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></h3>
 			</div>
 			
@@ -151,7 +151,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'freshdesk_url', // ID
-            'Base freshdesk URL', // Title 
+            'Base Freshdesk URL', // Title 
             array( $this, 'freshdesk_url_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -391,10 +391,16 @@ class FreshDeskSettingsPage{
 		} else {
 			$val2 = 'readonly="readonly"';
 		}
+		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
+			$val = $this->options['freshdesk_url'];
+		} else {
+			$val = 'https://your_domain.freshdesk.com/';
+		}
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%s/admin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', $val
+		);
     }
 	
 		
@@ -518,7 +524,7 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_loginurl_callback(){
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-login' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-login' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
@@ -537,7 +543,7 @@ class FreshDeskSettingsPage{
 			$val = 'https://your_domain.freshdesk.com/';
 		}
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-logout' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
@@ -558,6 +564,13 @@ class FreshDeskSettingsPage{
 		} else {
 			$val = '';
 		}
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
         printf(
             	'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -566,13 +579,13 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="freshdesk_enable" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
-										<label for="freshdesk_enable"></label>
+										<label for="freshdesk_enable"><p id="freshdesk_enable-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val 
+				</div>', $val, $class, $yesno
         );
     }
 	
@@ -596,6 +609,13 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_description_callback(){
 		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
             	'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -604,13 +624,13 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="fd_display_description" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
-										<label for="fd_display_description"></label>
+										<label for="fd_display_description"><p id="fd_display_description-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 	}
 
@@ -620,6 +640,13 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_priority_name_callback(){
 		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
 				'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -628,13 +655,13 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="fd_display_priority_name" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
-										<label for="fd_display_priority_name"></label>
+										<label for="fd_display_priority_name"><p id="fd_display_priority_name-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 	}
 	
@@ -644,6 +671,13 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_updated_at_callback(){
 		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
 				'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -652,13 +686,13 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="fd_display_updated_at" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
-										<label for="fd_display_updated_at"></label>
+										<label for="fd_display_updated_at"><p id="fd_display_updated_at-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>',$val
+				</div>',$val, $class, $yesno
         );
 	}
 	
@@ -668,6 +702,13 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_use_css_callback(){
 		$val = ( isset( $this->display_option['fd_display_use_css'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
 				'<div id="fd-wrapper">
 					<div id="fd-main">
@@ -676,13 +717,13 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="fd_display_use_css" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
-										<label for="fd_display_use_css"></label>
+										<label for="fd_display_use_css"><p id="fd_display_use_css-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>',$val
+				</div>',$val, $class, $yesno
         );
 	}
 	
