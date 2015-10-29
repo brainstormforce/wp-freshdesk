@@ -41,18 +41,28 @@ class FreshDeskSettingsPage{
 		if( $this->options ){
 			$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
 		}
+		if( isset( $this->options['freshdesk_url'] ) ) {
+			$this->options['freshdesk_url'] = rtrim( $this->options['freshdesk_url'], '/' ) . '/';
+		} else {
+			$this->options['freshdesk_url'] = '';
+		}
+		if ( !preg_match( "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $this->options['freshdesk_url'] ) ) {
+			$this->options['freshdesk_url'] = '';
+		} else {
+			$this->options['freshdesk_url'];
+		}
 		$this->url_options = get_option( 'fd_url' );
 		$this->display_option = get_option( 'fd_display' );
         ?>
-        <div class="wrap">
+        <div class="wrap about-wrap">
             <div class="fd-heading-section">
 				<h1><?php echo __( 'WP Freshdesk Settings', 'freshdesk-api' ); ?></h1>
-				<h3><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></h3>
-			</div>
+				<div class="fd-about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></div>
+				<div class="fd-badge"></div>
 			
 			<h2 class="nav-tab-wrapper">
 				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration', 'freshdesk-api' ); ?></a>
-				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcode', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcodes', 'freshdesk-api' ); ?></a>
 				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO', 'freshdesk-api' ); ?></a>
 				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
 			</h2>
@@ -66,9 +76,7 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
-				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.', 'freshdesk-api' ); ?></p>
-				<code>[fd_fetch_tickets]</code>
-				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:', 'freshdesk-api' ); ?></p>
+				<p><?php echo __( 'Paste the below shortcode on your page. This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:', 'freshdesk-api' ); ?></p>
 				<table>
 					<tr>
 						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
@@ -289,14 +297,6 @@ class FreshDeskSettingsPage{
             'freshdesk_display_section' // Section           
         );
 		
-		add_settings_field(
-            'invalid_user_msg', // ID
-            'Invalid User Error Message', // Title 
-            array( $this, 'invalid_user_msg_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
     }
 	
 
@@ -487,8 +487,8 @@ class FreshDeskSettingsPage{
 			}
 			
 		} else {
-			if( isset( $this->options['api_username'] ) ) {
-				$val1 = esc_attr( $this->options['api_username'] );
+			if( isset( $this->options['api_pwd'] ) ) {
+				$val1 = esc_attr( $this->options['api_pwd'] );
 			}
 			$val2 = 'readonly="readonly"';
 		}
@@ -599,7 +599,7 @@ class FreshDeskSettingsPage{
 			$val = ( $this->display_option['no_tickets_msg'] != '' ) ? htmlentities( $this->display_option['no_tickets_msg'] ) : '';
 		}
         printf(
-            '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" value="%s" class="regular-text">', $val
+			'<textarea autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" class="regular-text" rows="10" cols="50">%s</textarea>', $val
         );
 	}
 	
@@ -724,20 +724,6 @@ class FreshDeskSettingsPage{
 						</div>
 					</div>
 				</div>',$val, $class, $yesno
-        );
-	}
-	
-	
-	/*
-     * Callback function for invalid user message text box
-     */
-	public function invalid_user_msg_callback(){
-		$val = '';
-		if( isset( $this->display_option['invalid_user_msg'] ) ){
-			$val = ( $this->display_option['invalid_user_msg'] != '' ) ? htmlentities( $this->display_option['invalid_user_msg'] ) : '';
-		}
-        printf(
-            '<input type="text" autocomplete="off" placeholder="Eg: Invalid User!" id="invalid_user_msg" name="fd_display[invalid_user_msg]" value="%s" class="regular-text">', $val
         );
 	}
 	

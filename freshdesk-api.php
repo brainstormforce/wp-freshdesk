@@ -27,16 +27,29 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: Constructor
 		 */
 		
-		function __construct(){
+		function __construct() {
+		
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'plugins_loaded', array( $this, 'fd_load_textdomain' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_shortcode( "fd_fetch_tickets", array($this, "fetch_tickets"));
+			
 			include_once( 'admin-settings.php' );
+			
 			$this->options = get_option( 'fd_url' );
 			$this->opt = get_option( 'fd_apikey' );
-			$this->freshdeskUrl = ( isset( $this->opt['freshdesk_url'] ) ) ? rtrim( $this->opt['freshdesk_url'], '/' ) . '/' : '';
 			$this->display_option = get_option( 'fd_display' );
+			
+			if( isset( $this->opt['freshdesk_url'] ) ) {
+				$this->freshdeskUrl = rtrim( $this->opt['freshdesk_url'], '/' ) . '/';
+			} else {
+				$this->freshdeskUrl = '';
+			}
+			if ( !preg_match( "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $this->freshdeskUrl ) ) {
+				$this->freshdeskUrl = '';
+			} else {
+				$this->freshdeskUrl;
+			}
 		}
 		
 		
@@ -223,11 +236,10 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		public function fetch_tickets( $atts ){
-		
 			$result = '';
 			if ( is_user_logged_in() ) {
 					global $current_user;
-				if( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) {
+				if( ( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) || !isset( $this->opt['use_apikey'] ) ) {
 					if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
 				
 						switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {

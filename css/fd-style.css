@@ -1,5 +1,25 @@
 /* CSS Document */
 
+.fd-badge {
+	border-radius: 3px;
+    height: 170px;
+    padding-bottom: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 150px;
+	background:url("../images/FreshDesk-WP_logo.png") no-repeat top center; background-size: 150px;
+}
+
+.fd-about-text {
+	font-size: 19px;
+    font-weight: 400;
+    line-height: 1.6em;
+	color: #777;
+    margin: 1em 200px 1em 0;
+    min-height: 60px;
+}
+
 .fd-filter-dropdown {
 	float:left;
 	margin-bottom: 3%;
