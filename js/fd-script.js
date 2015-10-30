@@ -24,7 +24,21 @@
 			var arr = id.split('-');
 			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
 			jQuery( this ).addClass( "nav-tab-active" );
-			jQuery( '.tabs' ).hide();
+			jQuery( '.fd-tabs' ).hide();
 			jQuery( '#' + arr[1] + '-' + arr[0] ).show();
 		});
+		
+		jQuery('.fd-toggle').click(function(){
+			var id = jQuery(this).attr('id');
+			if( jQuery("#"+id).is(':checked') ) {
+				jQuery( "#"+id+'-p' ).removeClass( "fd-use-apikey-no" );
+				jQuery( "#"+id+'-p' ).addClass( "fd-use-apikey-yes" );
+				jQuery( "#"+id+'-p' ).html( "Yes" );
+			} else {
+				jQuery( "#"+id+'-p' ).removeClass( "fd-use-apikey-yes" );
+				jQuery( "#"+id+'-p' ).addClass( "fd-use-apikey-no" );
+				jQuery( "#"+id+'-p' ).html( "No" );
+			}
+		});
+		
 	});

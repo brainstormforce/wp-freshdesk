@@ -1,13 +1,13 @@
 // JavaScript Document
 	function ajaxcall( action, key ) {
-		var data = jQuery("#filter_form").serialize();
+		var data = jQuery("#fd-filter_form").serialize();
 		jQuery.ajax({
 			type : "post",
 			dataType : "html",
 			url : ajaxurl,
 			data : data,
 			success: function(response) {
-				jQuery("#tickets_html").html( response );
+				jQuery("#fd-tickets_html").html( response );
 				jQuery("#fd-dark-bg").hide();
 			}
 		});
@@ -15,8 +15,8 @@
 	}
 	jQuery(document).ready(function(){
 		var call_ajax_flag = jQuery('#call_ajax_flag').val();
-		jQuery("#filter_dropdown").change(function(){
-			//jQuery("#filter_form").submit();
+		jQuery("#fd-filter_dropdown").change(function(){
+			//jQuery("#fd-filter_form").submit();
 			if( call_ajax_flag == 1 ) {
 				jQuery("#fd-dark-bg").show();
 				ajaxcall( "filter", this.value );

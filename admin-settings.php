@@ -23,9 +23,9 @@ class FreshDeskSettingsPage{
         // This page will be under "Settings"
         add_options_page(
             'Settings Admin', 
-            'FreshDesk Settings', 
+            'WP Freshdesk', 
             'manage_options', 
-            'fd-setting-admin', 
+            'wp-freshdesk', 
             array( $this, 'create_admin_page' )
         );
     }
@@ -41,22 +41,32 @@ class FreshDeskSettingsPage{
 		if( $this->options ){
 			$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
 		}
+		if( isset( $this->options['freshdesk_url'] ) ) {
+			$this->options['freshdesk_url'] = rtrim( $this->options['freshdesk_url'], '/' ) . '/';
+		} else {
+			$this->options['freshdesk_url'] = '';
+		}
+		if ( !preg_match( "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $this->options['freshdesk_url'] ) ) {
+			$this->options['freshdesk_url'] = '';
+		} else {
+			$this->options['freshdesk_url'];
+		}
 		$this->url_options = get_option( 'fd_url' );
 		$this->display_option = get_option( 'fd_display' );
         ?>
-        <div class="wrap">
-            <div class="bend-heading-section">
-				<h1>FreshDesk Settings</h1>
-				<h3>Now your users won't have to remember one more username and password! Configure your Wordpress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!</h3>
-			</div>
+        <div class="wrap about-wrap">
+            <div class="fd-heading-section">
+				<h1><?php echo __( 'WP Freshdesk Settings', 'freshdesk-api' ); ?></h1>
+				<div class="fd-about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></div>
+				<div class="fd-badge"></div>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration' ); ?></a>
-				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcode' ); ?></a>
-				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO' ); ?></a>
-				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings' ); ?></a>
+				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcodes', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
 			</h2>
-			<div id="api-tab" class="tabs">
+			<div id="api-tab" class="fd-tabs">
 				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -65,42 +75,40 @@ class FreshDeskSettingsPage{
 						submit_button();?>
 				</form>
 			</div>
-			<div id="shortcode-tab" style="display:none;" class="tabs">
-				<p class="description1"><?php echo __( 'Paste the below shortcode on your page.' ); ?></p>
-				<code>[fd_fetch_tickets]</code>
-				<p><?php echo __( 'This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:'); ?></p>
+			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
+				<p><?php echo __( 'Paste the below shortcode on your page. This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:', 'freshdesk-api' ); ?></p>
 				<table>
 					<tr>
-						<td><?php echo __( 'All tickets' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets]' ); ?></code></td>
+						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Open' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Open"]' ); ?></code></td>
+						<td><?php echo __( 'Open', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Open"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Resolved' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Resolved"]' ); ?></code></td>
+						<td><?php echo __( 'Resolved', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Resolved"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Closed'); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Closed"]' ); ?></code></td>
+						<td><?php echo __( 'Closed', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Closed"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Pending' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Pending"]' ); ?></code></td>
+						<td><?php echo __( 'Pending', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Pending"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Customer' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Customer"]' ); ?></code></td>
+						<td><?php echo __( 'Waiting on Customer', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Waiting on Customer"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Third Party' ); ?></td>
-						<td><code><?php echo __( '[fd_fetch_tickets filter="Waiting on Third Party"]' ); ?></code></td>
+						<td><?php echo __( 'Waiting on Third Party', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_fetch_tickets filter="Waiting on Third Party"]</code></td>
 					</tr>
 				</table>
 			</div>
-			<div id="url-tab" style="display:none;" class="tabs">
+			<div id="url-tab" style="display:none;" class="fd-tabs">
 				<form method="post" action="options.php" id="url_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -109,7 +117,7 @@ class FreshDeskSettingsPage{
 						submit_button();?>
 				</form>
 			</div>
-			<div id="display-tab" style="display:none;" class="tabs">
+			<div id="display-tab" style="display:none;" class="fd-tabs">
 				<form method="post" action="options.php" id="display_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -151,7 +159,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'freshdesk_url', // ID
-            'Base freshdesk URL', // Title 
+            'Base Freshdesk URL', // Title 
             array( $this, 'freshdesk_url_callback' ), // Callback
             'my-setting-admin', // Page
             'setting_section_id' // Section           
@@ -250,7 +258,7 @@ class FreshDeskSettingsPage{
 		
 		add_settings_field(
             'fd_display_use_css', // ID
-            'Use predefined CSS', // Title 
+            'Use Predefined CSS', // Title 
             array( $this, 'fd_display_use_css_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
@@ -285,14 +293,6 @@ class FreshDeskSettingsPage{
             'no_tickets_msg', // ID
             'No Tickets Error Message', // Title 
             array( $this, 'no_tickets_msg_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
-		add_settings_field(
-            'invalid_user_msg', // ID
-            'Invalid User Error Message', // Title 
-            array( $this, 'invalid_user_msg_callback' ), // Callback
             'display-admin-setting', // Page
             'freshdesk_display_section' // Section           
         );
@@ -351,7 +351,7 @@ class FreshDeskSettingsPage{
 	
 
     /*
-     * Callback function for "FreshDesk API Key"
+     * Callback function for "Freshdesk API Key"
      */
     public function freshdesk_apikey_callback(){
 		$val1 = $val2 = '';
@@ -365,6 +365,10 @@ class FreshDeskSettingsPage{
 		} else {
 			$val2 = 'readonly="readonly"';
 		}
+		if( empty( $this->options ) ) {
+			$val1 = '';
+			$val2 = '';
+		}
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
@@ -373,7 +377,7 @@ class FreshDeskSettingsPage{
 		
 	
 	/*
-     * Callback function for "FreshDesk Shared Secret Key"
+     * Callback function for "Freshdesk Shared Secret Key"
      */
     public function freshdesk_sharedkey_callback(){
 		$val1 = $val2 = '';
@@ -387,18 +391,26 @@ class FreshDeskSettingsPage{
 		} else {
 			$val2 = 'readonly="readonly"';
 		}
+		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
+			$val = $this->options['freshdesk_url'];
+		} else {
+			$val = 'https://your_domain.freshdesk.com/';
+		}
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_sharedkey" name="fd_url[freshdesk_sharedkey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', ( isset( $this->options['freshdesk_url'] ) ) ? $this->options['freshdesk_url'] : '' );
+		printf( '<p id="timezone-description" class="description">Your shared token could be obtained on the <a target="_blank" href="%sadmin/security">Account Security page</a> in the <br> Single Sign-On >> "Simple SSO" section.</p>', $val
+		);
     }
 	
 		
 	 /*
-     * Callback function for "FreshDesk Admin Username"
+     * Callback function for "Freshdesk Admin Username"
      */
     public function use_apikey_callback(){
 		$val = '';
+		$class = '';
+		$yesno = '';
 		if( isset( $this->options['use_apikey'] ) ) {
 			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
 		} else {
@@ -407,28 +419,38 @@ class FreshDeskSettingsPage{
 		if( !$this->options ){
 			$val = 'checked="checked"';
 		}
+		if( empty( $this->options ) ) {
+			$val = 'checked="checked"';
+		}
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
         printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="use_apikey" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"></label>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
+										<label for="use_apikey"><p class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 		printf( '<p><strong>OR</strong></p>' );
     }
 	
 	
 	/*
-     * Callback function for "FreshDesk Admin Username"
+     * Callback function for "Freshdesk Admin Username"
      */
     public function api_username_callback(){
 		$val1 = $val2 = '';
@@ -438,6 +460,12 @@ class FreshDeskSettingsPage{
 				$val2 = '';
 			}
 		} else {
+			if( isset( $this->options['api_username'] ) ) {
+				$val1 = esc_attr( $this->options['api_username'] );
+			}
+			$val2 = 'readonly="readonly"';
+		}
+		if( empty( $this->options ) ) {
 			$val1 = '';
 			$val2 = 'readonly="readonly"';
 		}
@@ -448,7 +476,7 @@ class FreshDeskSettingsPage{
 	
 	
 	/*
-     * Callback function for "FreshDesk Admin Password"
+     * Callback function for "Freshdesk Admin Password"
      */
     public function api_pwd_callback(){
 		$val1 = $val2 = '';
@@ -459,6 +487,12 @@ class FreshDeskSettingsPage{
 			}
 			
 		} else {
+			if( isset( $this->options['api_pwd'] ) ) {
+				$val1 = esc_attr( $this->options['api_pwd'] );
+			}
+			$val2 = 'readonly="readonly"';
+		}
+		if( empty( $this->options ) ) {
 			$val1 = '';
 			$val2 = 'readonly="readonly"';
 		}
@@ -469,7 +503,7 @@ class FreshDeskSettingsPage{
 	
 		
 	/* 
-     * Callback function for "FreshDesk URL"
+     * Callback function for "Freshdesk URL"
      */
     public function freshdesk_url_callback(){
 		$val = '';
@@ -481,7 +515,7 @@ class FreshDeskSettingsPage{
         printf(
             '<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
         );
-		printf( '<p id="timezone-description" class="description">This is the base FreshDesk support URL.</p>' );
+		printf( '<p id="timezone-description" class="description">This is the base Freshdesk support URL.</p>' );
     }
 		
 	
@@ -490,7 +524,7 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_loginurl_callback(){
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-login' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-login' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
@@ -509,7 +543,7 @@ class FreshDeskSettingsPage{
 			$val = 'https://your_domain.freshdesk.com/';
 		}
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=bsf-freshdesk-remote-logout' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-logout' . '</code>'
         );
 		printf(
 			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
@@ -530,21 +564,28 @@ class FreshDeskSettingsPage{
 		} else {
 			$val = '';
 		}
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
         printf(
-            	'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="freshdesk_enable" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
-										<label for="freshdesk_enable"></label>
+            	'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="freshdesk_enable" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_url[freshdesk_enable]" %s>
+										<label for="freshdesk_enable"><p id="freshdesk_enable-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val 
+				</div>', $val, $class, $yesno
         );
     }
 	
@@ -558,7 +599,7 @@ class FreshDeskSettingsPage{
 			$val = ( $this->display_option['no_tickets_msg'] != '' ) ? htmlentities( $this->display_option['no_tickets_msg'] ) : '';
 		}
         printf(
-            '<input type="text" autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" value="%s" class="regular-text">', $val
+			'<textarea autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" class="regular-text" rows="10" cols="50">%s</textarea>', $val
         );
 	}
 	
@@ -568,21 +609,28 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_description_callback(){
 		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
-            	'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_description" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
-										<label for="fd_display_description"></label>
+            	'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_description" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
+										<label for="fd_display_description"><p id="fd_display_description-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 	}
 
@@ -592,21 +640,28 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_priority_name_callback(){
 		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_priority_name" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
-										<label for="fd_display_priority_name"></label>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_priority_name" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
+										<label for="fd_display_priority_name"><p id="fd_display_priority_name-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>', $val
+				</div>', $val, $class, $yesno
         );
 	}
 	
@@ -616,21 +671,28 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_updated_at_callback(){
 		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_updated_at" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
-										<label for="fd_display_updated_at"></label>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_updated_at" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
+										<label for="fd_display_updated_at"><p id="fd_display_updated_at-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>',$val
+				</div>',$val, $class, $yesno
         );
 	}
 	
@@ -640,35 +702,28 @@ class FreshDeskSettingsPage{
      */
 	public function fd_display_use_css_callback(){
 		$val = ( isset( $this->display_option['fd_display_use_css'] ) ) ? 'checked="checked"' : '';
+		if( $val == '' ) {
+			$class = ' fd-use-apikey-no';
+			$yesno = 'No';
+		} else {
+			$class = ' fd-use-apikey-yes';
+			$yesno = 'Yes';
+		}
 		printf(
-				'<div id="wrapper">
-					<div id="main">
-						<div class="container">
-							<div class="settings">
-								<div class="row">
-									<div class="switch">
-										<input id="fd_display_use_css" class="cmn-toggle cmn-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
-										<label for="fd_display_use_css"></label>
+				'<div id="fd-wrapper">
+					<div id="fd-main">
+						<div class="fd-container">
+							<div class="fd-settings">
+								<div class="fd-row">
+									<div class="fd-switch">
+										<input id="fd_display_use_css" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
+										<label for="fd_display_use_css"><p id="fd_display_use_css-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>',$val
-        );
-	}
-	
-	
-	/*
-     * Callback function for invalid user message text box
-     */
-	public function invalid_user_msg_callback(){
-		$val = '';
-		if( isset( $this->display_option['invalid_user_msg'] ) ){
-			$val = ( $this->display_option['invalid_user_msg'] != '' ) ? htmlentities( $this->display_option['invalid_user_msg'] ) : '';
-		}
-        printf(
-            '<input type="text" autocomplete="off" placeholder="Eg: Invalid User!" id="invalid_user_msg" name="fd_display[invalid_user_msg]" value="%s" class="regular-text">', $val
+				</div>',$val, $class, $yesno
         );
 	}
 	
