@@ -1,0 +1,187 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Freshdesk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: Mon Oct 26 2015 14:30:32 GMT+0530 (India Standard Time)\n"
+"PO-Revision-Date: Mon Oct 26 2015 14:30:41 GMT+0530 (India Standard Time)\n"
+"Last-Translator: admin <vrundak@bsf.io>\n"
+"Language-Team: \n"
+"Language: English\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Loco-Target-Locale: en_US\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: /admin-settings.php:54
+msgid "General Configuration"
+msgstr ""
+
+#: /admin-settings.php:55
+msgid "Shortcode"
+msgstr ""
+
+#: /admin-settings.php:56
+msgid "Freshdesk SSO"
+msgstr ""
+
+#: /admin-settings.php:57
+msgid "Display Settings"
+msgstr ""
+
+#: /admin-settings.php:69
+msgid "Paste the below shortcode on your page."
+msgstr ""
+
+#: /admin-settings.php:71
+msgid ""
+"This shortcode will display all the tickets on your page. It also provides "
+"filter options and search options. You can filter tickets with respect to:"
+msgstr ""
+
+#: /admin-settings.php:74
+msgid "All tickets"
+msgstr ""
+
+#: /admin-settings.php:75
+msgid "[fd_fetch_tickets]"
+msgstr ""
+
+#: /admin-settings.php:78 /freshdesk-api.php:263
+msgid "Open"
+msgstr ""
+
+#: /admin-settings.php:79
+msgid "[fd_fetch_tickets filter=\"Open\"]"
+msgstr ""
+
+#: /admin-settings.php:82 /freshdesk-api.php:273
+msgid "Resolved"
+msgstr ""
+
+#: /admin-settings.php:83
+msgid "[fd_fetch_tickets filter=\"Resolved\"]"
+msgstr ""
+
+#: /admin-settings.php:86 /freshdesk-api.php:278
+msgid "Closed"
+msgstr ""
+
+#: /admin-settings.php:87
+msgid "[fd_fetch_tickets filter=\"Closed\"]"
+msgstr ""
+
+#: /admin-settings.php:90 /freshdesk-api.php:268
+msgid "Pending"
+msgstr ""
+
+#: /admin-settings.php:91
+msgid "[fd_fetch_tickets filter=\"Pending\"]"
+msgstr ""
+
+#: /admin-settings.php:94 /freshdesk-api.php:283
+msgid "Waiting on Customer"
+msgstr ""
+
+#: /admin-settings.php:95
+msgid "[fd_fetch_tickets filter=\"Waiting on Customer\"]"
+msgstr ""
+
+#: /admin-settings.php:98 /freshdesk-api.php:289
+msgid "Waiting on Third Party"
+msgstr ""
+
+#: /admin-settings.php:99
+msgid "[fd_fetch_tickets filter=\"Waiting on Third Party\"]"
+msgstr ""
+
+#. Name of the plugin
+msgid "WP Freshdesk"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"With this plugin, your users will be able to see their tickets on your "
+"FreshDesk support portal. Other features include - SSO, ticket filtering, "
+"sorting & search options. Admins have an options to display only certain "
+"status tickets with shortcodes."
+msgstr ""
+
+#. Author of the plugin
+msgid "Brainstorm Force"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.brainstormforce.com"
+msgstr ""
+
+#: /freshdesk-api.php:90 /freshdesk-api.php:327
+msgid "Invalid Credentials"
+msgstr ""
+
+#: /freshdesk-api.php:93 /freshdesk-api.php:330
+msgid "Invalid User"
+msgstr ""
+
+#: /freshdesk-api.php:95 /freshdesk-api.php:332
+msgid "Invalid Freshdesk URL"
+msgstr ""
+
+#: /freshdesk-api.php:98 /freshdesk-api.php:335
+msgid "No tickets"
+msgstr ""
+
+#: /freshdesk-api.php:100 /freshdesk-api.php:337
+msgid "Error!"
+msgstr ""
+
+#: /freshdesk-api.php:124
+msgid "Remote authentication is not configured yet."
+msgstr ""
+
+#: /freshdesk-api.php:193
+msgid "Remote authentication failed: "
+msgstr ""
+
+#: /freshdesk-api.php:195
+msgid "Try again"
+msgstr ""
+
+#: /freshdesk-api.php:196
+#, php-format
+msgid "Log out of %s"
+msgstr ""
+
+#: /freshdesk-api.php:197
+#, php-format
+msgid "Return to %s dashboard"
+msgstr ""
+
+#: /freshdesk-api.php:258
+msgid "----All Tickets----"
+msgstr ""
+
+#: /freshdesk-api.php:293
+msgid "Search..."
+msgstr ""
+
+#: /freshdesk-api.php:434
+msgid "ID"
+msgstr ""
+
+#: /freshdesk-api.php:435
+msgid "Subject"
+msgstr ""
+
+#: /freshdesk-api.php:436
+msgid "Status"
+msgstr ""
