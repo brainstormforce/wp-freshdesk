@@ -1,6 +1,15 @@
 // JavaScript Document
 
 	jQuery(document).ready(function(){
+		jQuery('#api-tab').submit(function(){
+			if(/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i.test(jQuery("#freshdesk_url").val())){
+				return true;
+			} else {
+				alert("Invalid URL");
+				return false;
+			}
+			
+		});
 		jQuery('#use_apikey').change(function(){
 			if( jQuery("#use_apikey").is(':checked') ) {
 				jQuery( "#freshdesk_apikey" ).removeAttr("readonly");
