@@ -2,7 +2,7 @@
 
 	jQuery(document).ready(function(){
 		jQuery('#api-tab').submit(function(){
-			if(/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i.test(jQuery("#freshdesk_url").val())){
+			if(/^[A-Za-z\d\s]+$/.test(jQuery("#freshdesk_url").val())){
 				return true;
 			} else {
 				alert("Invalid URL");

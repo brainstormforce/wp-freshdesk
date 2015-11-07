@@ -41,14 +41,13 @@ if(!class_exists("FreshDeskAPI")){
 			$this->display_option = get_option( 'fd_display' );
 			
 			if( isset( $this->opt['freshdesk_url'] ) ) {
-				$this->freshdeskUrl = rtrim( $this->opt['freshdesk_url'], '/' ) . '/';
+				if ( preg_match( "/^[A-Za-z\d\s]+$/", $this->freshdeskUrl ) ) {
+					$this->freshdeskUrl = 'https://' . $this->opt['freshdesk_url'] . '.freshdesk.com/';
+				} else {
+					$this->freshdeskUrl = '';
+				}
 			} else {
 				$this->freshdeskUrl = '';
-			}
-			if ( !preg_match( "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $this->freshdeskUrl ) ) {
-				$this->freshdeskUrl = '';
-			} else {
-				$this->freshdeskUrl;
 			}
 		}
 		
