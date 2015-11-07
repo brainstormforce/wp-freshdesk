@@ -8,7 +8,6 @@
 				alert("Invalid URL");
 				return false;
 			}
-			
 		});
 		jQuery('#use_apikey').change(function(){
 			if( jQuery("#use_apikey").is(':checked') ) {
