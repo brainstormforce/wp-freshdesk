@@ -1,6 +1,14 @@
 // JavaScript Document
 
 	jQuery(document).ready(function(){
+		jQuery('#api-tab').submit(function(){
+			if(/^[A-Za-z\d\s]+$/.test(jQuery("#freshdesk_url").val())){
+				return true;
+			} else {
+				alert("Invalid URL");
+				return false;
+			}
+		});
 		jQuery('#use_apikey').change(function(){
 			if( jQuery("#use_apikey").is(':checked') ) {
 				jQuery( "#freshdesk_apikey" ).removeAttr("readonly");

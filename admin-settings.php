@@ -39,18 +39,19 @@ class FreshDeskSettingsPage{
         // Set class property
         $this->options = get_option( 'fd_apikey' );
 		if( $this->options ){
-			$this->options['freshdesk_url'] = ( isset( $this->options['freshdesk_url'] ) ) ? rtrim( $this->options['freshdesk_url'], '/' ) . '/' : '';
-		}
-		if( isset( $this->options['freshdesk_url'] ) ) {
-			$this->options['freshdesk_url'] = rtrim( $this->options['freshdesk_url'], '/' ) . '/';
+			if( isset( $this->options['freshdesk_url'] ) ){
+				if ( !preg_match( "/^[A-Za-z\d\s]+$/", $this->options['freshdesk_url'] ) ) {
+					$this->options['freshdesk_url'] = '';
+				} else {
+					$this->options['freshdesk_url'] = 'https://' . $this->options['freshdesk_url'] . '.freshdesk.com/';
+				}	
+			} else {
+				$this->options['freshdesk_url'] = '';
+			}
 		} else {
 			$this->options['freshdesk_url'] = '';
 		}
-		if ( !preg_match( "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $this->options['freshdesk_url'] ) ) {
-			$this->options['freshdesk_url'] = '';
-		} else {
-			$this->options['freshdesk_url'];
-		}
+		
 		$this->url_options = get_option( 'fd_url' );
 		$this->display_option = get_option( 'fd_display' );
         ?>
@@ -508,12 +509,13 @@ class FreshDeskSettingsPage{
     public function freshdesk_url_callback(){
 		$val = '';
 		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
-			$val = esc_attr( $this->options['freshdesk_url']);
+			$val = ltrim( rtrim( esc_attr( $this->options['freshdesk_url'] ), '.freshdesk.com/' ), 'https://' );
+			//'https://' . $this->opt['freshdesk_url'] . '.freshdesk.com/'
 		} else {
 			$val = '';
 		}
         printf(
-            '<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />', $val
+            'https://<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />.freshdesk.com/', $val
         );
 		printf( '<p id="timezone-description" class="description">This is the base Freshdesk support URL.</p>' );
     }

@@ -1,0 +1,6 @@
+.travis.yml
+/bin/
+phpunit.xml
+/tests/
+ssh-key
+ssh-key.pub
