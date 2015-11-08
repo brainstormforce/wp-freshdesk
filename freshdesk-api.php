@@ -124,7 +124,7 @@ if(!class_exists("FreshDeskAPI")){
 				$returnArray = '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
 			}
 			
-			echo $returnArray; die
+			echo $returnArray; die;
 		}
 		
 		
