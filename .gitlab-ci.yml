@@ -13,6 +13,7 @@ before_script:
     # - apt-get update
     # - apt-get -y install subversion
     # - apt-get -y install libapache2-svn
+    - apt-get install mysql-server
     - bash bin/install-wp-tests.sh wordpress_test effio_user testpassword localhost 4.3.1
 stages:
   - test
