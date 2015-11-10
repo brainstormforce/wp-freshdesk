@@ -112,7 +112,7 @@ install_db() {
 	fi
 
 	# create database
-	mysql create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	mysqld create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
 }
 
 # install_wp
