@@ -21,7 +21,7 @@ before_script:
 stages:
   - phpunit
 
-test:
+phpunit:
   script:
   - find . \( -name '*.php' \) -exec php -lf {} \;
   - php vendor/phpunit/phpunit/phpunit
