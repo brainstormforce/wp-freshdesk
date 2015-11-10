@@ -1,32 +1,34 @@
-# Before Script
-before_script:
-  - composer self-update
-  - composer install --prefer-dist > /dev/null
-  - cp .env.example .env
-  - php artisan key:generate
-  - php artisan migrate:refresh
-
-# Services
+image: tetraweb/php
 services:
-  - mysql:latest
-
-# Variables
+    - mysql
 variables:
-  MYSQL_ROOT_PASSWORD: root
-  MYSQL_USER: homestead
-  MYSQL_PASSWORD: secret
-  MYSQL_DATABASE: homestead
-
-# PHP 5.5
-php:5.5:
-  image: bobey/docker-gitlab-ci-runner-php5.5
-  script:
-    - echo "Running PHPUnit Tests"
-    - php vendor/bin/phpunit --colors --debug  --coverage-text
-
-# PHP 5.6
-php:5.6:
-  image: bobey/docker-gitlab-ci-runner-php5.6
-  script:
-    - echo "Running PHPUnit Tests"
-    - php vendor/bin/phpunit --colors --debug  --coverage-text
+    MYSQL_DATABASE: effiocms_db
+    MYSQL_USER: effio_user
+    MYSQL_PASSWORD: testpassword
+    WITH_XDEBUG: "1"
+before_script:
+    # enable necessary php extensions
+    - docker-php-ext-enable zip && docker-php-ext-enable mbstring && docker-php-ext-enable gd && docker-php-ext-enable pdo_mysql
+    # composer update
+    - composer self-update && composer --version
+    - composer global require --no-interaction --quiet "fxp/composer-asset-plugin:~1.1.0"
+    - export PATH="$HOME/.composer/vendor/bin:$PATH"
+    - composer install --dev --prefer-dist --no-interaction --quiet
+    # codeception install
+    - composer global require --no-interaction --quiet "codeception/codeception=2.0.*" "codeception/specify=*" "codeception/verify=*"
+    # setup application
+    - |
+      php ./init --env=Development --overwrite=All
+      cd tests/codeception/backend && codecept build
+      cd ../common && codecept build
+      cd ../console && codecept build
+      cd ../frontend && codecept build
+      cd ../../../
+    - cd tests/codeception/bin && php yii migrate --interactive=0 && cd ../../..
+codeception:
+    stage: test
+    script:
+        - |
+          php -S localhost:8080 > /dev/null 2>&1 &
+          cd tests/codeception/frontend
+          codecept run
