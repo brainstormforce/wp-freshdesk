@@ -1,9 +1,27 @@
+image: tetraweb/php
+services:
+    - mysql
+variables:
+    MYSQL_DATABASE: effiocms_db
+    MYSQL_USER: effio_user
+    MYSQL_PASSWORD: testpassword
+    WITH_XDEBUG: "1"
 before_script:
-  - composer install
-
+    # enable necessary php extensions
+    - docker-php-ext-enable zip && docker-php-ext-enable mbstring && docker-php-ext-enable gd && docker-php-ext-enable pdo_mysql
+    # composer update
+    - composer self-update && composer --version
+    - composer global require --no-interaction --quiet "fxp/composer-asset-plugin:~1.1.0"
+    - export PATH="$HOME/.composer/vendor/bin:$PATH"
+    - composer install --dev --prefer-dist --no-interaction --quiet
+    # codeception install
+    - composer global require --no-interaction --quiet "codeception/codeception=2.0.*" "codeception/specify=*" "codeception/verify=*"
+    # setup application
+    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 stages:
-  - test
+  - phpunit
 
 test:
   script:
+  - find . \( -name '*.php' \) -exec php -lf {} \;
   - php vendor/phpunit/phpunit/phpunit
