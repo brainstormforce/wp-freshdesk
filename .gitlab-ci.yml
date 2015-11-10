@@ -1,4 +1,4 @@
-image: tetraweb/php
+image: tetraweb/phpunit
 services:
     - mysql
 variables:
@@ -14,6 +14,7 @@ before_script:
     - composer global require --no-interaction --quiet "fxp/composer-asset-plugin:~1.1.0"
     # codeception install
     # setup application
+    - sudo apt-get install subversion
     - bash bin/install-wp-tests.sh wordpress_test effio_user testpassword localhost 4.3.1
 stages:
   - test
