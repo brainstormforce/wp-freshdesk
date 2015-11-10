@@ -15,9 +15,8 @@ before_script:
     - export PATH="$HOME/.composer/vendor/bin:$PATH"
     - composer install --dev --prefer-dist --no-interaction --quiet
     # codeception install
-    - composer global require --no-interaction --quiet "codeception/codeception=2.0.*" "codeception/specify=*" "codeception/verify=*"
     # setup application
-    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+    - bash bin/install-wp-tests.sh wordpress_test effio_user testpassword localhost 4.3.1
 stages:
   - test
 
