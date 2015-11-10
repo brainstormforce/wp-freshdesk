@@ -7,14 +7,10 @@ variables:
     MYSQL_PASSWORD: testpassword
     WITH_XDEBUG: "1"
 before_script:
-    # enable necessary php extensions
-    - docker-php-ext-enable zip && docker-php-ext-enable mbstring && docker-php-ext-enable gd && docker-php-ext-enable pdo_mysql
     # composer update
     - composer self-update && composer --version
-    - composer global require --no-interaction --quiet "fxp/composer-asset-plugin:~1.1.0"
-    # codeception install
     # setup application
-    - sudo apt-get install subversion
+    - apt-get install subversion
     - bash bin/install-wp-tests.sh wordpress_test effio_user testpassword localhost 4.3.1
 stages:
   - test
