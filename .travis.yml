@@ -16,7 +16,18 @@ php:
   - "5.2"
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0
+    # Trunk (current version in development is 4.4)
+    # @link https://github.com/WordPress/WordPress
+    - WP_VERSION=master WP_MULTISITE=0
+    - WP_VERSION=master WP_MULTISITE=1
+    # WordPress 4.3
+    # @link https://github.com/WordPress/WordPress/tree/4.3-branch
+    - WP_VERSION=4.3 WP_MULTISITE=0
+    - WP_VERSION=4.3 WP_MULTISITE=1
+    # WordPress 4.2
+    # @link https://github.com/WordPress/WordPress/tree/4.2-branch
+    - WP_VERSION=4.2 WP_MULTISITE=0
+    - WP_VERSION=4.2 WP_MULTISITE=1
 
 matrix:
   include:
