@@ -91,8 +91,6 @@ if(!class_exists("FreshDeskAPI")){
 			global $current_user;
 			$postArray = $_POST;
 			$returnArray = array();
-
-			$foo = get_site_icon_url();
 			
 			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 			$tickets = json_decode( json_encode( $tickets ), true );
