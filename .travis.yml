@@ -6,6 +6,7 @@ notifications:
     on_failure: change
 
 php:
+  - "hhvm"
   - "7.0"
   - "5.6"
   - "5.5"
