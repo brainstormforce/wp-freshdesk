@@ -8,30 +8,32 @@
     position: relative;
 }
 
-table.fd-lic-table-list, table.fd-lic-table-list tr th, table.fd-lic-table-list tr td {
+.fd-lic-table-list, .fd-lic-table-list tr th, .fd-lic-table-list tr td {
     border: 1px solid #eaeaea;
     margin: 0 !important;
     padding: 7px 10px;
     vertical-align: middle;
 }
-table.fd-lic-table-list {
+
+.fd-lic-table-list {
     background: #fdfdfd none repeat scroll 0 0;
     border-radius: 4px;
     overflow: hidden;
     width: 100%;
-	color: #757575;
-	border-collapse: collapse;
+    color: #757575;
+    border-collapse: collapse;
 }
-table.fd-lic-table-list tr th {
+
+.fd-lic-table-list tr th {
     background: #f2f2f2 none repeat scroll 0 0;
     font-size: 14px;
     line-height: 1.3em;
     padding: 11px 10px;
-	text-transform: uppercase;
+    text-transform: uppercase;
 }
 
-table.fd-lic-table-list tr td a {
-	color: #757575;
-	text-decoration:none;
+.fd-lic-table-list tr td a {
+    color: #757575;
+    text-decoration: none;
 }
 
