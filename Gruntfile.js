@@ -1,4 +1,5 @@
-copy: {module.exports = function (grunt) {
+copy: (module.exports = function (grunt) 
+	{
    // Project configuration.
    grunt.initConfig( {
        pkg: grunt.file.readJSON( 'package.json' ),
@@ -24,4 +25,4 @@ copy: {module.exports = function (grunt) {
   grunt.loadNpmTasks( 'grunt-contrib-copy' );
   grunt.registerTask( 'release', [ 'copy' ] );
 
-};
+});
