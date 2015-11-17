@@ -58,7 +58,7 @@ class FreshDeskSettingsPage{
         <div class="wrap about-wrap">
             <div class="fd-heading-section">
 				<h1><?php echo __( 'WP Freshdesk Settings', 'freshdesk-api' ); ?></h1>
-				<div class="fd-about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></div>
+				<div class="fd-about-text about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></div>
 				<div class="fd-badge"></div>
 			
 			<h2 class="nav-tab-wrapper">

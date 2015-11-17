@@ -12,6 +12,10 @@
     background-size: 150px;
 }
 
+.form-table {
+	width:100%;
+}
+
 .fd-about-text {
     font-size: 19px;
     font-weight: 400;
@@ -344,4 +348,14 @@ input.fd-toggle-round:checked + label:after {
         margin-bottom: 3%;
         float: none;
     }
+}
+@media only screen and (max-width:500px) {
+	.fd-badge {
+		position:relative;
+		margin-bottom:1.5em;
+		width:100%
+	}
+	.fd-tabs {
+		margin: 0;
+	}
 }
