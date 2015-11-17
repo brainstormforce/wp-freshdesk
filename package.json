@@ -1,0 +1,22 @@
+{
+  "name": "wp-freshdesk",
+  "version": "1.0.0",
+  "description": "With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nikschavan/wp-freshdesk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nikschavan/wp-freshdesk/issues"
+  },
+  "homepage": "https://github.com/Nikschavan/wp-freshdesk"
+}
