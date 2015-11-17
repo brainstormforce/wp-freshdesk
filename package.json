@@ -7,16 +7,19 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": ""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Nikschavan/wp-freshdesk.git"
+    "url": "https://github.com/brainstormforce/wp-freshdesk"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Nikschavan/wp-freshdesk/issues"
+    "url": "https://github.com/brainstormforce/wp-freshdesk"
   },
-  "homepage": "https://github.com/Nikschavan/wp-freshdesk"
+  "homepage": "https://github.com/brainstormforce/wp-freshdesk",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  }
 }
