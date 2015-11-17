@@ -6,6 +6,7 @@ class FreshDeskSettingsPage{
      */
     private $options;
 	private $url_options;
+	private $url_val;
 
     /**
      * Start up
@@ -42,13 +43,17 @@ class FreshDeskSettingsPage{
 			if( isset( $this->options['freshdesk_url'] ) ){
 				if ( !preg_match( "/^[A-Za-z\d\s]+$/", $this->options['freshdesk_url'] ) ) {
 					$this->options['freshdesk_url'] = '';
+					$this->url_val = '';
 				} else {
+					$this->url_val = $this->options['freshdesk_url'];
 					$this->options['freshdesk_url'] = 'https://' . $this->options['freshdesk_url'] . '.freshdesk.com/';
 				}	
 			} else {
+				$this->url_val = '';
 				$this->options['freshdesk_url'] = '';
 			}
 		} else {
+			$this->url_val = '';
 			$this->options['freshdesk_url'] = '';
 		}
 		
@@ -313,7 +318,7 @@ class FreshDeskSettingsPage{
             $new_input['freshdesk_apikey'] = sanitize_text_field( $input['freshdesk_apikey'] );
 			
 		if( isset( $input['freshdesk_url'] ) )
-            $new_input['freshdesk_url'] = sanitize_text_field( $input['freshdesk_url'] );
+            $new_input['freshdesk_url'] = $input['freshdesk_url'];
 			
 		if( isset( $input['freshdesk_sharedkey'] ) )
             $new_input['freshdesk_sharedkey'] = sanitize_text_field( $input['freshdesk_sharedkey'] );
@@ -508,9 +513,8 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_url_callback(){
 		$val = '';
-		if( isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
-			$val = ltrim( rtrim( esc_attr( $this->options['freshdesk_url'] ), '.freshdesk.com/' ), 'https://' );
-			//'https://' . $this->opt['freshdesk_url'] . '.freshdesk.com/'
+		if( isset( $this->options['freshdesk_url'] ) ) {
+			$val = $this->url_val;
 		} else {
 			$val = '';
 		}
