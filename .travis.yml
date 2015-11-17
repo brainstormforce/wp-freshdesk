@@ -6,11 +6,25 @@ notifications:
     on_failure: change
 
 php:
-  - 5.3
-  - 5.6
+  - "hhvm"
+  - "7.0"
+  - "5.6"
+  - "5.5"
+  - "5.4"
+  - "5.3"
+  # Current $required_php_version for WordPress: 5.2.4
+  - "5.2"
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0
+    # Trunk (current version in development is 4.4)
+    # @link https://github.com/WordPress/WordPress
+    - WP_VERSION=latest WP_MULTISITE=0
+    # WordPress 4.3
+    # @link https://github.com/WordPress/WordPress/tree/4.3-branch
+    - WP_VERSION=4.3 WP_MULTISITE=0
+    # WordPress 4.2
+    # @link https://github.com/WordPress/WordPress/tree/4.2-branch
+    - WP_VERSION=4.2 WP_MULTISITE=0
 
 matrix:
   include:
@@ -20,4 +34,7 @@ matrix:
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 
-script: phpunit
+script: 
+  # Search plugin for PHP syntax errors.
+  - find . \( -name '*.php' \) -exec php -lf {} \;
+  - phpunit
