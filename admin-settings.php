@@ -519,9 +519,9 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            'https://<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />.freshdesk.com/', $val
+            'https://<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: your_domain_name" />.freshdesk.com/', $val
         );
-		printf( '<p id="timezone-description" class="description">This is the base Freshdesk support URL.</p>' );
+		printf( '<p class="description">Enter only <strong>test</strong> if your site domain is <strong>https://test.freshdesk.com/</strong></p><p id="timezone-description" class="description">(This is the base Freshdesk support URL.)</p>' );
     }
 		
 	
