@@ -29,8 +29,14 @@ module.exports = function(grunt) {
 				files: [
 			      // Each of the files in the src/ folder will be output to
 			      // the dist/ folder each with the extension .gz.js
-			      {expand: true, src: ['**/*'], dest: 'wp-freshdesk/', ext: '.zip'}
-			      ]
+			      { 
+			      	src: [
+			      	'./wp-freshdesk/**',
+			      	'!./wp-freshdesk/wp-freshdesk.zip'
+			      	]
+
+			      }
+			    ]
 			  }
 			}
 		});
