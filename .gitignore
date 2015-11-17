@@ -4,3 +4,10 @@ phpunit.xml
 /tests/
 ssh-key
 ssh-key.pub
+
+# node modules
+node_modules/
+
+# ignore package
+wp-freshdesk/
+wp-freshdesk.zip
