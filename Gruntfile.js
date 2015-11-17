@@ -27,8 +27,6 @@ module.exports = function(grunt) {
 					mode: 'zip'
 				},
 				files: [
-			      // Each of the files in the src/ folder will be output to
-			      // the dist/ folder each with the extension .gz.js
 			      { 
 			      	src: [
 			      	'./wp-freshdesk/**',
