@@ -16,7 +16,8 @@ copy: (module.exports = function (grunt)
                    '!Gruntfile.js',
                    '!package.json',
                    '!.gitignore',
-                   '!bin/'
+                   '!bin/',
+                   '!phpunit.xml'
                ],
                dest: 'wp-freshdesk/'
            }
