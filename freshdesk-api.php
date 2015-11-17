@@ -41,7 +41,7 @@ if(!class_exists("FreshDeskAPI")){
 			$this->display_option = get_option( 'fd_display' );
 			
 			if( isset( $this->opt['freshdesk_url'] ) ) {
-				if ( preg_match( "/^[A-Za-z\d\s]+$/", $this->freshdeskUrl ) ) {
+				if ( preg_match( "/^[A-Za-z\d\s]+$/", $this->opt['freshdesk_url'] ) ) {
 					$this->freshdeskUrl = 'https://' . $this->opt['freshdesk_url'] . '.freshdesk.com/';
 				} else {
 					$this->freshdeskUrl = '';
