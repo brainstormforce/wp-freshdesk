@@ -4,3 +4,6 @@ phpunit.xml
 /tests/
 ssh-key
 ssh-key.pub
+
+# node modules
+node_modules/
