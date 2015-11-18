@@ -23,14 +23,13 @@ module.exports = function(grunt) {
 		compress: {
 			main: {
 				options: {
-					archive: 'wp-freshdesk/wp-freshdesk.zip',
+					archive: 'wp-freshdesk.zip',
 					mode: 'zip'
 				},
 				files: [
 			      { 
 			      	src: [
-			      	'./wp-freshdesk/**',
-			      	'!./wp-freshdesk/wp-freshdesk.zip'
+			      	'./wp-freshdesk/**'
 			      	]
 
 			      }
