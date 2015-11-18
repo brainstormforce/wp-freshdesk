@@ -443,7 +443,7 @@ class FreshDeskSettingsPage{
 								<div class="fd-row">
 									<div class="fd-switch">
 										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"><p class="fd-use-apikey-yesno %s">%s</p></label>
+										<label for="use_apikey"><p id="use_apikey-p" class="fd-use-apikey-yesno %s">%s</p></label>
 									</div>
 								</div>
 							</div>
@@ -519,9 +519,9 @@ class FreshDeskSettingsPage{
 			$val = '';
 		}
         printf(
-            'https://<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: https://your_domain_name.freshdesk.com/" />.freshdesk.com/', $val
+            'https://<input type="text" autocomplete="off" id="freshdesk_url" name="fd_apikey[freshdesk_url]" value="%s" class="regular-text" placeholder="Ex: your_domain_name" />.freshdesk.com/', $val
         );
-		printf( '<p id="timezone-description" class="description">This is the base Freshdesk support URL.</p>' );
+		printf( '<p class="description">Enter only <strong>test</strong> if your site domain is <strong>https://test.freshdesk.com/</strong></p><p id="timezone-description" class="description">(This is the base Freshdesk support URL.)</p>' );
     }
 		
 	
