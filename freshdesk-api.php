@@ -187,7 +187,10 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		public function fetch_tickets( $atts ){
-			$result = '';
+			$result = '
+			<div class="fd-tickets-outter">
+				<ul>';
+			
 			if ( is_user_logged_in() ) {
 				global $current_user;
 				
@@ -236,59 +239,63 @@ if(!class_exists("FreshDeskAPI")){
 						$filteredTickets = false;
 					}
 					
+					
+					
 					$result .= '
-					<div class="">
-						<form method="get" action="" id="fd-filter_form" name="fd-filter_form">
-							<div class="fd-filter-dropdown fd-filter">
-								<select id="fd-filter_dropdown" name="fd-filter_dropdown">
-									<option value="all_tickets" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'All Tickets', 'freshdesk-api' ) . '</option>
-									<option value="Open" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'Open', 'freshdesk-api' ) . '</option>
-									<option value="Pending" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'Pending', 'freshdesk-api' ) . '</option>
-									<option value="Resolved" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'Resolved', 'freshdesk-api' ) . '</option>
-									<option value="Closed" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'Closed', 'freshdesk-api' ) . '</option>
-									<option value="Waiting on Customer" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
-						}
-						$result .= '>' . __( 'Waiting on Customer', 'freshdesk-api' ) . '</option>
-									<option value="Waiting on Third Party" ';
-						if( isset( $_GET["fd-filter_dropdown"] ) ) {
-							$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
-						}
-						$txt = ( isset( $_GET['search_txt'] ) ) ? $_GET['search_txt'] : '';
-						$result .= '>' . __( 'Waiting on Third Party', 'freshdesk-api' ) . '</option>
-								</select>
-							</div>
-							<div class="fd-search-box fd-filter">
-								<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...', 'freshdesk-api' ) . '"/>
-							</div>
-							<div class="fd-submit-actions fd-filter">
-								<input type="submit" value="Search" id="filter_tickets"/>
-								<input type="button" value="Reset" id="reset_filter">
-							</div>
-							<div class="clear"></div>
-						</form>
-					</div>';
+								<li class="fd-filter-tickets">
+									<form method="get" action="" id="fd-filter_form" name="fd-filter_form">
+										<div class="fd-filter-dropdown fd-filter">
+											<select id="fd-filter_dropdown" name="fd-filter_dropdown">
+												<option value="all_tickets" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'All Tickets', 'freshdesk-api' ) . '</option>
+												<option value="Open" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'Open', 'freshdesk-api' ) . '</option>
+												<option value="Pending" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'Pending', 'freshdesk-api' ) . '</option>
+												<option value="Resolved" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'Resolved', 'freshdesk-api' ) . '</option>
+												<option value="Closed" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'Closed', 'freshdesk-api' ) . '</option>
+												<option value="Waiting on Customer" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+									}
+									$result .= '>' . __( 'Waiting on Customer', 'freshdesk-api' ) . '</option>
+												<option value="Waiting on Third Party" ';
+									if( isset( $_GET["fd-filter_dropdown"] ) ) {
+										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+									}
+									$txt = ( isset( $_GET['search_txt'] ) ) ? $_GET['search_txt'] : '';
+									$result .= '>' . __( 'Waiting on Third Party', 'freshdesk-api' ) . '</option>
+											</select>
+										</div>
+										<div class="fd-search-box fd-filter">
+											<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...', 'freshdesk-api' ) . '"/>
+										</div>
+										<div class="fd-filter">
+											<input type="submit" value="Search" id="filter_tickets"/>
+										</div>
+										<div class="fd-filter">
+											<input type="button" value="Reset" id="reset_filter">
+										</div>
+										<div class="clear"></div>
+									</form>
+								</li>';
 					
 					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ){
 						if( isset( $_GET['search_txt'] ) || isset( $_GET['fd-filter_dropdown'] ) ) {
@@ -312,7 +319,9 @@ if(!class_exists("FreshDeskAPI")){
 								} else {
 									$msg = __( 'Error!', 'freshdesk-api' );
 								}
-								$result .= '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
+								$result .= '<li>
+												<div class="fd-message">' . $msg . '</div>
+											</li>';
 							}
 						} else {
 							$result .= $this->get_html( $tickets );
@@ -331,15 +340,30 @@ if(!class_exists("FreshDeskAPI")){
 						} else {
 							$msg = __( 'Error!', 'freshdesk-api' );
 						}
-						$result .= '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
+						$result .= '<li>
+										<div class="fd-message">' . $msg . '</div>
+									</li>';
 					}
-					return $result;
+					
 				} else {
-					return '<p>Please configure settings for <strong>Freshdesk API</strong> from <a href="' . admin_url( '/options-general.php?page=wp-freshdesk' ) . '" target="_blank">admin panel</a></p>';
+					$result .= '
+						<li>
+							<div class="fd-message">Please configure settings for <strong>Freshdesk API</strong> from <a href="' . admin_url( '/options-general.php?page=wp-freshdesk' ) . '" target="_blank">admin panel</a></div>
+						</li>
+					';
 				}
 			} else{
-				return '<p><a href="' . wp_login_url() . '" title="Login">Login</a> to view your tickets!</p>';
+				$result .= '
+					<li>
+						<div class="fd-message"><a href="' . wp_login_url() . '" title="Login">Login</a> to view your tickets!</div>
+					</li>
+				';
 			}
+			
+			$result .= 
+				'</ul>
+			</div>';
+			return $result;
 		}
 		
 		
@@ -388,8 +412,60 @@ if(!class_exists("FreshDeskAPI")){
 		public function get_html( $tickets = '' ){
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
+			$append = ( count( $tickets ) > 1 ) ? 's' : '';
+			$html .=
+			'<li>
+				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found!</div>
+			</li>';
 			
-			$html .= '<div id="fd-tickets_html" class="fd-lic-table fd-table-responsive">
+			foreach( $tickets as $d ) {
+			
+				$class = ( $d->status_name == "Closed" ) ? 'status-closed' : '';
+				$diff = ( strtotime( date_i18n('Y-m-d H:i:s') ) - strtotime( date_i18n( 'Y-m-d H:i:s', false, 'gmt' ) ) );
+				$date = date_i18n( 'j M, Y, g:i A', strtotime( $d->updated_at ) + $diff );
+				$description = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description;
+				$html .= '
+				<li class="group ' . $class . '">
+					<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">
+						<span class="ticket-data">
+							<span class="ticket-title">' . $d->subject . ' <span class="ticket-id">#' . $d->display_id . '</span></span>
+							<span class="ticket-excerpt">' . $description . '</span>
+						</span>
+						<span class="ticket-meta">
+							<span class="ticket-status ' . $class . '">' . $d->status_name . '</span>
+							<span class="ticket-time"><abbr title="' . $date . '" class="timeago comment-time ticket-updated-at">' . $date . '</abbr></span>
+						</span>
+					</a>
+				</li>';
+			}
+			
+			/*$html .= '
+			<li class="group status-closed">
+				<a href="?id=80816">
+					<span class="ticket-data">
+						<span class="ticket-title">To get Stamps.com data back in the orders database. <span class="ticket-id">#80816</span></span>
+						<span class="ticket-excerpt">With the extension - "Stamps.com XML file export" I understand it is possible to - # Export...</span>
+					</span>
+					<span class="ticket-meta">
+						<span class="ticket-status status-closed">closed</span>
+						<span class="ticket-time"><abbr title="2013-08-05T21:07:48Z" class="timeago comment-time ticket-updated-at">2 years ago</abbr></span>
+					</span>
+				</a>
+			</li>
+			<li class="group">
+				<a href="?id=80816">
+					<span class="ticket-data">
+						<span class="ticket-title">To get Stamps.com data back in the orders database. <span class="ticket-id">#80816</span></span>
+						<span class="ticket-excerpt">With the extension - "Stamps.com XML file export" I understand it is possible to - # Export...</span>
+					</span>
+					<span class="ticket-meta">
+						<span class="ticket-status status-closed">closed</span>
+						<span class="ticket-time"><abbr title="2013-08-05T21:07:48Z" class="timeago comment-time ticket-updated-at">2 years ago</abbr></span>
+					</span>
+				</a>
+			</li>'*/
+			
+			/*$html .= '<div id="fd-tickets_html" class="fd-lic-table fd-table-responsive">
 						<div class="fd-total-tickets"><p>Total Tickets: ' . count( $tickets ) . '</p></div>
 						<table class="fd-lic-table-list">
 							<tr>
@@ -452,7 +528,7 @@ if(!class_exists("FreshDeskAPI")){
 							'</tr>';
 			}
 			
-			$html .= '</table></div>';
+			$html .= '</table></div>';*/
 			return $html;
 		}
 		
