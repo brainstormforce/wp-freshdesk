@@ -82,60 +82,12 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
-		/*
-		 * Function Name: process_filter_tickets
-		 * Function Description: AJAX call function for ticket search/filter
-		 */
-		
-		function process_filter_tickets(){
-			global $current_user;
-			$postArray = $_POST;
-			$returnArray = array();
-			
-			$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
-			$tickets = json_decode( json_encode( $tickets ), true );
-			$filteredTickets = $tickets;
-			if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
-				if( isset( $postArray['fd-filter_dropdown'] ) ) {
-					$filteredTickets = ( $postArray['fd-filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $postArray['fd-filter_dropdown'] ) : $tickets ;
-				}
-				if( isset( $postArray['search_txt'] ) && trim( $postArray['search_txt'] ) != '' ) {
-					$filteredTickets = ( trim( $postArray['search_txt'] ) != '' ) ? $this->search_tickets( $filteredTickets, $postArray['search_txt'] ) : $tickets ;
-				}
-				if( empty( $filteredTickets ) ) {
-					$returnArray = '<div id="fd-tickets_html"><p> ' . __( 'No tickets for "' . strtoupper( str_replace( '_', ' ', $postArray['fd-filter_dropdown'] ) ) . '" category.', 'freshdesk-api' ) . '</p><div class="fd-more-ticket">Could not find what you are searching for? Click <a href="' . $this->freshdeskUrl . 'support/tickets" target="_blank">here</a> to check all your old tickets.</div></div>';
-				} else {
-					$returnArray = $this->get_html( $filteredTickets );
-				}
-			} else {
-				if( isset( $tickets->require_login ) ) {
-					$msg = __( 'Invalid Credentials', 'freshdesk-api' );
-				} else if( isset( $tickets->errors ) ) {
-					if( isset( $tickets->errors->no_email ) ){
-						$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'freshdesk-api' );
-					} else {
-						$msg = __( 'Invalid Freshdesk URL', 'freshdesk-api' );
-					}
-				} else if( empty( $tickets ) ){
-					$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets', 'freshdesk-api' );
-				}else {
-					$msg = __( 'Error!', 'freshdesk-api' );
-				}
-				$returnArray = '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
-			}
-			
-			echo $returnArray; die;
-		}
-		
-		
 		
 		/*
 		 * Function Name: init
 		 * Function Description: Initialization
 		 */
 		public function init(){
-			add_action( 'wp_ajax_filter_tickets', array( &$this, 'process_filter_tickets' ) );
-			add_action( 'wp_ajax_nopriv_filter_tickets', array( &$this, 'process_filter_tickets' ) );
 			
 			if ( is_user_logged_in() ) {
 				
@@ -237,108 +189,134 @@ if(!class_exists("FreshDeskAPI")){
 		public function fetch_tickets( $atts ){
 			$result = '';
 			if ( is_user_logged_in() ) {
-					global $current_user;
+				global $current_user;
+				
 				if( ( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) || !isset( $this->opt['use_apikey'] ) ) {
 					if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
 				
 						switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
 							case 'Open':
-								$_POST["fd-filter_dropdown"] = 'Open';
+								$_GET["fd-filter_dropdown"] = 'Open';
 								break;
 							case 'Closed':
-								$_POST["fd-filter_dropdown"] = 'Closed';
+								$_GET["fd-filter_dropdown"] = 'Closed';
 								break;
 							case 'Resolved':
-								$_POST["fd-filter_dropdown"] = 'Resolved';
+								$_GET["fd-filter_dropdown"] = 'Resolved';
 								break;
 							case 'Waiting On Third Party':
-								$_POST["fd-filter_dropdown"] = 'Waiting on Third Party';
+								$_GET["fd-filter_dropdown"] = 'Waiting on Third Party';
 								break;
 							case 'Waiting On Customer':
-								$_POST["fd-filter_dropdown"] = 'Waiting on Customer';
+								$_GET["fd-filter_dropdown"] = 'Waiting on Customer';
 								break;
 							case 'Pending':
-								$_POST["fd-filter_dropdown"] = 'Pending';
+								$_GET["fd-filter_dropdown"] = 'Pending';
 								break;
 							default:
 								break;
 						}
 					}
-									
-					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles, $_POST );
-					$ajaxTickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+					
+					if( !isset( $_GET['fd-filter_dropdown'] ) || $_GET['fd-filter_dropdown'] == '' ){
+						$_GET["fd-filter_dropdown"] = 'Open';
+					}
+					
+					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
+					$filteredTickets = false;
+					if( isset( $tickets ) ) {
+						$tickets = json_decode( json_encode( $tickets ), true );
+						if( isset( $_GET['fd-filter_dropdown'] ) && $_GET['fd-filter_dropdown'] != '' ) {
+							$filteredTickets = ( $_GET['fd-filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $_GET['fd-filter_dropdown'] ) : $tickets ;
+						}
+						if( isset( $_GET['search_txt'] ) && $_GET['search_txt'] != '' ) {
+							$filteredTickets = ( trim( $_GET['search_txt'] ) != '' ) ? $this->search_tickets( $filteredTickets, $_GET['search_txt'] ) : $tickets ;
+						}
+					} else {
+						$filteredTickets = false;
+					}
+					
 					$result .= '
 					<div class="">
-						<form method="post" action="" id="fd-filter_form" name="fd-filter_form">
-							<div class="fd-filter-dropdown">
+						<form method="get" action="" id="fd-filter_form" name="fd-filter_form">
+							<div class="fd-filter-dropdown fd-filter">
 								<select id="fd-filter_dropdown" name="fd-filter_dropdown">
 									<option value="all_tickets" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'All Tickets', 'freshdesk-api' ) . '</option>
 									<option value="Open" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'Open', 'freshdesk-api' ) . '</option>
 									<option value="Pending" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'Pending', 'freshdesk-api' ) . '</option>
 									<option value="Resolved" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'Resolved', 'freshdesk-api' ) . '</option>
 									<option value="Closed" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'Closed', 'freshdesk-api' ) . '</option>
 									<option value="Waiting on Customer" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
 						}
 						$result .= '>' . __( 'Waiting on Customer', 'freshdesk-api' ) . '</option>
 									<option value="Waiting on Third Party" ';
-						if( isset( $_POST["fd-filter_dropdown"] ) ) {
-							$result .= ( $_POST["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+						if( isset( $_GET["fd-filter_dropdown"] ) ) {
+							$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
 						}
-						$txt = ( isset( $_POST['search_txt'] ) ) ? $_POST['search_txt'] : '';
+						$txt = ( isset( $_GET['search_txt'] ) ) ? $_GET['search_txt'] : '';
 						$result .= '>' . __( 'Waiting on Third Party', 'freshdesk-api' ) . '</option>
 								</select>
 							</div>
-							<div class="fd-search-box">
+							<div class="fd-search-box fd-filter">
 								<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...', 'freshdesk-api' ) . '"/>
 							</div>
-							<div class="clear"></div>';
-					$is_call_ajax_flag = ( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) ) ? '1' : '0';
-					$result .= '
-							<input type="hidden" id="action" name="action" value="filter_tickets"/>
-							<input type="hidden" id="call_ajax_flag" name="call_ajax_flag" value="' . $is_call_ajax_flag . '"/>
+							<div class="fd-submit-actions fd-filter">
+								<input type="submit" value="Search" id="filter_tickets"/>
+								<input type="button" value="Reset" id="reset_filter">
+							</div>
+							<div class="clear"></div>
 						</form>
 					</div>';
 					
-					$result .= '<div class="fd-cntlst-loader" style="visibility: visible;overflow: hidden; display:none;" id="fd-dark-bg">
-									<div class="fd-smile-loader">
-										<div class="fd-smile-loading-bar"></div>
-										<div class="fd-smile-loading-bar"></div>
-										<div class="fd-smile-loading-bar"></div>
-										<div class="fd-smile-loading-bar"></div>
-									</div>
-								</div>';
-							
-					$result .= 
-							'<script type="text/javascript">
-								ajaxurl = "' . admin_url('admin-ajax.php') . '";
-							</script>
-							';
-							
-
-					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ) {
-						$result .= $this->get_html( $tickets );
+					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ){
+						if( isset( $_GET['search_txt'] ) || isset( $_GET['fd-filter_dropdown'] ) ) {
+							if( !isset( $filteredTickets->require_login ) && $filteredTickets != '' && !isset( $filteredTickets->errors ) && !empty( $filteredTickets ) ) {
+								$result .= $this->get_html( $filteredTickets );
+							} else {
+								if( isset( $filteredTickets->require_login ) ) {
+									$msg = __( 'Invalid Credentials', 'freshdesk-api' );
+								} else if( isset( $filteredTickets->errors ) ) {
+									if( isset( $filteredTickets->errors->no_email ) ){
+										$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'freshdesk-api' );
+									} else {
+										$msg = __( 'Invalid Freshdesk URL' , 'freshdesk-api');
+									}
+								} else if( empty( $filteredTickets ) ) {
+									$keyword = ( isset( $_GET['search_txt'] ) && $_GET['search_txt'] != '' ) ? 'keyword <strong>"' . $_GET['search_txt'] . '"</strong>.' : '';
+									$dropdown = ( isset( $_GET['fd-filter_dropdown'] ) && $_GET['fd-filter_dropdown'] != '' ) ? 'No tickets for <strong>"' . strtoupper( str_replace( '_', ' ', $_GET['fd-filter_dropdown'] ) ) . '"</strong> category' : '';
+									$str = $dropdown;
+									$str .= ( $keyword != '' ) ? ' & ' . $keyword : '';
+									$msg = '<p> ' . $str . '</p><div class="fd-more-ticket">Could not find what you are searching for? Click <a href="' . $this->freshdeskUrl . 'support/tickets" target="_blank">here</a> to check all your old tickets.</div>';
+								} else {
+									$msg = __( 'Error!', 'freshdesk-api' );
+								}
+								$result .= '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
+							}
+						} else {
+							$result .= $this->get_html( $tickets );
+						}
 					} else {
 						if( isset( $tickets->require_login ) ) {
 							$msg = __( 'Invalid Credentials', 'freshdesk-api' );
@@ -350,10 +328,10 @@ if(!class_exists("FreshDeskAPI")){
 							}
 						} else if( empty( $tickets ) ) {
 							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets', 'freshdesk-api' );
-						}else {
+						} else {
 							$msg = __( 'Error!', 'freshdesk-api' );
 						}
-						$result = '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
+						$result .= '<div id="fd-tickets_html"><p>' . $msg . '</p></div>';
 					}
 					return $result;
 				} else {
@@ -370,9 +348,8 @@ if(!class_exists("FreshDeskAPI")){
 		 * Function Description: API call to Freshdesk to get all tickets of the user(email)
 		 */
 		
-		public function get_tickets( $uemail = '', $roles = array(), $post_array = array() ){
+		public function get_tickets( $uemail = '', $roles = array() ){
 			if( !empty( $uemail ) ){
-			
 				$filterName = 'all_tickets';
 				if( isset( $this->opt['use_apikey'] ) ){
 					$apikey = ( $this->opt['freshdesk_apikey'] != '' ) ? $this->opt['freshdesk_apikey'] : '';
@@ -381,7 +358,6 @@ if(!class_exists("FreshDeskAPI")){
 					$apikey = ( $this->opt['api_username'] != '' ) ? $this->opt['api_username'] : '';
 					$password = ( $this->opt['api_pwd'] != '' ) ? $this->opt['api_pwd'] : '';
 				}
-				
 				
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
@@ -397,19 +373,6 @@ if(!class_exists("FreshDeskAPI")){
 				curl_close ($ch);
 				
 				$tickets = json_decode( $server_output );
-				
-				if( isset( $tickets ) ) {
-					if( isset( $post_array['fd-filter_dropdown'] ) ) {
-						$tickets = json_decode( json_encode( $tickets ), true );
-						$tickets = ( $post_array['fd-filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $post_array['fd-filter_dropdown'] ) : $tickets ;
-					}
-					if( isset( $post_array['search_txt'] ) ) {
-						$tickets = ( trim( $post_array['search_txt'] ) != '' ) ? $this->search_tickets( $tickets, $post_array['search_txt'] ) : $tickets ;
-					}
-				} else {
-					$tickets = false;
-				}
-				
 				return $tickets;
 			} else{
 				return false;
