@@ -270,31 +270,6 @@ class FreshDeskSettingsPage{
             'freshdesk_display_section' // Section           
         );
 		
-		
-		add_settings_field(
-            'fd_display_description', // ID
-            'Show Description', // Title 
-            array( $this, 'fd_display_description_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
-		add_settings_field(
-            'fd_display_priority_name', // ID
-            'Show Priority', // Title 
-            array( $this, 'fd_display_priority_name_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
-		add_settings_field(
-            'fd_display_updated_at', // ID
-            'Show Updated Date', // Title 
-            array( $this, 'fd_display_updated_at_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
 		add_settings_field(
             'no_tickets_msg', // ID
             'No Tickets Error Message', // Title 
@@ -334,16 +309,6 @@ class FreshDeskSettingsPage{
 			
 		if( isset( $input['no_tickets_msg'] ) )
             $new_input['no_tickets_msg'] = ( $input['no_tickets_msg'] );
-			
-		if( isset( $input['fd_display_description'] ) )
-            $new_input['fd_display_description'] = sanitize_text_field( $input['fd_display_description'] );
-			
-		if( isset( $input['fd_display_priority_name'] ) )
-            $new_input['fd_display_priority_name'] = sanitize_text_field( $input['fd_display_priority_name'] );
-			
-		if( isset( $input['fd_display_updated_at'] ) )
-            $new_input['fd_display_updated_at'] = sanitize_text_field( $input['fd_display_updated_at'] );
-
         return $new_input;
     }
 
@@ -606,99 +571,6 @@ class FreshDeskSettingsPage{
 		}
         printf(
 			'<textarea autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" class="regular-text" rows="10" cols="50">%s</textarea>', $val
-        );
-	}
-	
-	
-	/*
-     * Callback function for display description text box
-     */
-	public function fd_display_description_callback(){
-		$val = ( isset( $this->display_option['fd_display_description'] ) ) ? 'checked="checked"' : '';
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
-		printf(
-            	'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="fd_display_description" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_description]" %s>
-										<label for="fd_display_description"><p id="fd_display_description-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>', $val, $class, $yesno
-        );
-	}
-
-
-	/*
-     * Callback function for display ticket priority text box
-     */
-	public function fd_display_priority_name_callback(){
-		$val = ( isset( $this->display_option['fd_display_priority_name'] ) ) ? 'checked="checked"' : '';
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
-		printf(
-				'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="fd_display_priority_name" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_priority_name]" %s>
-										<label for="fd_display_priority_name"><p id="fd_display_priority_name-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>', $val, $class, $yesno
-        );
-	}
-	
-	
-	/*
-     * Callback function for display ticket updated at date text box
-     */
-	public function fd_display_updated_at_callback(){
-		$val = ( isset( $this->display_option['fd_display_updated_at'] ) ) ? 'checked="checked"' : '';
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
-		printf(
-				'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="fd_display_updated_at" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_updated_at]" %s>
-										<label for="fd_display_updated_at"><p id="fd_display_updated_at-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>',$val, $class, $yesno
         );
 	}
 	
