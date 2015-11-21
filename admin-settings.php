@@ -170,6 +170,16 @@ class FreshDeskSettingsPage{
             'my-setting-admin', // Page
             'setting_section_id' // Section           
         );
+		
+		
+		add_settings_field(
+            'use_apikey', // ID
+            'Use only API key?', // Title 
+            array( $this, 'use_apikey_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
 
         add_settings_field(
             'freshdesk_apikey', // ID
@@ -179,13 +189,6 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
-		add_settings_field(
-            'use_apikey', // ID
-            'Use only API key?', // Title 
-            array( $this, 'use_apikey_callback' ), // Callback
-            'my-setting-admin', // Page
-            'setting_section_id' // Section           
-        );
 		
 		add_settings_field(
             'api_username', // ID
@@ -340,6 +343,7 @@ class FreshDeskSettingsPage{
 			$val1 = '';
 			$val2 = '';
 		}
+		
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
@@ -379,44 +383,14 @@ class FreshDeskSettingsPage{
      * Callback function for "Freshdesk Admin Username"
      */
     public function use_apikey_callback(){
-		$val = '';
-		$class = '';
-		$yesno = '';
-		if( isset( $this->options['use_apikey'] ) ) {
-			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
-		} else {
-			$val = '';
-		}
-		if( !$this->options ){
-			$val = 'checked="checked"';
-		}
-		if( empty( $this->options ) ) {
-			$val = 'checked="checked"';
-		}
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
+		$on = ( $this->options['use_apikey'] == 'on' ) ? 'selected="selected"' : '';
+		$off = ( $this->options['use_apikey'] != 'on' ) ? 'selected="selected"' : '';
         printf(
-				'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"><p id="use_apikey-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>', $val, $class, $yesno
+			'<select id="use_apikey" name="fd_apikey[use_apikey]">
+				<option value="on" %s>API Key</option>
+				<option value="off" %s>Username/Password</option>
+			</select>', $on, $off
         );
-		printf( '<p><strong>OR</strong></p>' );
     }
 	
 	
@@ -425,7 +399,7 @@ class FreshDeskSettingsPage{
      */
     public function api_username_callback(){
 		$val1 = $val2 = '';
-		if( !isset( $this->options['use_apikey'] ) ) {
+		if( !isset( $this->options['use_apikey'] ) || $this->options['use_apikey'] != 'on' ) {
 			if( isset( $this->options['api_username'] ) ) {
 				$val1 = esc_attr( $this->options['api_username'] );
 				$val2 = '';
@@ -451,7 +425,7 @@ class FreshDeskSettingsPage{
      */
     public function api_pwd_callback(){
 		$val1 = $val2 = '';
-		if( !isset( $this->options['use_apikey'] ) ) {
+		if( !isset( $this->options['use_apikey'] ) || $this->options['use_apikey'] != 'on' ) {
 			if( isset( $this->options['api_pwd'] ) ) {
 				$val1 = esc_attr( $this->options['api_pwd'] );
 				$val2 = '';
