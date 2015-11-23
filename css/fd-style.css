@@ -5,7 +5,8 @@
 	border: 1px solid #d6eebd;
 	overflow: hidden;
     position: relative;
-	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	        border-radius: 5px;
     color: #424242;
     margin: 0 0 1.758em;
     padding: 20px;
@@ -21,7 +22,9 @@
     line-height: 100%;
     position: absolute;
     right: -0.18em;
-    transform: rotate(-20deg);
+    -webkit-transform: rotate(-20deg);
+        -ms-transform: rotate(-20deg);
+            transform: rotate(-20deg);
     width: auto;
 }
 
@@ -85,7 +88,9 @@
 }
 
 .fd-tickets-outter > ul .group a {
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
     color: #3c3c3c;
     display: block;
     float: left;
@@ -105,7 +110,8 @@
 }
 
 .fd-badge {
-    border-radius: 3px;
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
     height: 170px;
     padding-bottom: 10px;
     position: absolute;
@@ -113,7 +119,8 @@
     top: 0;
     width: 150px;
     background: url("../images/FreshDesk-WP_logo.png") no-repeat top center;
-    background-size: 150px;
+    -webkit-background-size: 150px 150px;
+            background-size: 150px;
 }
 
 .form-table {
@@ -226,7 +233,10 @@
     position: relative;
     cursor: pointer;
     outline: none;
-    user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 /* ============================================================
@@ -237,7 +247,8 @@ input.fd-toggle-round + label {
     width: 70px;
     height: 30px;
     background-color: #dddddd;
-    border-radius: 60px;
+    -webkit-border-radius: 60px;
+            border-radius: 60px;
 }
 
 input.fd-toggle-round + label:before, input.fd-toggle-round + label:after {
@@ -252,15 +263,20 @@ input.fd-toggle-round + label:before, input.fd-toggle-round + label:after {
 input.fd-toggle-round + label:before {
     right: 1px;
     background-color: #f1f1f1;
-    border-radius: 60px;
+    -webkit-border-radius: 60px;
+            border-radius: 60px;
+    -webkit-transition: background 0.4s;
     transition: background 0.4s;
 }
 
 input.fd-toggle-round + label:after {
     width: 30px;
     background-color: #fff;
-    border-radius: 100%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 100%;
+            border-radius: 100%;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    -webkit-transition: margin 0.4s;
     transition: margin 0.4s;
 }
 
@@ -326,3 +342,5 @@ input.fd-toggle-round:checked + label:after {
 		margin: 0;
 	}
 }
+
+/*# sourceMappingURL=sourcemap/fd-style.css.map */
