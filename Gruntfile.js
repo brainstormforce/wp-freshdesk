@@ -39,27 +39,30 @@ module.exports = function(grunt) {
 		postcss: {
 			main: {
 				options: {
-					map: true,
-					processors: [
-						require('autoprefixer')({
-							browsers: [
-							'Android >= 2.1',
-							'Chrome >= 21',
-							'Edge >= 12',
-							'Explorer >= 7',
-							'Firefox >= 17',
-							'Opera >= 12.1',
-							'Safari >= 6.0'
-							]
-				        }), // add vendor prefixes
-						]
+					map: {
+						inline: false, 
+						annotation: 'css/sourcemap' //sourcemap for autoprefixr
 					},
-					dist: {
-						src: 'css/*.css'
-					}
-				}
+					processors: [
+					require('autoprefixer')({
+						browsers: [
+						'Android >= 2.1',
+						'Chrome >= 21',
+						'Edge >= 12',
+						'Explorer >= 7',
+						'Firefox >= 17',
+						'Opera >= 12.1',
+						'Safari >= 6.0'
+						]
+				        }), // add vendor prefixes
+					]
+				},
+				src: [
+				'css/*.css'
+				]
 			}
-			});
+		}
+	});
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-compress' );
 	grunt.loadNpmTasks( 'grunt-postcss' );
