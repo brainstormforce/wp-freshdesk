@@ -33,6 +33,7 @@ if(!class_exists("FreshDeskAPI")){
 			add_action( 'plugins_loaded', array( $this, 'fd_load_textdomain' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_shortcode( "fd_fetch_tickets", array($this, "fetch_tickets"));
+			add_shortcode( "fd_new_ticket", array($this, "new_ticket"));
 			
 			include_once( 'admin-settings.php' );
 			
@@ -68,13 +69,6 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function enqueue_scripts() {
-		
-			if( isset( $this->display_option['fd_display_use_css'] ) && $this->display_option['fd_display_use_css'] != '' ){
-				if( $this->display_option['fd_display_use_css'] == 'on' ){
-					wp_register_style( 'fd-table', plugins_url('css/fd-table.css', __FILE__) );
-					wp_enqueue_style( 'fd-table' );
-				}
-			}
 			wp_register_style( 'fd-style', plugins_url('css/fd-style.css', __FILE__) );
 			wp_enqueue_style( 'fd-style' );
 			wp_register_script( 'fd-script-frontend', plugins_url('js/fd-script-frontend.js', __FILE__), array('jquery'), '1.1', true );
@@ -368,6 +362,16 @@ if(!class_exists("FreshDeskAPI")){
 		
 		
 		/*
+		 * Function Name: new_ticket
+		 * Function Description: Create a new ticket button html
+		 */
+		
+		function new_ticket(){
+			echo '<input type="hidden" id="hidden_new_ticket_url" value="' . $this->freshdeskUrl . 'support/tickets/new/" /><input type="button" value="New Ticket" id="new_ticket">';
+		}
+		
+		
+		/*
 		 * Function Name: get_tickets
 		 * Function Description: API call to Freshdesk to get all tickets of the user(email)
 		 */
@@ -422,8 +426,9 @@ if(!class_exists("FreshDeskAPI")){
 			
 				$class = ( $d->status_name == "Closed" ) ? 'status-closed' : '';
 				$diff = ( strtotime( date_i18n('Y-m-d H:i:s') ) - strtotime( date_i18n( 'Y-m-d H:i:s', false, 'gmt' ) ) );
-				$date = date_i18n( 'j M, Y, g:i A', strtotime( $d->updated_at ) + $diff );
+				$date = date_i18n( 'j M\' Y, g:i A', strtotime( $d->updated_at ) + $diff );
 				$description = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description;
+				$time_elapsed = $this->timeAgo( date_i18n( 'Y-m-d H:i:s', strtotime( $d->updated_at ) + $diff ) );
 				$html .= '
 				<li class="group ' . $class . '">
 					<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">
@@ -433,7 +438,7 @@ if(!class_exists("FreshDeskAPI")){
 						</span>
 						<span class="ticket-meta">
 							<span class="ticket-status ' . $class . '">' . $d->status_name . '</span>
-							<span class="ticket-time"><abbr title="' . $date . '" class="timeago comment-time ticket-updated-at">' . $date . '</abbr></span>
+							<span class="ticket-time"><abbr title="Last Updated on - ' . $date . '" class="timeago comment-time ticket-updated-at">' . $time_elapsed . '</abbr></span>
 						</span>
 					</a>
 				</li>';
@@ -478,6 +483,75 @@ if(!class_exists("FreshDeskAPI")){
 		}
 		
 		
+		/*
+		 * Function Name: timeAgo
+		 * Function Description: returns input php time to "mins/hours/months/weeks/years ago" format.
+		 */
+
+		function timeAgo( $time_ago ) {
+			$time_ago = strtotime( $time_ago );
+			$cur_time = time();
+			$time_elapsed = $cur_time - $time_ago;
+			$seconds = $time_elapsed ;
+			$minutes = round( $time_elapsed / 60 );
+			$hours = round( $time_elapsed / 3600 );
+			$days = round( $time_elapsed / 86400 );
+			$weeks = round( $time_elapsed / 604800 );
+			$months = round( $time_elapsed / 2600640 );
+			$years = round( $time_elapsed / 31207680 );
+			// Seconds
+			if( $seconds <= 60 ) {
+				return "just now";
+			}
+			//Minutes
+			else if( $minutes <= 60 ){
+				if( $minutes == 1 ) {
+					return "one minute ago";
+				} else {
+					return "$minutes minutes ago";
+				}
+			}
+			//Hours
+			else if( $hours <= 24 ) {
+				if( $hours == 1 ) {
+					return "an hour ago";
+				} else {
+					return "$hours hrs ago";
+				}
+			}
+			//Days
+			else if( $days <= 7 ) {
+				if( $days == 1 ) {
+					return "yesterday";
+				} else {
+					return "$days days ago";
+				}
+			}
+			//Weeks
+			else if( $weeks <= 4.3 ){
+				if( $weeks == 1 ) {
+					return "a week ago";
+				} else {
+					return "$weeks weeks ago";
+				}
+			}
+			//Months
+			else if( $months <= 12 ) {
+				if( $months == 1 ) {
+					return "a month ago";
+				} else {
+					return "$months months ago";
+				}
+			}
+			//Years
+			else {
+				if( $years == 1 ) {
+					return "one year ago";
+				} else {
+					return "$years years ago";
+				}
+			}
+		}
 	}
 } //end of class
 
