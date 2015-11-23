@@ -60,7 +60,7 @@ module.exports = function(grunt) {
 						src: 'css/*.css'
 					}
 				}
-			});
+			},
 
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-compress' );
