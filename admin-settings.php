@@ -73,6 +73,7 @@ class FreshDeskSettingsPage{
 				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
 			</h2>
 			<div id="api-tab" class="fd-tabs">
+				<p class="about-description"><?php echo __( 'All the settings related to connecting your freshdesk account with your WordPress are listed here - ', 'freshdesk-api' ); ?></p>
 				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -82,7 +83,7 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
-				<p><?php echo __( 'Paste the below shortcode on your page. This shortcode will display all the tickets on your page. It also provides filter options and search options. You can filter tickets with respect to:', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'Shortcodes for displaying tickets on your page', 'freshdesk-api' ); ?></p>
 				<table>
 					<tr>
 						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
@@ -112,18 +113,34 @@ class FreshDeskSettingsPage{
 						<td><?php echo __( 'Waiting on Third Party', 'freshdesk-api' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Waiting on Third Party"]</code></td>
 					</tr>
+					<tr>
+						<td><?php echo __( 'Create New Ticket', 'freshdesk-api' ); ?></td>
+						<td><code>[fd_new_ticket]</code></td>
+					</tr>
 				</table>
 			</div>
 			<div id="url-tab" style="display:none;" class="fd-tabs">
+				<p class="about-description"><?php echo __( 'Configure Single Sign on with Freshdesk, so that users don\'t have to remember their username and password combos to get to their tickets.', 'freshdesk-api' ); ?></p>
 				<form method="post" action="options.php" id="url_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
 						settings_fields( 'url_option' );   
 						do_settings_sections( 'url-admin-setting' );
-						submit_button();?>
+						$val = '';
+						if(  isset( $this->options['freshdesk_url'] ) ) {
+							$val = $this->options['freshdesk_url'];
+						} else {
+							$val = 'https://your_domain.freshdesk.com/';
+						}
+					?>
+					<p class="description"><?php echo __( 'Note: Remember that you can always go to: ', 'freshdesk-api' ); ?><a href="<?php echo $val; ?>login/normal" target="_blank"><?php echo $val; ?>access/normal</a><?php echo __( ' to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk.', 'freshdesk-api' ); ?></p>
+					<?php
+						submit_button();
+					?>
 				</form>
 			</div>
 			<div id="display-tab" style="display:none;" class="fd-tabs">
+				<p class="about-description"><?php echo __( 'All the front-end related setings are listed here -', 'freshdesk-api' ); ?></p>
 				<form method="post" action="options.php" id="display_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -170,6 +187,16 @@ class FreshDeskSettingsPage{
             'my-setting-admin', // Page
             'setting_section_id' // Section           
         );
+		
+		
+		add_settings_field(
+            'use_apikey', // ID
+            'Method of Authentication', // Title 
+            array( $this, 'use_apikey_callback' ), // Callback
+            'my-setting-admin', // Page
+            'setting_section_id' // Section           
+        );
+		
 
         add_settings_field(
             'freshdesk_apikey', // ID
@@ -179,13 +206,6 @@ class FreshDeskSettingsPage{
             'setting_section_id' // Section           
         );
 		
-		add_settings_field(
-            'use_apikey', // ID
-            'Use only API key?', // Title 
-            array( $this, 'use_apikey_callback' ), // Callback
-            'my-setting-admin', // Page
-            'setting_section_id' // Section           
-        );
 		
 		add_settings_field(
             'api_username', // ID
@@ -263,14 +283,6 @@ class FreshDeskSettingsPage{
         );
 		
 		add_settings_field(
-            'fd_display_use_css', // ID
-            'Use Predefined CSS', // Title 
-            array( $this, 'fd_display_use_css_callback' ), // Callback
-            'display-admin-setting', // Page
-            'freshdesk_display_section' // Section           
-        );
-		
-		add_settings_field(
             'no_tickets_msg', // ID
             'No Tickets Error Message', // Title 
             array( $this, 'no_tickets_msg_callback' ), // Callback
@@ -340,10 +352,11 @@ class FreshDeskSettingsPage{
 			$val1 = '';
 			$val2 = '';
 		}
+		
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description"><strong>Where can I find my API Key?</strong><br/>You can find the API key under,<br/>"User Profile" (top right options of your helpdesk) >> "Profile Settings" >> Your API Key</p>' );
+		printf( '<p id="timezone-description" class="description">Refer this tutorial to get your API key -</br><a href="http://bsf.io/freshdesk-api" target="blank">http://bsf.io/freshdesk-api</a></p>' );
     }
 		
 	
@@ -379,44 +392,14 @@ class FreshDeskSettingsPage{
      * Callback function for "Freshdesk Admin Username"
      */
     public function use_apikey_callback(){
-		$val = '';
-		$class = '';
-		$yesno = '';
-		if( isset( $this->options['use_apikey'] ) ) {
-			$val = ( $this->options['use_apikey'] == 'on' ) ? 'checked="checked"' : '';
-		} else {
-			$val = '';
-		}
-		if( !$this->options ){
-			$val = 'checked="checked"';
-		}
-		if( empty( $this->options ) ) {
-			$val = 'checked="checked"';
-		}
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
+		$on = ( $this->options['use_apikey'] == 'on' ) ? 'selected="selected"' : '';
+		$off = ( $this->options['use_apikey'] != 'on' ) ? 'selected="selected"' : '';
         printf(
-				'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="use_apikey" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_apikey[use_apikey]" %s>
-										<label for="use_apikey"><p id="use_apikey-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>', $val, $class, $yesno
+			'<select id="use_apikey" name="fd_apikey[use_apikey]">
+				<option value="on" %s>API Key</option>
+				<option value="off" %s>Username/Password</option>
+			</select>', $on, $off
         );
-		printf( '<p><strong>OR</strong></p>' );
     }
 	
 	
@@ -425,7 +408,7 @@ class FreshDeskSettingsPage{
      */
     public function api_username_callback(){
 		$val1 = $val2 = '';
-		if( !isset( $this->options['use_apikey'] ) ) {
+		if( !isset( $this->options['use_apikey'] ) || $this->options['use_apikey'] != 'on' ) {
 			if( isset( $this->options['api_username'] ) ) {
 				$val1 = esc_attr( $this->options['api_username'] );
 				$val2 = '';
@@ -451,7 +434,7 @@ class FreshDeskSettingsPage{
      */
     public function api_pwd_callback(){
 		$val1 = $val2 = '';
-		if( !isset( $this->options['use_apikey'] ) ) {
+		if( !isset( $this->options['use_apikey'] ) || $this->options['use_apikey'] != 'on' ) {
 			if( isset( $this->options['api_pwd'] ) ) {
 				$val1 = esc_attr( $this->options['api_pwd'] );
 				$val2 = '';
@@ -495,11 +478,8 @@ class FreshDeskSettingsPage{
      */
     public function freshdesk_loginurl_callback(){
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=fd-remote-login' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-login' . '</code><p class="description">Paste this URL as <strong>\'Remote Login URL\'</strong> in your Freshdesk settings page</p>'
         );
-		printf(
-			'<p class="description">The settings that need to be configured in your Freshdesk account.</p>'
-		);
     }
 	
 	
@@ -507,21 +487,9 @@ class FreshDeskSettingsPage{
      * Callback function for "Logout URL" for SSO
      */
     public function freshdesk_logouturl_callback(){
-		$val = '';
-		if(  isset( $this->options['freshdesk_url'] ) && strlen( $this->options['freshdesk_url'] ) > 5 ) {
-			$val = $this->options['freshdesk_url'];
-		} else {
-			$val = 'https://your_domain.freshdesk.com/';
-		}
         printf(
-            '<code>' . site_url() . '/wp-login.php?action=fd-remote-logout' . '</code>'
+            '<code>' . site_url() . '/wp-login.php?action=fd-remote-logout' . '</code><p class="description">Paste this URL as <strong>\'Remote Logout URL\'</strong> in your Freshdesk settings page</p>'
         );
-		printf(
-			'<p class="description">The settings that need to be configured in your Freshdesk account.</p><br/>
-			<p class="description">Remember that you can always go to:
-<a href="%slogin/normal" target="_blank">%saccess/normal</a><br/>
-			to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk. </p>', $val, $val
-		);
     }
 	
 	
@@ -572,39 +540,7 @@ class FreshDeskSettingsPage{
         printf(
 			'<textarea autocomplete="off" placeholder="Eg: Sorry! No Tickets!" id="no_tickets_msg" name="fd_display[no_tickets_msg]" class="regular-text" rows="10" cols="50">%s</textarea>', $val
         );
-	}
-	
-	
-	/*
-     * Callback function to use/not use plugin css
-     */
-	public function fd_display_use_css_callback(){
-		$val = ( isset( $this->display_option['fd_display_use_css'] ) ) ? 'checked="checked"' : '';
-		if( $val == '' ) {
-			$class = ' fd-use-apikey-no';
-			$yesno = 'No';
-		} else {
-			$class = ' fd-use-apikey-yes';
-			$yesno = 'Yes';
-		}
-		printf(
-				'<div id="fd-wrapper">
-					<div id="fd-main">
-						<div class="fd-container">
-							<div class="fd-settings">
-								<div class="fd-row">
-									<div class="fd-switch">
-										<input id="fd_display_use_css" class="fd-toggle fd-toggle-round" type="checkbox" name="fd_display[fd_display_use_css]" %s>
-										<label for="fd_display_use_css"><p id="fd_display_use_css-p" class="fd-use-apikey-yesno %s">%s</p></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>',$val, $class, $yesno
-        );
-	}
-	
+	}	
 }
 
 if( is_admin() )
