@@ -226,9 +226,6 @@
     position: relative;
     cursor: pointer;
     outline: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -240,10 +237,6 @@ input.fd-toggle-round + label {
     width: 70px;
     height: 30px;
     background-color: #dddddd;
-    -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
     border-radius: 60px;
 }
 
@@ -259,31 +252,15 @@ input.fd-toggle-round + label:before, input.fd-toggle-round + label:after {
 input.fd-toggle-round + label:before {
     right: 1px;
     background-color: #f1f1f1;
-    -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
     border-radius: 60px;
-    -webkit-transition: background 0.4s;
-    -moz-transition: background 0.4s;
-    -o-transition: background 0.4s;
     transition: background 0.4s;
 }
 
 input.fd-toggle-round + label:after {
     width: 30px;
     background-color: #fff;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    -o-border-radius: 100%;
     border-radius: 100%;
-    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    -webkit-transition: margin 0.4s;
-    -moz-transition: margin 0.4s;
-    -o-transition: margin 0.4s;
     transition: margin 0.4s;
 }
 
