@@ -75,7 +75,7 @@
 }
 
 .fd-tickets-outter > ul {
-	float: left;
+	margin-left: 0;
     width: 100%;
 }
 
