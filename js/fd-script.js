@@ -1,19 +1,21 @@
 // JavaScript Document
 
 	jQuery(document).ready(function(){
-		var hashTxt = window.location.hash.substr(1);
-		if( hashTxt == '' ) {
-			hashTxt = 'api-tab';
-			window.location.hash = hashTxt;
+
+		if( window.location.href.indexOf("page=wp-freshdesk") != -1 ) {
+			var hashTxt = window.location.hash.substr(1);
+			if( hashTxt == '' ) {
+				hashTxt = 'api-tab';
+				window.location.hash = hashTxt;
+			}	
+			var arr = hashTxt.split('-');
+			jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
+			jQuery( '#' + arr[1] + '-' + arr[0] ).addClass( "nav-tab-active" );
+			jQuery( '.fd-tabs' ).hide();
+			jQuery( '#' + hashTxt ).show();
+			jQuery('#' + hashTxt + ' form').attr('action', 'options.php#' + hashTxt);
+			jQuery( 'html, body' ).scrollTop(0);
 		}
-		//alert( hashTxt );
-		var arr = hashTxt.split('-');
-		//alert('#' + arr[1] + '-' + arr[0]);
-		jQuery( '.nav-tab' ).removeClass( "nav-tab-active" );
-		jQuery( '#' + arr[1] + '-' + arr[0] ).addClass( "nav-tab-active" );
-		jQuery( '.fd-tabs' ).hide();
-		jQuery( '#' + hashTxt ).show();
-		jQuery('#' + hashTxt + ' form').attr('action', 'options.php#' + hashTxt);
 		
 		if( jQuery("#use_apikey").val() == 'on' ) {
 			jQuery( "#api_username" ).parent().parent().hide();
@@ -65,6 +67,7 @@
 			jQuery( '#' + arr[1] + '-' + arr[0] ).show();
 			window.location.hash = arr[1] + '-' + arr[0];
 			jQuery('#' + arr[1] + '-' + arr[0] + ' form').attr('action', 'options.php#' + arr[1] + '-' + arr[0]);
+			jQuery( 'html, body' ).scrollTop(0);
 		});
 		
 		jQuery('.fd-toggle').click(function(){
