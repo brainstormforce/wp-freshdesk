@@ -9,6 +9,7 @@ module.exports = function(grunt) {
 				'**',
 				'!node_modules/**',
 				'!build/**',
+				'!css/sourcemap/**',
 				'!.git/**',
 				'!bin/**',
 				'!tests/**',
