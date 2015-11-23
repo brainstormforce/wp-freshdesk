@@ -101,8 +101,7 @@
 }
 
 .fd-filter-tickets {
-	border-bottom: 0 none;
-    padding: 0 15px 10px;
+	border-bottom: 0 none!important;
 }
 
 .fd-badge {

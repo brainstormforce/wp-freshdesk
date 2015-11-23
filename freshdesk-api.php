@@ -367,7 +367,7 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function new_ticket(){
-			echo '<input type="hidden" id="hidden_new_ticket_url" value="' . $this->freshdeskUrl . 'support/tickets/new/" /><input type="button" value="New Ticket" id="new_ticket">';
+			echo '<form action="' . $this->freshdeskUrl . 'support/tickets/new/" target="_blank"><input type="submit" value="New Ticket" id="new_ticket"></form>';
 		}
 		
 		

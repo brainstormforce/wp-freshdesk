@@ -73,7 +73,7 @@ class FreshDeskSettingsPage{
 				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
 			</h2>
 			<div id="api-tab" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'All the settings related to connecting your freshdesk account with your WordPress are listed here - ', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'All the settings related to connecting your freshdesk account with your WordPress are listed here.', 'freshdesk-api' ); ?></p>
 				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -83,7 +83,7 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'Shortcodes for displaying tickets on your page', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'Shortcodes for displaying tickets on your page.', 'freshdesk-api' ); ?></p>
 				<table>
 					<tr>
 						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
@@ -140,7 +140,7 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="display-tab" style="display:none;" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'All the front-end related setings are listed here -', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'All the front-end related setings are listed here.', 'freshdesk-api' ); ?></p>
 				<form method="post" action="options.php" id="display_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -356,7 +356,7 @@ class FreshDeskSettingsPage{
         printf(
             '<input autocomplete="off" type="text" id="freshdesk_apikey" name="fd_apikey[freshdesk_apikey]" value="%s" class="regular-text" %s />', $val1, $val2
         );
-		printf( '<p id="timezone-description" class="description">Refer this tutorial to get your API key -</br><a href="http://bsf.io/freshdesk-api" target="blank">http://bsf.io/freshdesk-api</a></p>' );
+		printf( '<p id="timezone-description" class="description">Refer this tutorial to get your API key - <a href="http://bsf.io/freshdesk-api" target="blank">http://bsf.io/freshdesk-api</a></p>' );
     }
 		
 	
