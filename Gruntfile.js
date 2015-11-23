@@ -50,8 +50,7 @@ module.exports = function(grunt) {
 							'Firefox >= 17',
 							'Opera >= 12.1',
 							'Safari >= 6.0'
-							],
-							cascade: false
+							]
 				        }), // add vendor prefixes
 						]
 					},
