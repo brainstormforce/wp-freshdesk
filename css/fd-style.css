@@ -24,7 +24,8 @@
     right: -0.18em;
     -webkit-transform: rotate(-20deg);
         -ms-transform: rotate(-20deg);
-            transform: rotate(-20deg);
+            -o-transform: rotate(-20deg);
+       transform: rotate(-20deg);
     width: auto;
 }
 
@@ -120,7 +121,8 @@
     width: 150px;
     background: url("../images/FreshDesk-WP_logo.png") no-repeat top center;
     -webkit-background-size: 150px 150px;
-            background-size: 150px;
+            -o-background-size: 150px;
+       background-size: 150px;
 }
 
 .form-table {
@@ -266,6 +268,7 @@ input.fd-toggle-round + label:before {
     -webkit-border-radius: 60px;
             border-radius: 60px;
     -webkit-transition: background 0.4s;
+    -o-transition: background 0.4s;
     transition: background 0.4s;
 }
 
@@ -277,6 +280,7 @@ input.fd-toggle-round + label:after {
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     -webkit-transition: margin 0.4s;
+    -o-transition: margin 0.4s;
     transition: margin 0.4s;
 }
 
@@ -342,5 +346,4 @@ input.fd-toggle-round:checked + label:after {
 		margin: 0;
 	}
 }
-
 /*# sourceMappingURL=sourcemap/fd-style.css.map */

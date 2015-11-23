@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 						'Edge >= 12',
 						'Explorer >= 7',
 						'Firefox >= 17',
-						'Opera >= 12.1',
+						'Opera >= 10',
 						'Safari >= 6.0'
 						]
 				        }), // add vendor prefixes
