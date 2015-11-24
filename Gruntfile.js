@@ -74,7 +74,6 @@ module.exports = function(grunt) {
 
 	});
 
-grunt.loadNpmTasks( 'grunt-wp-i18n' );
 grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 grunt.loadNpmTasks( 'grunt-contrib-copy' );
 grunt.loadNpmTasks( 'grunt-contrib-compress' );
