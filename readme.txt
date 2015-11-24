@@ -1,5 +1,5 @@
 === WP Freshdesk ===
-Contributors: brainstormforce, vrundakansara, nikschavan, pratikc
+Contributors: brainstormforce, vrundakansara, nikschavan, pratikchaskar
 Tags: freshdesk, support, wordpress freshdesk
 Requires at least: 4.2
 Tested up to: 4.2
@@ -11,9 +11,9 @@ With this plugin, your users will be able to see their tickets on your Freshdesk
 
 == Description ==
 
-With WP Freshdesk you can easily connect your WordPress site with your Freshdesk account, For all the WordPress users, it fetches their tickets from Freshdesk and displays them in a beautiful list with just simple shortcodes.
+With WP Freshdesk you can easily connect your WordPress site with your Freshdesk account. For all the WordPress users, it fetches their tickets from Freshdesk and displays them in a beautiful list with just simple shortcodes.
 
-IT also provides Single sign-on to be configured between WordPress and freshdesk, so that once the user is logged in to WordPress site, they don't have to re-login on freshdesk to view their tickets.
+It also provides Single Sign-On to be configured between WordPress and Freshdesk, so that once the user is logged in to WordPress site, they don't have to re-login on Freshdesk to view their tickets.
 
 
 Get involved in the development of the plugin, Visit [Github Repo](https://github.com/brainstormforce/wp-freshdesk/ "Github Repo")
