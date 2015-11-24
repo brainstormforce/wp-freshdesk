@@ -427,17 +427,17 @@ if(!class_exists("FreshDeskAPI")){
 				$class = ( $d->status_name == "Closed" ) ? 'status-closed' : '';
 				$diff = ( strtotime( date_i18n('Y-m-d H:i:s') ) - strtotime( date_i18n( 'Y-m-d H:i:s', false, 'gmt' ) ) );
 				$date = date_i18n( 'j M\' Y, g:i A', strtotime( $d->updated_at ) + $diff );
-				$description = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description;
+				$description = ( strlen( $d->description ) > 125 ) ? strip_tags( substr( $d->description, 0, 125 ) ) . '...' : strip_tags( $d->description );
 				$time_elapsed = $this->timeAgo( date_i18n( 'Y-m-d H:i:s', strtotime( $d->updated_at ) + $diff ) );
 				$html .= '
 				<li class="group ' . $class . '">
 					<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">
 						<span class="ticket-data">
-							<span class="ticket-title">' . $d->subject . ' <span class="ticket-id">#' . $d->display_id . '</span></span>
+							<span class="ticket-title">' . strip_tags( $d->subject ) . ' <span class="ticket-id">#' . $d->display_id . '</span></span>
 							<span class="ticket-excerpt">' . $description . '</span>
 						</span>
 						<span class="ticket-meta">
-							<span class="ticket-status ' . $class . '">' . $d->status_name . '</span>
+							<span class="ticket-status ' . $class . '">' . strip_tags( $d->status_name ) . '</span>
 							<span class="ticket-time"><abbr title="Last Updated on - ' . $date . '" class="timeago comment-time ticket-updated-at">' . $time_elapsed . '</abbr></span>
 						</span>
 					</a>
