@@ -16,7 +16,8 @@ module.exports = function(grunt) {
 				'!Gruntfile.js',
 				'!package.json',
 				'!.gitignore',
-				'!phpunit.xml'
+				'!phpunit.xml',
+				'!README.md'
 				],
 				dest: 'wp-freshdesk/'
 			}
@@ -62,11 +63,24 @@ module.exports = function(grunt) {
 				'css/*.css'
 				]
 			}
-		}
+		},
+		wp_readme_to_markdown: {
+			your_target: {
+				files: {
+					'README.md': 'readme.txt'
+				}
+			},
+		},
 	});
-	grunt.loadNpmTasks( 'grunt-contrib-copy' );
-	grunt.loadNpmTasks( 'grunt-contrib-compress' );
-	grunt.loadNpmTasks( 'grunt-postcss' );
-	grunt.registerTask( 'release', [ 'copy', 'compress' ] );
-	grunt.registerTask( 'css', [ 'postcss' ] );
+
+grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
+grunt.loadNpmTasks( 'grunt-contrib-copy' );
+grunt.loadNpmTasks( 'grunt-contrib-compress' );
+grunt.loadNpmTasks( 'grunt-postcss' );
+
+grunt.registerTask( 'release', [ 'copy', 'compress' ] );
+grunt.registerTask( 'css', [ 'postcss' ] );
+grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
+
+grunt.util.linefeed = '\n';
 };
