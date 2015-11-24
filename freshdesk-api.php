@@ -59,7 +59,7 @@ if(!class_exists("FreshDeskAPI")){
 		 * @since 1.0.0
 		 */
 		function fd_load_textdomain() {
-			load_plugin_textdomain( 'freshdesk-api', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' ); 
+			load_plugin_textdomain( 'freshdesk-api', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
 		}
 		
 		
@@ -89,7 +89,7 @@ if(!class_exists("FreshDeskAPI")){
 				if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'fd-remote-login' ) {
 					// Don't waste time if remote auth is turned off.
 					if ( !isset( $this->options['freshdesk_enable'] ) && $this->options['freshdesk_enable'] != 'on' && !isset( $this->options['freshdesk_sharedkey'] ) && $this->options['freshdesk_sharedkey'] != '' ) {
-						__( 'Remote authentication is not configured yet.', 'wp-freshdesk' );
+						__( 'Remote authentication is not configured yet.', 'freshdesk-api' );
 						die();
 					}
 					// Filter freshdesk_return_to
@@ -158,11 +158,11 @@ if(!class_exists("FreshDeskAPI")){
 					} elseif ( $kind == 'error' ) {
 						// If there was an error...
 					?>
-						<p><?php __( 'Remote authentication failed: ', 'wp-freshdesk' ); ?><?php echo $message; ?>.</p>
+						<p><?php __( 'Remote authentication failed: ', 'freshdesk-api' ); ?><?php echo $message; ?>.</p>
 						<ul>
-							<li><a href="<?php echo $this->freshdeskUrl; ?>"><?php __( 'Try again', 'wp-freshdesk' ); ?></a></li>
-							<li><a href="<?php echo wp_logout_url(); ?>"><?php printf( __( 'Log out of %s', 'wp-freshdesk' ), get_bloginfo( 'name' ) ); ?></a></li>
-							<li><a href="<?php echo admin_url(); ?>"><?php printf( __( 'Return to %s dashboard', 'wp-freshdesk' ), get_bloginfo( 'name' ) ); ?></a></li>
+							<li><a href="<?php echo $this->freshdeskUrl; ?>"><?php __( 'Try again', 'freshdesk-api' ); ?></a></li>
+							<li><a href="<?php echo wp_logout_url(); ?>"><?php printf( __( 'Log out of %s', 'freshdesk-api' ), get_bloginfo( 'name' ) ); ?></a></li>
+							<li><a href="<?php echo admin_url(); ?>"><?php printf( __( 'Return to %s dashboard', 'freshdesk-api' ), get_bloginfo( 'name' ) ); ?></a></li>
 						</ul>
 					<?php
 					}
@@ -244,42 +244,42 @@ if(!class_exists("FreshDeskAPI")){
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'All Tickets', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'All Tickets', 'freshdesk-api' ) . '</option>
 												<option value="Open" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'Open', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Open', 'freshdesk-api' ) . '</option>
 												<option value="Pending" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'Pending', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Pending', 'freshdesk-api' ) . '</option>
 												<option value="Resolved" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'Resolved', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Resolved', 'freshdesk-api' ) . '</option>
 												<option value="Closed" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'Closed', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Closed', 'freshdesk-api' ) . '</option>
 												<option value="Waiting on Customer" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
 									}
-									$result .= '>' . __( 'Waiting on Customer', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Waiting on Customer', 'freshdesk-api' ) . '</option>
 												<option value="Waiting on Third Party" ';
 									if( isset( $_GET["fd-filter_dropdown"] ) ) {
 										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
 									}
 									$txt = ( isset( $_GET['search_txt'] ) ) ? $_GET['search_txt'] : '';
-									$result .= '>' . __( 'Waiting on Third Party', 'wp-freshdesk' ) . '</option>
+									$result .= '>' . __( 'Waiting on Third Party', 'freshdesk-api' ) . '</option>
 											</select>
 										</div>
 										<div class="fd-search-box fd-filter">
-											<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...', 'wp-freshdesk' ) . '"/>
+											<input type="text" value="' . $txt . '" id="search_txt" name="search_txt" placeholder="' . __( 'Search...', 'freshdesk-api' ) . '"/>
 										</div>
 										<div class="fd-filter">
 											<input type="submit" value="Search" id="filter_tickets"/>
@@ -297,12 +297,12 @@ if(!class_exists("FreshDeskAPI")){
 								$result .= $this->get_html( $filteredTickets );
 							} else {
 								if( isset( $filteredTickets->require_login ) ) {
-									$msg = __( 'Invalid Credentials', 'wp-freshdesk' );
+									$msg = __( 'Invalid Credentials', 'freshdesk-api' );
 								} else if( isset( $filteredTickets->errors ) ) {
 									if( isset( $filteredTickets->errors->no_email ) ){
-										$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'wp-freshdesk' );
+										$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'freshdesk-api' );
 									} else {
-										$msg = __( 'Invalid Freshdesk URL' , 'wp-freshdesk');
+										$msg = __( 'Invalid Freshdesk URL' , 'freshdesk-api');
 									}
 								} else if( empty( $filteredTickets ) ) {
 									$keyword = ( isset( $_GET['search_txt'] ) && $_GET['search_txt'] != '' ) ? 'keyword <strong>"' . $_GET['search_txt'] . '"</strong>.' : '';
@@ -311,7 +311,7 @@ if(!class_exists("FreshDeskAPI")){
 									$str .= ( $keyword != '' ) ? ' & ' . $keyword : '';
 									$msg = '<p> ' . $str . '</p><div class="fd-more-ticket">Could not find what you are searching for? Click <a href="' . $this->freshdeskUrl . 'support/tickets" target="_blank">here</a> to check all your old tickets.</div>';
 								} else {
-									$msg = __( 'Error!', 'wp-freshdesk' );
+									$msg = __( 'Error!', 'freshdesk-api' );
 								}
 								$result .= '<li>
 												<div class="fd-message">' . $msg . '</div>
@@ -322,17 +322,17 @@ if(!class_exists("FreshDeskAPI")){
 						}
 					} else {
 						if( isset( $tickets->require_login ) ) {
-							$msg = __( 'Invalid Credentials', 'wp-freshdesk' );
+							$msg = __( 'Invalid Credentials', 'freshdesk-api' );
 						} else if( isset( $tickets->errors ) ) {
 							if( isset( $tickets->errors->no_email ) ){
-								$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'wp-freshdesk' );
+								$msg = ( isset( $this->display_option['invalid_user_msg'] ) && $this->display_option['invalid_user_msg'] != '' ) ? $this->display_option['invalid_user_msg'] : __( 'Invalid User', 'freshdesk-api' );
 							} else {
-								$msg = __( 'Invalid Freshdesk URL' , 'wp-freshdesk');
+								$msg = __( 'Invalid Freshdesk URL' , 'freshdesk-api');
 							}
 						} else if( empty( $tickets ) ) {
-							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets', 'wp-freshdesk' );
+							$msg = ( isset( $this->display_option['no_tickets_msg'] ) && $this->display_option['no_tickets_msg'] != '' ) ? $this->display_option['no_tickets_msg'] : __( 'No tickets', 'freshdesk-api' );
 						} else {
-							$msg = __( 'Error!', 'wp-freshdesk' );
+							$msg = __( 'Error!', 'freshdesk-api' );
 						}
 						$result .= '<li>
 										<div class="fd-message">' . $msg . '</div>
