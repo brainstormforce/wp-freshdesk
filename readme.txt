@@ -1,5 +1,5 @@
 === WP Freshdesk ===
-Contributors: brainstormforce, vrundakansara, nikschavan, pratikc
+Contributors: brainstormforce, vrundakansara, nikschavan, pratikchaskar
 Tags: freshdesk, support, wordpress freshdesk
 Requires at least: 4.2
 Tested up to: 4.2
