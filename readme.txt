@@ -1,4 +1,4 @@
-=== Wp-Freshdesk ===
+=== WP Freshdesk ===
 Contributors: brainstormforce, vrundakansara, nikschavan, pratikc
 Tags: freshdesk, support, wordpress freshdesk
 Requires at least: 4.2
