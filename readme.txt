@@ -33,13 +33,13 @@ Get involved in the development of the plugin, Visit [Github Repo](https://githu
 = The Good Way =
 
 1. In your WordPress Admin, go to the Add New Plugins page
-1. Search for: WP Freshdesk
-1. WP Freshdesk should be the first result. Click the Install link.
+2. Search for: WP Freshdesk
+3. WP Freshdesk should be the first result. Click the Install link.
 
 = The Old Way =
 
 1. Upload the plugin to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
+2. Activate the plugin through the 'Plugins' menu in WordPress
 
 = The Living-On-The-Edge Way =
 
