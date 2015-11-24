@@ -71,6 +71,7 @@ module.exports = function(grunt) {
 				}
 			},
 		},
+
 	});
 
 grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
