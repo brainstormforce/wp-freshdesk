@@ -62,18 +62,18 @@ class FreshDeskSettingsPage{
         ?>
         <div class="wrap about-wrap">
             <div class="fd-heading-section">
-				<h1><?php echo __( 'WP Freshdesk Settings', 'freshdesk-api' ); ?></h1>
-				<div class="fd-about-text about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'freshdesk-api' ); ?></div>
+				<h1><?php echo __( 'WP Freshdesk Settings', 'wp-freshdesk' ); ?></h1>
+				<div class="fd-about-text about-text"><?php echo __( 'Now your users won\'t have to remember one more username and password! Configure your WordPress website and Freshdesk to work together to give your users Freshdesk Remote Authentication!', 'wp-freshdesk' ); ?></div>
 				<div class="fd-badge"></div>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration', 'freshdesk-api' ); ?></a>
-				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcodes', 'freshdesk-api' ); ?></a>
-				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO', 'freshdesk-api' ); ?></a>
-				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'freshdesk-api' ); ?></a>
+				<a href="javascript:void(0);" id="tab-api" class="nav-tab nav-tab-active"><?php echo __( 'General Configuration', 'wp-freshdesk' ); ?></a>
+				<a href="javascript:void(0);" id="tab-shortcode" class="nav-tab"><?php echo __( 'Shortcodes', 'wp-freshdesk' ); ?></a>
+				<a href="javascript:void(0);" id="tab-url" class="nav-tab"><?php echo __( 'Freshdesk SSO', 'wp-freshdesk' ); ?></a>
+				<a href="javascript:void(0);" id="tab-display" class="nav-tab"><?php echo __( 'Display Settings', 'wp-freshdesk' ); ?></a>
 			</h2>
 			<div id="api-tab" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'All the settings related to connecting your freshdesk account with your WordPress are listed here.', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'All the settings related to connecting your freshdesk account with your WordPress are listed here.', 'wp-freshdesk' ); ?></p>
 				<form method="post" action="options.php" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -83,44 +83,44 @@ class FreshDeskSettingsPage{
 				</form>
 			</div>
 			<div id="shortcode-tab" style="display:none;" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'Shortcodes for displaying tickets on your page.', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'Shortcodes for displaying tickets on your page.', 'wp-freshdesk' ); ?></p>
 				<table>
 					<tr>
-						<td><?php echo __( 'All tickets', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'All tickets', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Open', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Open', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Open"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Resolved', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Resolved', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Resolved"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Closed', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Closed', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Closed"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Pending', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Pending', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Pending"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Customer', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Waiting on Customer', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Waiting on Customer"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Waiting on Third Party', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Waiting on Third Party', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_fetch_tickets filter="Waiting on Third Party"]</code></td>
 					</tr>
 					<tr>
-						<td><?php echo __( 'Create New Ticket', 'freshdesk-api' ); ?></td>
+						<td><?php echo __( 'Create New Ticket', 'wp-freshdesk' ); ?></td>
 						<td><code>[fd_new_ticket]</code></td>
 					</tr>
 				</table>
 			</div>
 			<div id="url-tab" style="display:none;" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'Configure Single Sign on with Freshdesk, so that users don\'t have to remember their username and password combos to get to their tickets.', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'Configure Single Sign on with Freshdesk, so that users don\'t have to remember their username and password combos to get to their tickets.', 'wp-freshdesk' ); ?></p>
 				<form method="post" action="options.php" id="url_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
@@ -133,14 +133,14 @@ class FreshDeskSettingsPage{
 							$val = 'https://your_domain.freshdesk.com/';
 						}
 					?>
-					<p class="description"><?php echo __( 'Note: Remember that you can always go to: ', 'freshdesk-api' ); ?><a href="<?php echo $val; ?>login/normal" target="_blank"><?php echo $val; ?>access/normal</a><?php echo __( ' to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk.', 'freshdesk-api' ); ?></p>
+					<p class="description"><?php echo __( 'Note: Remember that you can always go to: ', 'wp-freshdesk' ); ?><a href="<?php echo $val; ?>login/normal" target="_blank"><?php echo $val; ?>access/normal</a><?php echo __( ' to use the regular login in case you get unlucky and somehow lock yourself out of Freshdesk.', 'wp-freshdesk' ); ?></p>
 					<?php
 						submit_button();
 					?>
 				</form>
 			</div>
 			<div id="display-tab" style="display:none;" class="fd-tabs">
-				<p class="about-description"><?php echo __( 'All the front-end related setings are listed here.', 'freshdesk-api' ); ?></p>
+				<p class="about-description"><?php echo __( 'All the front-end related setings are listed here.', 'wp-freshdesk' ); ?></p>
 				<form method="post" action="options.php" id="display_form" autocomplete="off">
 					<?php
 						// This prints out all hidden setting fields
