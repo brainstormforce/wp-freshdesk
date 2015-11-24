@@ -9,6 +9,7 @@ module.exports = function(grunt) {
 				'**',
 				'!node_modules/**',
 				'!build/**',
+				'!css/sourcemap/**',
 				'!.git/**',
 				'!bin/**',
 				'!tests/**',
@@ -23,25 +24,49 @@ module.exports = function(grunt) {
 		compress: {
 			main: {
 				options: {
-					archive: 'wp-freshdesk/wp-freshdesk.zip',
+					archive: 'wp-freshdesk.zip',
 					mode: 'zip'
 				},
 				files: [
-			      // Each of the files in the src/ folder will be output to
-			      // the dist/ folder each with the extension .gz.js
-			      { 
-			      	src: [
-			      	'./wp-freshdesk/**',
-			      	'!./wp-freshdesk/wp-freshdesk.zip'
-			      	]
+				{ 
+					src: [
+					'./wp-freshdesk/**'
+					]
 
-			      }
-			    ]
-			  }
+				}
+				]
 			}
-		});
-
+		},
+		postcss: {
+			main: {
+				options: {
+					map: {
+						inline: false, 
+						annotation: 'css/sourcemap' //sourcemap for autoprefixr
+					},
+					processors: [
+					require('autoprefixer')({
+						browsers: [
+						'Android >= 2.1',
+						'Chrome >= 21',
+						'Edge >= 12',
+						'Explorer >= 7',
+						'Firefox >= 17',
+						'Opera >= 10',
+						'Safari >= 6.0'
+						]
+				        }), // add vendor prefixes
+					]
+				},
+				src: [
+				'css/*.css'
+				]
+			}
+		}
+	});
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-compress' );
+	grunt.loadNpmTasks( 'grunt-postcss' );
 	grunt.registerTask( 'release', [ 'copy', 'compress' ] );
+	grunt.registerTask( 'css', [ 'postcss' ] );
 };

@@ -11,3 +11,7 @@ node_modules/
 # ignore package
 wp-freshdesk/
 wp-freshdesk.zip
+
+#ignore css sourcemap
+
+css/sourcemap/
