@@ -59,7 +59,7 @@ if(!class_exists("FreshDeskAPI")){
 		 * @since 1.0.0
 		 */
 		function fd_load_textdomain() {
-			load_plugin_textdomain( 'wp-freshdesk', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
+			load_plugin_textdomain( 'wp-freshdesk', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' ); 
 		}
 		
 		
