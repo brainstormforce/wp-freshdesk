@@ -15,16 +15,6 @@ With WP Freshdesk you can easily connect your WordPress site with your Freshdesk
 
 IT also provides Single sign-on to be configured between WordPress and freshdesk, so that once the user is logged in to WordPress site, they don't have to re-login on freshdesk to view their tickets.
 
-Available Shortcodes - 
-
-All Tickets 			-	`[fd_fetch_tickets]` \r
-Open Tickets 			-	`[fd_fetch_tickets filter="Open"]` \r
-Resolved tickets 		-	`[fd_fetch_tickets filter="Resolved"]` \r
-Closed Tickets 			-	`[fd_fetch_tickets filter="Closed"]` \r
-Pending Tickets 		-	`[fd_fetch_tickets filter="Pending"]` \r
-Waiting on Customer		-	`[fd_fetch_tickets filter="Waiting on Customer"]` \r
-Waiting on Third Party 	- 	`[fd_fetch_tickets filter="Waiting on Third Party"]` \r
-Create New Ticket 		-	`[fd_new_ticket]`
 
 Get involved in the development of the plugin, Visit [Github Repo](https://github.com/brainstormforce/wp-freshdesk/ "Github Repo")
 
@@ -46,16 +36,6 @@ Get involved in the development of the plugin, Visit [Github Repo](https://githu
 (Please don't do this in production, you will almost certainly break something!)
 
 1. Checkout the current development version from https://github.com/brainstormforce/wp-freshdesk/tree/devp
-
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
 
 == Screenshots ==
 
