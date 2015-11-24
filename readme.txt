@@ -17,13 +17,13 @@ IT also provides Single sign-on to be configured between WordPress and freshdesk
 
 Available Shortcodes - 
 
-All Tickets 			-	`[fd_fetch_tickets]` \n
-Open Tickets 			-	`[fd_fetch_tickets filter="Open"]` \n
-Resolved tickets 		-	`[fd_fetch_tickets filter="Resolved"]` \n
-Closed Tickets 			-	`[fd_fetch_tickets filter="Closed"]` \n
-Pending Tickets 		-	`[fd_fetch_tickets filter="Pending"]` \n
-Waiting on Customer		-	`[fd_fetch_tickets filter="Waiting on Customer"]` \n
-Waiting on Third Party 	- 	`[fd_fetch_tickets filter="Waiting on Third Party"]` \n
+All Tickets 			-	`[fd_fetch_tickets]` \r
+Open Tickets 			-	`[fd_fetch_tickets filter="Open"]` \r
+Resolved tickets 		-	`[fd_fetch_tickets filter="Resolved"]` \r
+Closed Tickets 			-	`[fd_fetch_tickets filter="Closed"]` \r
+Pending Tickets 		-	`[fd_fetch_tickets filter="Pending"]` \r
+Waiting on Customer		-	`[fd_fetch_tickets filter="Waiting on Customer"]` \r
+Waiting on Third Party 	- 	`[fd_fetch_tickets filter="Waiting on Third Party"]` \r
 Create New Ticket 		-	`[fd_new_ticket]`
 
 Get involved in the development of the plugin, Visit [Github Repo](https://github.com/brainstormforce/wp-freshdesk/ "Github Repo")
