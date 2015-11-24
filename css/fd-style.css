@@ -1,7 +1,118 @@
 /* CSS Document */
 
+.fd-message {
+    background: #eff8e6 none repeat scroll 0 0;
+    border: 1px solid #d6eebd;
+    overflow: hidden;
+    position: relative;
+    -webkit-border-radius: 5px;
+            border-radius: 5px;
+    color: #424242;
+    margin: 0 0 1.758em;
+    padding: 20px;
+}
+
+.fd-message::before {
+    bottom: -0.18em;
+    color: #d6eebd;
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: 4.5em;
+    font-weight: 400;
+    line-height: 100%;
+    position: absolute;
+    right: -0.18em;
+    -webkit-transform: rotate(-20deg);
+        -ms-transform: rotate(-20deg);
+         -o-transform: rotate(-20deg);
+            transform: rotate(-20deg);
+    width: auto;
+}
+
+.fd-tickets-outter > ul .group .ticket-data .ticket-title {
+    margin-bottom: 5px;
+}
+
+.fd-tickets-outter > ul .group .ticket-data .ticket-title .ticket-id {
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.fd-tickets-outter > ul .group .ticket-data .ticket-excerpt {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.fd-tickets-outter > ul .group .ticket-meta .ticket-status {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.fd-tickets-outter > ul .group .ticket-meta .ticket-time {
+    color: #888;
+    float: right;
+    font-size: 13px;
+}
+
+.fd-tickets-outter > ul .group a {
+    color: #3c3c3c;
+}
+
+.fd-tickets-outter > ul .group .ticket-meta {
+    float: right;
+}
+
+.group::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.fd-tickets-outter > ul .group.status-closed {
+    background-color: #fafafa;
+    opacity: 0.5;
+}
+
+.content .fd-tickets-outter > ul {
+	margin-left: 0;
+    width: 100%;
+}
+
+.fd-tickets-outter > ul .group .ticket-data {
+    float: left;
+    max-width: 65%;
+}
+
+.fd-tickets-outter > ul .group a {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+    color: #3c3c3c;
+    display: block;
+    float: left;
+    padding: 20px 15px;
+    text-decoration: none !important;
+    width: 100%;
+}
+
+.fd-tickets-outter > ul li{
+	list-style: outside none none;
+	border-bottom: 1px solid #eee;
+    margin-left: 0;
+}
+
+.fd-tickets-outter > ul .fd-filter-tickets {
+	border-bottom: 0 none;
+}
+
 .fd-badge {
-    border-radius: 3px;
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
     height: 170px;
     padding-bottom: 10px;
     position: absolute;
@@ -9,7 +120,9 @@
     top: 0;
     width: 150px;
     background: url("../images/FreshDesk-WP_logo.png") no-repeat top center;
-    background-size: 150px;
+    -webkit-background-size: 150px 150px;
+         -o-background-size: 150px;
+            background-size: 150px;
 }
 
 .form-table {
@@ -25,14 +138,10 @@
     min-height: 60px;
 }
 
-.fd-filter-dropdown {
-    float: left;
-    margin-bottom: 3%;
-}
-
-.fd-search-box {
-    float: right;
-    margin-bottom: 3%;
+.fd-filter {
+	margin-bottom: 3%;
+	margin-right:3%;
+	float:left;
 }
 
 .fd-more-tickets {
@@ -52,116 +161,6 @@
 
 .fd-use-apikey-no {
     color: #6F7979;
-}
-
-/* Loader */
-#fd-dark-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-
-.fd-cntlst-loader {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(242, 242, 242, 0.95);
-    z-index: 99999;
-    visibility: hidden;
-    -webkit-transition: visibility 600ms linear, background-color 600ms linear;
-    -moz-transition: visibility 600ms linear, background-color 600ms linear;
-    transition: visibility 600ms linear, background-color 600ms linear;
-}
-
-.fd-cntlst-loader .fd-smile-loader {
-    position: absolute !important;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.fd-cntlst-loader.bsf-fixed-loader .fd-smile-loader {
-    top: 150px;
-    -webkit-transform: translate(-50%, 0);
-    -moz-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-}
-
-.fd-smile-loading-bar {
-    display: inline-block;
-    width: 6px;
-    height: 29px;
-    border-radius: 4px;
-    -webkit-animation: loading 1s ease-in-out infinite;
-    -moz-animation: loading 1s ease-in-out infinite;
-    animation: loading 1s ease-in-out infinite;
-    margin-right: 1px;
-}
-
-.fd-smile-loading-bar:nth-child(1) {
-    background-color: #3498db;
-    -webkit-animation-delay: 0;
-    -moz-animation-delay: 0;
-    animation-delay: 0;
-}
-
-.fd-smile-loading-bar:nth-child(2) {
-    background-color: #e74c3c;
-    -webkit-animation-delay: 0.09s;
-    -moz-animation-delay: 0.09s;
-    animation-delay: 0.09s;
-}
-
-.fd-smile-loading-bar:nth-child(3) {
-    background-color: #f1c40f;
-    -webkit-animation-delay: .18s;
-    -moz-animation-delay: .18s;
-    animation-delay: .18s;
-}
-
-.fd-smile-loading-bar:nth-child(4) {
-    background-color: #2ecc71;
-    -webkit-animation-delay: .27s;
-    -moz-animation-delay: .27s;
-    animation-delay: .27s;
-}
-
-@-webkit-keyframes loading {
-    0% {
-        -webkit-transform: scale(1);
-    }
-    20% {
-        -webkit-transform: scale(1, 2.2);
-    }
-    40% {
-        -webkit-transform: scale(1);
-    }
-}
-
-@-moz-keyframes loading {
-    0% {
-        -moz-transform: scale(1);
-    }
-    20% {
-        -moz-transform: scale(1, 2.2);
-    }
-    40% {
-        -moz-transform: scale(1);
-    }
-}
-
-@keyframes loading {
-    0% {
-        transform: scale(1);
-    }
-    20% {
-        transform: scale(1, 2.2);
-    }
-    40% {
-        transform: scale(1);
-    }
 }
 
 .clear {
@@ -202,8 +201,8 @@
 
 /* ============================================================
   COMMON
-============================================================ */
-#fd-wrapper {
+  ============================================================ */
+  #fd-wrapper {
     min-width: 600px;
 }
 
@@ -224,8 +223,8 @@
 
 /* ============================================================
   COMMON
-============================================================ */
-.fd-toggle {
+  ============================================================ */
+  .fd-toggle {
     position: absolute;
     margin-left: -9999px;
     visibility: hidden;
@@ -237,24 +236,21 @@
     cursor: pointer;
     outline: none;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 /* ============================================================
   Switch 1 - ROUND
-============================================================ */
-input.fd-toggle-round + label {
+  ============================================================ */
+  input.fd-toggle-round + label {
     padding: 2px;
     width: 70px;
     height: 30px;
     background-color: #dddddd;
     -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
-    border-radius: 60px;
+            border-radius: 60px;
 }
 
 input.fd-toggle-round + label:before, input.fd-toggle-round + label:after {
@@ -270,12 +266,8 @@ input.fd-toggle-round + label:before {
     right: 1px;
     background-color: #f1f1f1;
     -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
-    border-radius: 60px;
+            border-radius: 60px;
     -webkit-transition: background 0.4s;
-    -moz-transition: background 0.4s;
     -o-transition: background 0.4s;
     transition: background 0.4s;
 }
@@ -284,15 +276,10 @@ input.fd-toggle-round + label:after {
     width: 30px;
     background-color: #fff;
     -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    -o-border-radius: 100%;
-    border-radius: 100%;
+            border-radius: 100%;
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     -webkit-transition: margin 0.4s;
-    -moz-transition: margin 0.4s;
     -o-transition: margin 0.4s;
     transition: margin 0.4s;
 }
@@ -359,3 +346,4 @@ input.fd-toggle-round:checked + label:after {
 		margin: 0;
 	}
 }
+/*# sourceMappingURL=sourcemap/fd-style.css.map */
