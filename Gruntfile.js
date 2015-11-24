@@ -80,4 +80,6 @@ grunt.loadNpmTasks( 'grunt-postcss' );
 grunt.registerTask( 'release', [ 'copy', 'compress' ] );
 grunt.registerTask( 'css', [ 'postcss' ] );
 grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
+
+grunt.util.linefeed = '\n';
 };
