@@ -1,0 +1,233 @@
+# Loco Gettext template
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Freshdesk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: Tue Nov 24 2015 12:54:14 GMT+0530 (India Standard Time)\n"
+"POT-Revision-Date: Tue Nov 24 2015 12:56:50 GMT+0530 (India Standard Time)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: ../admin-settings.php:65
+msgctxt "WP Freshdesk Settings"
+msgid "WP Freshdesk Settings"
+msgstr ""
+
+#: ../admin-settings.php:66
+msgctxt ""
+"Now your users won't have to remember one more username and password! "
+"Configure your WordPress website and Freshdesk to work together to give your "
+"users Freshdesk Remote Authentication!"
+msgid ""
+"Now your users won't have to remember one more username and password! "
+"Configure your WordPress website and Freshdesk to work together to give your "
+"users Freshdesk Remote Authentication!"
+msgstr ""
+
+#: ../admin-settings.php:70
+msgctxt "General Configuration"
+msgid "General Configuration"
+msgstr ""
+
+#: ../admin-settings.php:71
+msgctxt "Shortcodes"
+msgid "Shortcodes"
+msgstr ""
+
+#: ../admin-settings.php:72
+msgctxt "Freshdesk SSO"
+msgid "Freshdesk SSO"
+msgstr ""
+
+#: ../admin-settings.php:73
+msgctxt "Display Settings"
+msgid "Display Settings"
+msgstr ""
+
+#: ../admin-settings.php:76
+msgctxt ""
+"All the settings related to connecting your freshdesk account with your "
+"WordPress are listed here."
+msgid ""
+"All the settings related to connecting your freshdesk account with your "
+"WordPress are listed here."
+msgstr ""
+
+#: ../admin-settings.php:86
+msgctxt "Shortcodes for displaying tickets on your page."
+msgid "Shortcodes for displaying tickets on your page."
+msgstr ""
+
+#: ../admin-settings.php:89
+msgctxt "All tickets"
+msgid "All tickets"
+msgstr ""
+
+#: ../admin-settings.php:93 ../wp-freshdesk.php:252
+msgctxt "Open"
+msgid "Open"
+msgstr ""
+
+#: ../admin-settings.php:97 ../wp-freshdesk.php:262
+msgctxt "Resolved"
+msgid "Resolved"
+msgstr ""
+
+#: ../admin-settings.php:101 ../wp-freshdesk.php:267
+msgctxt "Closed"
+msgid "Closed"
+msgstr ""
+
+#: ../admin-settings.php:105 ../wp-freshdesk.php:257
+msgctxt "Pending"
+msgid "Pending"
+msgstr ""
+
+#: ../admin-settings.php:109 ../wp-freshdesk.php:272
+msgctxt "Waiting on Customer"
+msgid "Waiting on Customer"
+msgstr ""
+
+#: ../admin-settings.php:113 ../wp-freshdesk.php:278
+msgctxt "Waiting on Third Party"
+msgid "Waiting on Third Party"
+msgstr ""
+
+#: ../admin-settings.php:117
+msgctxt "Create New Ticket"
+msgid "Create New Ticket"
+msgstr ""
+
+#: ../admin-settings.php:123
+msgctxt ""
+"Configure Single Sign on with Freshdesk, so that users don't have to "
+"remember their username and password combos to get to their tickets."
+msgid ""
+"Configure Single Sign on with Freshdesk, so that users don't have to "
+"remember their username and password combos to get to their tickets."
+msgstr ""
+
+#: ../admin-settings.php:136
+msgctxt "Note: Remember that you can always go to: "
+msgid "Note: Remember that you can always go to: "
+msgstr ""
+
+#: ../admin-settings.php:136
+msgctxt ""
+" to use the regular login in case you get unlucky and somehow lock yourself "
+"out of Freshdesk."
+msgid ""
+" to use the regular login in case you get unlucky and somehow lock yourself "
+"out of Freshdesk."
+msgstr ""
+
+#: ../admin-settings.php:143
+msgctxt "All the front-end related setings are listed here."
+msgid "All the front-end related setings are listed here."
+msgstr ""
+
+#. Name of the plugin
+msgctxt "WP Freshdesk"
+msgid "WP Freshdesk"
+msgstr ""
+
+#. Description of the plugin
+msgctxt ""
+"With this plugin, your users will be able to see their tickets on your "
+"Freshdesk support portal. Other features include - SSO, ticket filtering, "
+"sorting & search options. Admins have an options to display only certain "
+"status tickets with shortcodes."
+msgid ""
+"With this plugin, your users will be able to see their tickets on your "
+"Freshdesk support portal. Other features include - SSO, ticket filtering, "
+"sorting & search options. Admins have an options to display only certain "
+"status tickets with shortcodes."
+msgstr ""
+
+#. Author of the plugin
+msgctxt "Brainstorm Force"
+msgid "Brainstorm Force"
+msgstr ""
+
+#. Author URI of the plugin
+msgctxt "https://www.brainstormforce.com"
+msgid "https://www.brainstormforce.com"
+msgstr ""
+
+#: ../wp-freshdesk.php:92
+msgctxt "Remote authentication is not configured yet."
+msgid "Remote authentication is not configured yet."
+msgstr ""
+
+#: ../wp-freshdesk.php:161
+msgctxt "Remote authentication failed: "
+msgid "Remote authentication failed: "
+msgstr ""
+
+#: ../wp-freshdesk.php:163
+msgctxt "Try again"
+msgid "Try again"
+msgstr ""
+
+#: ../wp-freshdesk.php:164
+#, php-format
+msgctxt "Log out of %s"
+msgid "Log out of %s"
+msgstr ""
+
+#: ../wp-freshdesk.php:165
+#, php-format
+msgctxt "Return to %s dashboard"
+msgid "Return to %s dashboard"
+msgstr ""
+
+#: ../wp-freshdesk.php:247
+msgctxt "All Tickets"
+msgid "All Tickets"
+msgstr ""
+
+#: ../wp-freshdesk.php:282
+msgctxt "Search..."
+msgid "Search..."
+msgstr ""
+
+#: ../wp-freshdesk.php:300 ../wp-freshdesk.php:325
+msgctxt "Invalid Credentials"
+msgid "Invalid Credentials"
+msgstr ""
+
+#: ../wp-freshdesk.php:303 ../wp-freshdesk.php:328
+msgctxt "Invalid User"
+msgid "Invalid User"
+msgstr ""
+
+#: ../wp-freshdesk.php:305 ../wp-freshdesk.php:330
+msgctxt "Invalid Freshdesk URL"
+msgid "Invalid Freshdesk URL"
+msgstr ""
+
+#: ../wp-freshdesk.php:314 ../wp-freshdesk.php:335
+msgctxt "Error!"
+msgid "Error!"
+msgstr ""
+
+#: ../wp-freshdesk.php:333
+msgctxt "No tickets"
+msgid "No tickets"
+msgstr ""
