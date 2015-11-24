@@ -72,34 +72,6 @@ module.exports = function(grunt) {
 			},
 		},
 
-		makepot: {
-			target: {
-				options: {
-					domainPath: '/languages',
-					mainFile: 'freshdesk-api.php',
-					potFilename: 'wp-freshdesk.pot',
-					potHeaders: {
-						poedit: true,
-						'x-poedit-keywordslist': true
-					},
-					type: 'wp-plugin',
-					updateTimestamp: true
-				}
-			}
-		},
-
-		addtextdomain: {
-			options: {
-				textdomain: 'wp-freshdesk',
-			},
-			target: {
-				files: {
-					src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
-				}
-			}
-		},
-
-
 	});
 
 grunt.loadNpmTasks( 'grunt-wp-i18n' );
@@ -111,7 +83,6 @@ grunt.loadNpmTasks( 'grunt-postcss' );
 grunt.registerTask( 'release', [ 'copy', 'compress' ] );
 grunt.registerTask( 'css', [ 'postcss' ] );
 grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
-grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 
 grunt.util.linefeed = '\n';
 };
