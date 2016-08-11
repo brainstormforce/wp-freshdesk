@@ -6,7 +6,7 @@
 * Version: 1.0
 * Author: Brainstorm Force
 * Author URI: https://www.brainstormforce.com/
-* License:
+* License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 

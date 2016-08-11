@@ -2,8 +2,8 @@
 Contributors: brainstormforce, vrundakansara, nikschavan, pratikchaskar
 Tags: freshdesk, support, wordpress freshdesk
 Requires at least: 4.2
-Tested up to: 4.2
-Stable tag: trunk
+Tested up to: 4.6
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ With WP Freshdesk you can easily connect your WordPress site with your Freshdesk
 It also provides Single Sign-On to be configured between WordPress and Freshdesk, so that once the user is logged in to WordPress site, they don't have to re-login on Freshdesk to view their tickets.
 
 
-Get involved in the development of the plugin, Visit [Github Repo](https://github.com/brainstormforce/wp-freshdesk/ "Github Repo")
+We would appreciate all kind of contributions on GitHub with issues / PR here, Visit [Github Repo](https://github.com/brainstormforce/wp-freshdesk/ "Github Repo")
 
 == Installation ==
 
