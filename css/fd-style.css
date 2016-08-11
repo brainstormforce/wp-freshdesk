@@ -31,12 +31,13 @@
 
 .fd-tickets-outter > ul .group .ticket-data .ticket-title {
     margin-bottom: 5px;
+	font-weight:bold;
 }
 
 .fd-tickets-outter > ul .group .ticket-data .ticket-title .ticket-id {
     color: #aaaaaa;
-    font-size: 14px;
     margin-left: 5px;
+	font-style:italic;
 }
 
 .fd-tickets-outter > ul .group .ticket-data .ticket-excerpt {

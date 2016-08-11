@@ -187,47 +187,48 @@ if(!class_exists("FreshDeskAPI")){
 			
 			if ( is_user_logged_in() ) {
 				global $current_user;
-				
+				$fd_filter_dropdown = ( isset( $_GET["fd-filter_dropdown"] ) ) ? esc_attr( $_GET["fd-filter_dropdown"] ) : '';
 				if( ( isset( $this->opt['freshdesk_apikey'] ) && $this->opt['freshdesk_apikey'] != '' ) || !isset( $this->opt['use_apikey'] ) ) {
 					if( isset( $atts['filter'] ) && trim( $atts['filter'] ) != '' ) {
-				
+						
 						switch( trim( ucwords( strtolower( $atts['filter'] ) ) ) ) {
 							case 'Open':
-								$_GET["fd-filter_dropdown"] = 'Open';
+								$fd_filter_dropdown = 'Open';
 								break;
 							case 'Closed':
-								$_GET["fd-filter_dropdown"] = 'Closed';
+								$fd_filter_dropdown = 'Closed';
 								break;
 							case 'Resolved':
-								$_GET["fd-filter_dropdown"] = 'Resolved';
+								$fd_filter_dropdown = 'Resolved';
 								break;
 							case 'Waiting On Third Party':
-								$_GET["fd-filter_dropdown"] = 'Waiting on Third Party';
+								$fd_filter_dropdown = 'Waiting on Third Party';
 								break;
 							case 'Waiting On Customer':
-								$_GET["fd-filter_dropdown"] = 'Waiting on Customer';
+								$fd_filter_dropdown = 'Waiting on Customer';
 								break;
 							case 'Pending':
-								$_GET["fd-filter_dropdown"] = 'Pending';
+								$fd_filter_dropdown = 'Pending';
 								break;
 							default:
 								break;
 						}
 					}
 					
-					if( !isset( $_GET['fd-filter_dropdown'] ) || $_GET['fd-filter_dropdown'] == '' ){
-						$_GET["fd-filter_dropdown"] = 'Open';
+					if( !isset( $fd_filter_dropdown ) || $fd_filter_dropdown == '' ){
+						$fd_filter_dropdown = 'Open';
 					}
 					
 					$tickets = $this->get_tickets( $current_user->data->user_email, $current_user->roles );
 					$filteredTickets = false;
+					$search_txt = ( isset( $_GET['search_txt'] ) ) ? esc_attr( $_GET['search_txt'] ) : '';
 					if( isset( $tickets ) ) {
 						$tickets = json_decode( json_encode( $tickets ), true );
-						if( isset( $_GET['fd-filter_dropdown'] ) && $_GET['fd-filter_dropdown'] != '' ) {
-							$filteredTickets = ( $_GET['fd-filter_dropdown'] != 'all_tickets' ) ? $this->filter_tickets( $tickets, $_GET['fd-filter_dropdown'] ) : $tickets ;
+						if( isset( $fd_filter_dropdown ) && $fd_filter_dropdown != '' ) {
+							$filteredTickets = ( $fd_filter_dropdown != 'all_tickets' ) ? $this->filter_tickets( $tickets, $fd_filter_dropdown ) : $tickets ;
 						}
-						if( isset( $_GET['search_txt'] ) && $_GET['search_txt'] != '' ) {
-							$filteredTickets = ( trim( $_GET['search_txt'] ) != '' ) ? $this->search_tickets( $filteredTickets, $_GET['search_txt'] ) : $tickets ;
+						if( isset( $search_txt ) && $search_txt != '' ) {
+							$filteredTickets = ( trim( $search_txt ) != '' ) ? $this->search_tickets( $filteredTickets, $search_txt ) : $tickets ;
 						}
 					} else {
 						$filteredTickets = false;
@@ -241,40 +242,40 @@ if(!class_exists("FreshDeskAPI")){
 										<div class="fd-filter-dropdown fd-filter">
 											<select id="fd-filter_dropdown" name="fd-filter_dropdown">
 												<option value="all_tickets" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "all_tickets" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "all_tickets" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'All Tickets', 'wp-freshdesk' ) . '</option>
 												<option value="Open" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Open" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Open" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'Open', 'wp-freshdesk' ) . '</option>
 												<option value="Pending" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Pending" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Pending" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'Pending', 'wp-freshdesk' ) . '</option>
 												<option value="Resolved" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Resolved" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Resolved" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'Resolved', 'wp-freshdesk' ) . '</option>
 												<option value="Closed" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Closed" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Closed" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'Closed', 'wp-freshdesk' ) . '</option>
 												<option value="Waiting on Customer" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Customer" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Waiting on Customer" ) ? 'selected="selected"' : '';
 									}
 									$result .= '>' . __( 'Waiting on Customer', 'wp-freshdesk' ) . '</option>
 												<option value="Waiting on Third Party" ';
-									if( isset( $_GET["fd-filter_dropdown"] ) ) {
-										$result .= ( $_GET["fd-filter_dropdown"] == "Waiting on Third Party" ) ? 'selected="selected"' : '';
+									if( isset( $fd_filter_dropdown ) ) {
+										$result .= ( $fd_filter_dropdown == "Waiting on Third Party" ) ? 'selected="selected"' : '';
 									}
-									$txt = ( isset( $_GET['search_txt'] ) ) ? $_GET['search_txt'] : '';
+									$txt = ( isset( $search_txt ) ) ? $search_txt : '';
 									$result .= '>' . __( 'Waiting on Third Party', 'wp-freshdesk' ) . '</option>
 											</select>
 										</div>
@@ -292,7 +293,7 @@ if(!class_exists("FreshDeskAPI")){
 								</li>';
 					
 					if( !isset( $tickets->require_login ) && $tickets != '' && !isset( $tickets->errors ) && !empty( $tickets ) ){
-						if( isset( $_GET['search_txt'] ) || isset( $_GET['fd-filter_dropdown'] ) ) {
+						if( isset( $search_txt ) || isset( $fd_filter_dropdown ) ) {
 							if( !isset( $filteredTickets->require_login ) && $filteredTickets != '' && !isset( $filteredTickets->errors ) && !empty( $filteredTickets ) ) {
 								$result .= $this->get_html( $filteredTickets );
 							} else {
@@ -305,8 +306,8 @@ if(!class_exists("FreshDeskAPI")){
 										$msg = __( 'Invalid Freshdesk URL' , 'wp-freshdesk');
 									}
 								} else if( empty( $filteredTickets ) ) {
-									$keyword = ( isset( $_GET['search_txt'] ) && $_GET['search_txt'] != '' ) ? 'keyword <strong>"' . $_GET['search_txt'] . '"</strong>.' : '';
-									$dropdown = ( isset( $_GET['fd-filter_dropdown'] ) && $_GET['fd-filter_dropdown'] != '' ) ? 'No tickets for <strong>"' . strtoupper( str_replace( '_', ' ', $_GET['fd-filter_dropdown'] ) ) . '"</strong> category' : '';
+									$keyword = ( isset( $search_txt ) && $search_txt != '' ) ? 'keyword <strong>"' . $search_txt . '"</strong>.' : '';
+									$dropdown = ( isset( $fd_filter_dropdown ) && $fd_filter_dropdown != '' ) ? 'No tickets for <strong>"' . strtoupper( str_replace( '_', ' ', $fd_filter_dropdown ) ) . '"</strong> category' : '';
 									$str = $dropdown;
 									$str .= ( $keyword != '' ) ? ' & ' . $keyword : '';
 									$msg = '<p> ' . $str . '</p><div class="fd-more-ticket">Could not find what you are searching for? Click <a href="' . $this->freshdeskUrl . 'support/tickets" target="_blank">here</a> to check all your old tickets.</div>';
@@ -427,17 +428,17 @@ if(!class_exists("FreshDeskAPI")){
 				$class = ( $d->status_name == "Closed" ) ? 'status-closed' : '';
 				$diff = ( strtotime( date_i18n('Y-m-d H:i:s') ) - strtotime( date_i18n( 'Y-m-d H:i:s', false, 'gmt' ) ) );
 				$date = date_i18n( 'j M\' Y, g:i A', strtotime( $d->updated_at ) + $diff );
-				$description = ( strlen( $d->description ) > 50 ) ? substr( $d->description, 0, 50 ) . '...' : $d->description;
+				$description = ( strlen( $d->description ) > 125 ) ? strip_tags( substr( $d->description, 0, 125 ) ) . '...' : strip_tags( $d->description );
 				$time_elapsed = $this->timeAgo( date_i18n( 'Y-m-d H:i:s', strtotime( $d->updated_at ) + $diff ) );
 				$html .= '
 				<li class="group ' . $class . '">
 					<a href="' . $this->freshdeskUrl . 'helpdesk/tickets/' . $d->display_id . '" target="_blank">
 						<span class="ticket-data">
-							<span class="ticket-title">' . $d->subject . ' <span class="ticket-id">#' . $d->display_id . '</span></span>
+							<span class="ticket-title">' . strip_tags( $d->subject ) . ' <span class="ticket-id">#' . $d->display_id . '</span></span>
 							<span class="ticket-excerpt">' . $description . '</span>
 						</span>
 						<span class="ticket-meta">
-							<span class="ticket-status ' . $class . '">' . $d->status_name . '</span>
+							<span class="ticket-status ' . $class . '">' . strip_tags( $d->status_name ) . '</span>
 							<span class="ticket-time"><abbr title="Last Updated on - ' . $date . '" class="timeago comment-time ticket-updated-at">' . $time_elapsed . '</abbr></span>
 						</span>
 					</a>
@@ -568,7 +569,8 @@ add_action('admin_init', 'fd_plugin_redirect' );
 function fd_plugin_redirect() {
 	if ( get_option( 'fd_do_activation_redirect', false ) ) {
 		delete_option( 'fd_do_activation_redirect' );
-		if( !isset( $_GET['activate-multi'] ) ) {
+		$activate_multi = esc_attr( $_GET['activate-multi'] );
+		if( !isset( $activate_multi ) ) {
 			wp_redirect( 'options-general.php?page=wp-freshdesk' );
 		}
 	}
@@ -581,7 +583,8 @@ function fd_plugin_redirect() {
 
 function fd_plugin_activate() {
 	add_option('fd_do_activation_redirect', true);
-	if( !isset( $_GET['activate-multi'] ) ) {
+	$activate_multi = esc_attr( $_GET['activate-multi'] );
+	if( !isset( $activate_multi ) ) {
 		wp_redirect( 'options-general.php?page=wp-freshdesk' );
 	}
 }
