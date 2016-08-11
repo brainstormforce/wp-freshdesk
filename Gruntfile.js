@@ -8,15 +8,16 @@ module.exports = function(grunt) {
 				src: [
 				'**',
 				'!node_modules/**',
-				'!build/**',
-				'!css/sourcemap/**',
 				'!.git/**',
-				'!bin/**',
-				'!tests/**',
+				'!*.sh',
+				'!.gitlab-ci.yml',
+				'!.gitignore',
+				'!.gitattributes',
 				'!Gruntfile.js',
 				'!package.json',
-				'!.gitignore',
-				'!phpunit.xml',
+				'!bin/**',
+				'!tests/**',
+				'!phpunit.xml.dist',
 				'!README.md'
 				],
 				dest: 'wp-freshdesk/'
@@ -37,6 +38,10 @@ module.exports = function(grunt) {
 				}
 				]
 			}
+		},
+		clean: {
+			main: ["wp-freshdesk"],
+			zip: ["wp-freshdesk.zip"],
 		},
 		postcss: {
 			main: {
@@ -79,7 +84,7 @@ grunt.loadNpmTasks( 'grunt-contrib-copy' );
 grunt.loadNpmTasks( 'grunt-contrib-compress' );
 grunt.loadNpmTasks( 'grunt-postcss' );
 
-grunt.registerTask( 'release', [ 'copy', 'compress' ] );
+grunt.registerTask( 'release', [ 'clean:zip', 'copy','compress','clean:main' ] );
 grunt.registerTask( 'css', [ 'postcss' ] );
 grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 
