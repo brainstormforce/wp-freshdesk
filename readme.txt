@@ -7,7 +7,7 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
+Allow users to see their Freshdesk tickets right on your website and provides SSO to have seamless navigation between Freshdesk and WordPress.
 
 == Description ==
 
@@ -35,11 +35,11 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 
 (Please don't do this in production, you will almost certainly break something!)
 
-1. Checkout the current development version from https://github.com/brainstormforce/wp-freshdesk/tree/devp
+1. Check out the current development version from https://github.com/brainstormforce/wp-freshdesk/tree/master
 
 == Screenshots ==
 
-1. Settings screen for general configurationsbetween WordPress and Freshdesk.
+1. Settings screen for general configurations between WordPress and Freshdesk.
 2. List of all he available shortcodes.
 3. SSO settings page.
 4. Display Settings.
