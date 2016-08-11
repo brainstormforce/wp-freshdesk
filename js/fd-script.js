@@ -3,7 +3,7 @@
 	jQuery(document).ready(function(){
 
 		if( window.location.href.indexOf("page=wp-freshdesk") != -1 ) {
-			var hashTxt = escape( window.location.hash.substr(1) );
+			var hashTxt = window.location.hash.substr(1);
 			if( hashTxt == '' ) {
 				hashTxt = 'api-tab';
 				window.location.hash = hashTxt;
