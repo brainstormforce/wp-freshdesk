@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 		},
 		clean: {
 			main: ["wp-freshdesk"],
-			zip: ["wp-freshdesk.zip"],
+			zip: ["wp-freshdesk.zip"]
 		},
 		postcss: {
 			main: {
@@ -82,6 +82,7 @@ module.exports = function(grunt) {
 grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 grunt.loadNpmTasks( 'grunt-contrib-copy' );
 grunt.loadNpmTasks( 'grunt-contrib-compress' );
+grunt.loadNpmTasks( 'grunt-contrib-clean' );
 grunt.loadNpmTasks( 'grunt-postcss' );
 
 grunt.registerTask( 'release', [ 'clean:zip', 'copy','compress','clean:main' ] );
