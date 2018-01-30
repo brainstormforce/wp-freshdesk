@@ -1,5 +1,0 @@
-Version 1.0.1 - Tuesday, January 30, 2018
-- Fixed: JS Conflict with WP Rocket plugin
-
-Version 1.0.0 - Thursday, August 11, 2016
-- Initial Release
