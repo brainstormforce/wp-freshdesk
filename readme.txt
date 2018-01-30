@@ -48,7 +48,7 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 == Changelog ==
 
 = 1.0.1 =
-* Fixed: JS Conflict with WP Rocket plugin
+* Fixed: Load the plugin’s assets only on the required pages
 
 = 1.0 =
 * Initial Release
