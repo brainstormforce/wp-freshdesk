@@ -3,7 +3,7 @@
 * Plugin Name: WP Freshdesk
 * Plugin URI: 
 * Description: With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
-* Version: 1.0
+* Version: 1.0.1
 * Author: Brainstorm Force
 * Author URI: https://www.brainstormforce.com/
 * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
