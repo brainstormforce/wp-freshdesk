@@ -8,6 +8,9 @@ ssh-key.pub
 # node modules
 node_modules/
 
+# Composer Dependencies
+vendor/
+
 # ignore package
 wp-freshdesk/
 wp-freshdesk.zip

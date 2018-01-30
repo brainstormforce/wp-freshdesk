@@ -1,38 +1,31 @@
+sudo: false
+
 language: php
+dist: precise
 
 notifications:
   email:
     on_success: never
     on_failure: change
+  slack: bsf-bots:RDGCoMDDxnlCvnUfvhq8pQ36
 
-php:
-  - "hhvm"
-  - "7.0"
-  - "5.6"
-  - "5.5"
-  - "5.4"
-  - "5.3"
-
-env:
-    # Trunk (current version in development is 4.4)
-    # @link https://github.com/WordPress/WordPress
-    - WP_VERSION=nightly WP_MULTISITE=0
-    # WordPress 4.3
-    # @link https://github.com/WordPress/WordPress/tree/4.3-branch
-    - WP_VERSION=latest WP_MULTISITE=0
-    # WordPress 4.2
-    # @link https://github.com/WordPress/WordPress/tree/4.2-branch
-    - WP_VERSION=4.2 WP_MULTISITE=0
+cache:
+  - composer
+  - $HOME/.composer/cache
 
 matrix:
   include:
-    - php: 5.3
-      env: WP_VERSION=latest WP_MULTISITE=1
+    - php: 7.2
+      env: WP_TRAVISCI=phpcs
 
 before_script:
-  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - |
+    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+      composer install
+    fi
 
-script: 
-  # Search plugin for PHP syntax errors.
-  - find . \( -name '*.php' \) -exec php -lf {} \;
-  - phpunit
+script:
+  - |
+    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+      vendor/bin/phpcs
+    fi
