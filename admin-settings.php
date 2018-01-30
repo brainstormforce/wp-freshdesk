@@ -403,8 +403,8 @@ class FreshDeskSettingsPage{
      * Callback function for "Freshdesk Admin Username"
      */
     public function use_apikey_callback(){
-		$on = ( $this->options['use_apikey'] == 'on' ) ? 'selected="selected"' : '';
-		$off = ( $this->options['use_apikey'] != 'on' ) ? 'selected="selected"' : '';
+		$on = ( isset( $this->options['use_apikey'] ) &&  $this->options['use_apikey'] == 'on' ) ? 'selected="selected"' : '';
+		$off = ( isset( $this->options['use_apikey'] ) && $this->options['use_apikey'] != 'on' ) ? 'selected="selected"' : '';
         printf(
 			'<select id="use_apikey" name="fd_apikey[use_apikey]">
 				<option value="on" %s>API Key</option>
