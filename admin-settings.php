@@ -14,6 +14,7 @@ class FreshDeskSettingsPage{
     public function __construct(){
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'page_init' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_css_js' ) );
     }
 
 
@@ -152,19 +153,29 @@ class FreshDeskSettingsPage{
         </div>
         <?php
     }
-
-
-    /*
-     * Register and add settings
-     */
-    public function page_init(){
 	
-		//Enqueue all styles and scripts.		
+	/**
+	 * Enqueue CSS and JS on WordPress admin pages of WP Freshdesk
+	 */
+	public function enqueue_admin_css_js( $hook ) {
+		
+		 // Load only on WP Freshdesk plugin pages
+		if ( $hook != "settings_page_wp-freshdesk" ) {
+			return;
+		}
+		
+		//Enqueue all styles and scripts
 		wp_register_script( 'fd-script', plugins_url('js/fd-script.js', __FILE__), array('jquery'), '1.1', true );
 		wp_enqueue_script( 'fd-script' );
 		
 		wp_register_style( 'fd-style', plugins_url('css/fd-style.css', __FILE__) );
 		wp_enqueue_style( 'fd-style' );
+	}
+	
+    /*
+     * Register and add settings
+     */
+    public function page_init(){
 		
 		// Register the setting tab
 		register_setting(
