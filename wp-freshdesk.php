@@ -3,7 +3,7 @@
 * Plugin Name: WP Freshdesk
 * Plugin URI: 
 * Description: With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
-* Version: 1.0.1
+* Version: 1.0.2
 * Author: Brainstorm Force
 * Author URI: https://www.brainstormforce.com/
 * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -95,11 +95,11 @@ if(!class_exists("FreshDeskAPI")){
 					// Filter freshdesk_return_to
 					$return_to = apply_filters( 'freshdesk_return_to', $_REQUEST['host_url'] ) ;
 	
-					global $current_user;
-					wp_get_current_user();
-	
 					// If the current user is logged in
-					if ( 0 != $current_user->ID ) {
+					if ( is_user_logged_in() ) {
+
+						global $current_user;
+						wp_get_current_user();
 	
 						// Pick the most appropriate name for the current user.
 						if ( $current_user->user_firstname != '' && $current_user->user_lastname != '' )
@@ -113,11 +113,17 @@ if(!class_exists("FreshDeskAPI")){
 						// The token is the remote "Shared Secret" under Admin - Security - Enable Single Sign On
 						$token = $this->options['freshdesk_sharedkey'];
 	
+						// Current timestamp.
+						$timestamp = time();
+
 						// Generate the hash as per http://www.freshdesk.com/api/remote-authentication
-						$hash = md5( $name . $email . $token );
+
+						$to_be_hashed = $name . $token . $email . $timestamp;
+						$hash = hash_hmac('md5', $to_be_hashed, $token);
+
 	
 						// Create the SSO redirect URL and fire the redirect.
-						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=fd-remote-login&return_to=' . urlencode( 'https://' . $return_to . '/' ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash );
+						$sso_url = trailingslashit( $this->freshdeskUrl ) . 'login/sso/?action=fd-remote-login&return_to=' . urlencode( 'https://' . $return_to . '/' ) . '&name=' . urlencode( $name ) . '&email=' . urlencode( $email ) . '&hash=' . urlencode( $hash ) . '&timestamp=' . $timestamp;
 	
 						//Hook before redirecting logged in user.
 						do_action( 'freshdesk_logged_in_redirect_before' );
@@ -368,7 +374,7 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		function new_ticket(){
-			echo '<form action="' . $this->freshdeskUrl . 'support/tickets/new/" target="_blank"><input type="submit" value="New Ticket" id="new_ticket"></form>';
+			return '<form action="' . $this->freshdeskUrl . 'support/tickets/new/" target="_blank"><input type="submit" value="New Ticket" id="new_ticket"></form>';
 		}
 		
 		
