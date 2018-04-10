@@ -2,8 +2,8 @@
 **Contributors:** brainstormforce, vrundakansara-1, nikschavan, pratikchaskar  
 **Tags:** freshdesk, support, wordpress freshdesk  
 **Requires at least:** 4.2  
-**Tested up to:** 4.9.2  
-**Stable tag:** 1.0.1  
+**Tested up to:** 4.9.5  
+**Stable tag:** 1.0.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
