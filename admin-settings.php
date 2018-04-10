@@ -42,7 +42,7 @@ class FreshDeskSettingsPage{
         $this->options = get_option( 'fd_apikey' );
 		if( $this->options ){
 			if( isset( $this->options['freshdesk_url'] ) ){
-				if ( !preg_match( "/^[A-Za-z\d\s]+$/", $this->options['freshdesk_url'] ) ) {
+				if ( !preg_match( "/^[-A-Za-z\d\s]+$/", $this->options['freshdesk_url'] ) ) {
 					$this->options['freshdesk_url'] = '';
 					$this->url_val = '';
 				} else {

@@ -27,7 +27,7 @@
 			jQuery( "#api_pwd" ).parent().parent().show();
 		}
 		jQuery('#api-tab').submit(function(){
-			if(/^[A-Za-z\d\s]+$/.test(jQuery("#freshdesk_url").val())){
+			if(/^[-A-Za-z\d\s]+$/.test(jQuery("#freshdesk_url").val())){
 				return true;
 			} else {
 				alert("Invalid URL");
