@@ -43,6 +43,34 @@ module.exports = function(grunt) {
 			main: ["wp-freshdesk"],
 			zip: ["wp-freshdesk.zip"]
 		},
+		makepot: {
+            target: {
+                options: {
+                    domainPath: '/',
+                    mainFile: 'wp-freshdesk.php',
+                    potFilename: 'languages/wp-freshdesk.pot',
+                    exclude: [
+						'admin/bsf-core',
+					],
+                    potHeaders: {
+                        poedit: true,
+                        'x-poedit-keywordslist': true
+                    },
+                    type: 'wp-plugin',
+                    updateTimestamp: true
+                }
+            }
+        },
+        addtextdomain: {
+            options: {
+                textdomain: 'wp-freshdesk',
+            },
+            target: {
+                files: {
+                    src: ['*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**', '!admin/bsf-core/**']
+                }
+            }
+        },
 		postcss: {
 			main: {
 				options: {
@@ -84,10 +112,16 @@ grunt.loadNpmTasks( 'grunt-contrib-copy' );
 grunt.loadNpmTasks( 'grunt-contrib-compress' );
 grunt.loadNpmTasks( 'grunt-contrib-clean' );
 grunt.loadNpmTasks( 'grunt-postcss' );
+grunt.loadNpmTasks( 'grunt-wp-i18n' );
+grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 
 grunt.registerTask( 'release', [ 'clean:zip', 'copy','compress','clean:main' ] );
 grunt.registerTask( 'css', [ 'postcss' ] );
 grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
+
+grunt.registerTask( 'i18n', ['addtextdomain','makepot'] );
+
+grunt.registerTask('default', ['readme', 'css']);
 
 grunt.util.linefeed = '\n';
 };
