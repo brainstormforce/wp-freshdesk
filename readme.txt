@@ -47,7 +47,7 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 
 == Changelog ==
 
-== 1.0.2 ==
+= 1.0.2 =
 * Fixed: SSO functionality as per the updated API.
 * Fixed: Create new ticket shortcode echos on wrong position.
 * Improved: Updated Regex for FreshDesk URL.

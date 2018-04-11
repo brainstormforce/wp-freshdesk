@@ -1,5 +1,5 @@
 # WP Freshdesk #
-**Contributors:** brainstormforce, vrundakansara-1, nikschavan, pratikchaskar  
+**Contributors:** [brainstormforce](https://profiles.wordpress.org/brainstormforce), [vrundakansara-1](https://profiles.wordpress.org/vrundakansara-1), [nikschavan](https://profiles.wordpress.org/nikschavan), [pratikchaskar](https://profiles.wordpress.org/pratikchaskar)  
 **Tags:** freshdesk, support, wordpress freshdesk  
 **Requires at least:** 4.2  
 **Tested up to:** 4.9.5  
@@ -39,25 +39,15 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 
 ## Screenshots ##
 
-### 1. Settings screen for general configurations between WordPress and Freshdesk. ###
-![Settings screen for general configurations between WordPress and Freshdesk.](http://ps.w.org/wp-freshdesk/assets/screenshot-1.png)
-
-### 2. List of all he available shortcodes. ###
-![List of all he available shortcodes.](http://ps.w.org/wp-freshdesk/assets/screenshot-2.png)
-
-### 3. SSO settings page. ###
-![SSO settings page.](http://ps.w.org/wp-freshdesk/assets/screenshot-3.png)
-
-### 4. Display Settings. ###
-![Display Settings.](http://ps.w.org/wp-freshdesk/assets/screenshot-4.png)
-
-### 5. Frontend display of tickets list. ###
-![Frontend display of tickets list.](http://ps.w.org/wp-freshdesk/assets/screenshot-5.png)
-
+1. Settings screen for general configurations between WordPress and Freshdesk.
+2. List of all he available shortcodes.
+3. SSO settings page.
+4. Display Settings.
+5. Frontend display of tickets list.
 
 ## Changelog ##
 
-## 1.0.2 ##
+### 1.0.2 ###
 * Fixed: SSO functionality as per the updated API.
 * Fixed: Create new ticket shortcode echos on wrong position.
 * Improved: Updated Regex for FreshDesk URL.
