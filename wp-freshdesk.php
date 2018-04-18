@@ -497,7 +497,7 @@ if(!class_exists("FreshDeskAPI")){
 
 		function timeAgo( $time_ago ) {
 			$time_ago = strtotime( $time_ago );
-			$cur_time = time();
+			$cur_time = strtotime( date_i18n('Y-m-d H:i:s'));
 			$time_elapsed = $cur_time - $time_ago;
 			$seconds = $time_elapsed ;
 			$minutes = round( $time_elapsed / 60 );
@@ -508,7 +508,7 @@ if(!class_exists("FreshDeskAPI")){
 			$years = round( $time_elapsed / 31207680 );
 			// Seconds
 			if( $seconds <= 60 ) {
-				return "just now";
+				return "Sometime ago";
 			}
 			//Minutes
 			else if( $minutes <= 60 ){
