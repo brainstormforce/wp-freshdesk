@@ -7,18 +7,30 @@ module.exports = function(grunt) {
 				},
 				src: [
 				'**',
-				'!node_modules/**',
-				'!.git/**',
-				'!*.sh',
-				'!.gitlab-ci.yml',
-				'!.gitignore',
-				'!.gitattributes',
-				'!Gruntfile.js',
-				'!package.json',
-				'!bin/**',
-				'!tests/**',
-				'!phpunit.xml.dist',
-				'!README.md'
+                '!*.zip',
+                '!node_modules/**',
+                '!build/**',
+                '!css/sourcemap/**',
+                '!.git/**',
+                '!bin/**',
+                '!.gitlab-ci.yml',
+                '!bin/**',
+                '!tests/**',
+                '!phpunit.xml.dist',
+                '!*.sh',
+                '!*.map',
+                '!Gruntfile.js',
+                '!package.json',
+                '!.gitignore',
+                '!phpunit.xml',
+                '!README.md',
+                '!sass/**',
+                '!codesniffer.ruleset.xml',
+                '!vendor/**',
+                '!composer.json',
+                '!composer.lock',
+                '!package-lock.json',
+                '!phpcs.xml.dist',
 				],
 				dest: 'wp-freshdesk/'
 			}
@@ -112,6 +124,8 @@ grunt.loadNpmTasks( 'grunt-contrib-copy' );
 grunt.loadNpmTasks( 'grunt-contrib-compress' );
 grunt.loadNpmTasks( 'grunt-contrib-clean' );
 grunt.loadNpmTasks( 'grunt-postcss' );
+grunt.loadNpmTasks( 'grunt-wp-i18n' );
+grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 
 grunt.registerTask( 'release', [ 'clean:zip', 'copy','compress','clean:main' ] );
 grunt.registerTask( 'css', [ 'postcss' ] );
