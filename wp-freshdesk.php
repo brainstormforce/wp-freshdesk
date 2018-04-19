@@ -508,7 +508,7 @@ if(!class_exists("FreshDeskAPI")){
 			$years = round( $time_elapsed / 31207680 );
 			// Seconds
 			if( $seconds <= 60 ) {
-				return "Sometime ago";
+				return "just now";
 			}
 			//Minutes
 			else if( $minutes <= 60 ){
