@@ -427,7 +427,7 @@ if(!class_exists("FreshDeskAPI")){
 			$append = ( count( $tickets ) > 1 ) ? 's' : '';
 			$html .=
 			'<li>
-				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found ( from ' . $current_user->data->user_email . ' )</div>
+				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found (Opened with: ' . $current_user->data->user_email . ')</div>
 			</li>';
 			
 			foreach( $tickets as $d ) {
