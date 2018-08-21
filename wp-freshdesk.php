@@ -421,12 +421,13 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		public function get_html( $tickets = '' ){
+			global $current_user;
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			$append = ( count( $tickets ) > 1 ) ? 's' : '';
 			$html .=
 			'<li>
-				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found!</div>
+				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found ( from ' . $current_user->data->user_email . ' )</div>
 			</li>';
 			
 			foreach( $tickets as $d ) {
