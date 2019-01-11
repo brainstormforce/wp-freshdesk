@@ -397,18 +397,27 @@ if(!class_exists("FreshDeskAPI")){
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
 				
-				$ch = curl_init ($url);
-				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
-				curl_setopt($ch, CURLOPT_HEADER, false);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				$server_output = curl_exec ($ch);
-				curl_close ($ch);
+				$auth = base64_encode( $apikey . ':' . $password );
+				$args = [
+				    'headers' => [
+				    	'Content-Type' => 'application/json',
+				        'Authorization' => "Basic $auth"
+				    ],
+				    'body' => array()
+				];  
+
+				$response = wp_remote_get( $url, $args );
+
+				// test for wp errors.
+                if( is_wp_error( $response ) ) {
+                    return array();
+                    exit;
+                }
+
+                $body = wp_remote_retrieve_body( $response );
+                $tickets = json_decode( $body );
+                return $tickets;
 				
-				$tickets = json_decode( $server_output );
-				return $tickets;
 			} else{
 				return false;
 			}			
