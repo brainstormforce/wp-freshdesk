@@ -3,14 +3,13 @@
 * Plugin Name: WP Freshdesk
 * Plugin URI: 
 * Description: With this plugin, your users will be able to see their tickets on your Freshdesk support portal. Other features include - SSO, ticket filtering, sorting & search options. Admins have an options to display only certain status tickets with shortcodes.
-* Version: 1.0.2
+* Version: 1.0.3
 * Author: Brainstorm Force
 * Author URI: https://www.brainstormforce.com/
 * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-
-//Block direct access to plugin files
+//Block direct access to plugin files.
 defined( 'ABSPATH' ) or die();
 
 if(!class_exists("FreshDeskAPI")){
@@ -397,18 +396,28 @@ if(!class_exists("FreshDeskAPI")){
 				$filter = ( !in_array( 'administrator', $roles ) ) ? '&email=' . $uemail : '';
 				$url = $this->freshdeskUrl . 'helpdesk/tickets.json?filter_name=' . $filterName . $filter;
 				
-				$ch = curl_init ($url);
-				curl_setopt($ch, CURLOPT_USERPWD, "$apikey:$password");
-				curl_setopt($ch, CURLOPT_HEADER, false);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				$server_output = curl_exec ($ch);
-				curl_close ($ch);
+				$auth = base64_encode( $apikey . ':' . $password );
 				
-				$tickets = json_decode( $server_output );
-				return $tickets;
+				$args = array(
+				    'headers' => array(
+				    	'Content-Type' => 'application/json',
+				        'Authorization' => "Basic $auth"
+				    ),
+				    'body' => array()
+				);  
+
+				$response = wp_remote_get( $url, $args );
+
+				// test for wp errors.
+                if( is_wp_error( $response ) ) {
+                    return array();
+                    exit;
+                }
+
+                $body = wp_remote_retrieve_body( $response );
+                $tickets = json_decode( $body );
+                return $tickets;
+				
 			} else{
 				return false;
 			}			
@@ -421,12 +430,13 @@ if(!class_exists("FreshDeskAPI")){
 		 */
 		
 		public function get_html( $tickets = '' ){
+			global $current_user;
 			$html = '';
 			$tickets = json_decode( json_encode( $tickets ), FALSE );
 			$append = ( count( $tickets ) > 1 ) ? 's' : '';
 			$html .=
 			'<li>
-				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found!</div>
+				<div class="fd-message">' . count( $tickets ) . ' ticket' . $append . ' found (Opened with: ' . $current_user->data->user_email . ')</div>
 			</li>';
 			
 			foreach( $tickets as $d ) {
