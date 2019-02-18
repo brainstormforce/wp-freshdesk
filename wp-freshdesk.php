@@ -589,7 +589,7 @@ function fd_plugin_redirect()
     if (get_option('fd_do_activation_redirect', false)) {
         delete_option('fd_do_activation_redirect');
         $activate_multi = isset($_GET['activate-multi']) ? esc_attr($_GET['activate-multi']) : '';
-        if (!isset($activate_multi)) {
+        if (!$activate_multi) {
             wp_redirect('options-general.php?page=wp-freshdesk');
         }
     }
@@ -604,7 +604,7 @@ function fd_plugin_activate()
 {
     add_option('fd_do_activation_redirect', true);
     $activate_multi = isset($_GET['activate-multi']) ? esc_attr($_GET['activate-multi']) : '';
-    if (!isset($activate_multi)) {
+    if (!$activate_multi) {
         wp_redirect('options-general.php?page=wp-freshdesk');
     }
 }
