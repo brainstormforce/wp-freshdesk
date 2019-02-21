@@ -2,8 +2,8 @@
 **Contributors:** [brainstormforce](https://profiles.wordpress.org/brainstormforce), [vrundakansara-1](https://profiles.wordpress.org/vrundakansara-1), [nikschavan](https://profiles.wordpress.org/nikschavan), [pratikchaskar](https://profiles.wordpress.org/pratikchaskar)  
 **Tags:** freshdesk, support, wordpress freshdesk  
 **Requires at least:** 4.2  
-**Tested up to:** 4.9.5  
-**Stable tag:** 1.0.2  
+**Tested up to:** 5.1  
+**Stable tag:** 1.0.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -46,6 +46,11 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 5. Frontend display of tickets list.
 
 ## Changelog ##
+
+### 1.0.3 ###
+* Fixed: Ticket updated time showing wrong value.
+* Fixed: Redirection issue.
+* Improved: Replaced Curl call with WP_REMOTE_GET
 
 ### 1.0.2 ###
 * Fixed: SSO functionality as per the updated API.
