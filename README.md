@@ -1,5 +1,5 @@
 # WP Freshdesk #
-**Contributors:** [brainstormforce](https://profiles.wordpress.org/brainstormforce), [vrundakansara-1](https://profiles.wordpress.org/vrundakansara-1), [nikschavan](https://profiles.wordpress.org/nikschavan), [pratikchaskar](https://profiles.wordpress.org/pratikchaskar)  
+**Contributors:** [brainstormforce](https://profiles.wordpress.org/brainstormforce)  
 **Tags:** freshdesk, support, wordpress freshdesk  
 **Requires at least:** 4.2  
 **Tested up to:** 5.1  
