@@ -46,6 +46,8 @@ We would appreciate all kind of contributions on GitHub with issues / PR here, V
 5. Frontend display of tickets list.
 
 == Changelog ==
+= 1.0.4 =
+* Fixed: Page redirection to Plugin's settings page on activation on multisite issue.
 
 = 1.0.3 =
 * Fixed: Ticket updated time showing wrong value.
